@@ -100,7 +100,7 @@
         }
     </script>
 <script async
-  src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&v=beta&libraries=maps3d">
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMVkVC9t1s4Fc-iJVmsvmGUgCvfnKfMMs&v=beta&libraries=maps3d">
 </script>    
 <style>
         .material-symbols-outlined {
@@ -233,24 +233,20 @@
 </aside>
 <!-- Map View Container -->
 <div class="flex-1 relative bg-stone-200 overflow-hidden">
-<div class="flex-1 relative bg-stone-200 overflow-hidden">
-
-  <!-- 🌍 3D Google Map -->
-  <gmp-map-3d
-    class="absolute inset-0 w-full h-full"
-    center="19.7008,-101.1844"
-    zoom="16"
-    tilt="65"
-    heading="40"
-    range="1500"
-    map-type-id="satellite"
-  >
-    <!-- 📍 Your KML plots -->
-    <!-- <gmp-kml-layer url="assets/predio-Tres-Marias.kml"></gmp-kml-layer> -->
+  <gmp-map-3d 
+    id="main-map"
+    center="20.588, -100.389" 
+    tilt="65" 
+    range="1200" 
+    heading="0"
+    class="absolute inset-0 w-full h-full">
+    
+    <gmp-kml-layer src="https://yourwebsite.com/path/to/predio-Tres-Marias.kml"></gmp-kml-layer>
+    
   </gmp-map-3d>
-
   <!-- Optional dark overlay (keeps your aesthetic) -->
   <div class="absolute inset-0 bg-black/30 pointer-events-none"></div>
+</div>
 
 
 <!-- Simulated Info Card Popup -->
