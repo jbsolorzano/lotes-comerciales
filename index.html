@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TRES MARÍAS | Strategic Land Banking</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,300;0,400;0,700;1,400&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-variant": "#e3e2e0",
+                      "secondary-fixed-dim": "#d7c4a1",
+                      "on-secondary-fixed-variant": "#52452a",
+                      "on-primary": "#ffffff",
+                      "surface-container-highest": "#e3e2e0",
+                      "surface": "#faf9f7",
+                      "on-secondary-fixed": "#241a04",
+                      "inverse-on-surface": "#f1f1ef",
+                      "surface-tint": "#5f5e60",
+                      "primary-container": "#2c2c2e",
+                      "tertiary-container": "#2b2c2e",
+                      "secondary": "#6b5d40",
+                      "tertiary-fixed": "#e3e2e4",
+                      "tertiary": "#171819",
+                      "outline-variant": "#c7c6ca",
+                      "error-container": "#ffdad6",
+                      "on-secondary-container": "#6f6144",
+                      "inverse-primary": "#c8c6c8",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-fixed": "#1b1c1d",
+                      "secondary-fixed": "#f4e0bc",
+                      "on-tertiary-container": "#939395",
+                      "surface-dim": "#dadad8",
+                      "surface-container": "#efeeec",
+                      "tertiary-fixed-dim": "#c7c6c8",
+                      "on-surface-variant": "#46464a",
+                      "on-tertiary": "#ffffff",
+                      "on-surface": "#1a1c1b",
+                      "secondary-container": "#f1ddb9",
+                      "primary": "#171819",
+                      "surface-bright": "#faf9f7",
+                      "on-background": "#1a1c1b",
+                      "on-primary-fixed": "#1b1b1d",
+                      "surface-container-low": "#f4f3f1",
+                      "inverse-surface": "#2f3130",
+                      "on-tertiary-fixed-variant": "#464749",
+                      "on-primary-container": "#949395",
+                      "surface-container-lowest": "#ffffff",
+                      "background": "#faf9f7",
+                      "on-secondary": "#ffffff",
+                      "surface-container-high": "#e9e8e6",
+                      "primary-fixed": "#e4e2e4",
+                      "on-primary-fixed-variant": "#474649",
+                      "outline": "#77777b",
+                      "on-error": "#ffffff",
+                      "error": "#ba1a1a",
+                      "primary-fixed-dim": "#c8c6c8"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-lg": "48px",
+                      "stack-md": "24px",
+                      "section-gap": "128px",
+                      "container-max": "1440px",
+                      "margin-edge": "64px",
+                      "gutter": "32px",
+                      "unit": "8px",
+                      "stack-sm": "12px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Noto Serif"],
+                      "body-md": ["Manrope"],
+                      "body-lg": ["Manrope"],
+                      "headline-md": ["Noto Serif"],
+                      "display-xl": ["Noto Serif"],
+                      "label-caps": ["Manrope"],
+                      "button": ["Manrope"]
+              },
+              "fontSize": {
+                      "headline-lg": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                      "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0.01em", "fontWeight": "400"}],
+                      "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                      "display-xl": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "400"}],
+                      "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.15em", "fontWeight": "600"}],
+                      "button": ["14px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #707072; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-secondary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 right-0 z-50 border-b border-stone-300/30 bg-primary">
+<div class="flex justify-between items-center w-full px-12 py-6 max-w-[1440px] mx-auto">
+<h1 class="text-2xl font-light tracking-[0.3em] text-white">TRES MARÍAS</h1>
+<nav class="hidden md:flex items-center space-x-12">
+<a class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="#">Portfolio</a>
+<a class="font-sans uppercase tracking-[0.2em] text-sm border-b pb-1 text-white border-white" href="#">Insights</a>
+<a class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="#">Legacy</a>
+<a class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="#">Contact</a>
+</nav>
+<button class="px-8 py-3 text-button font-button uppercase tracking-widest transition-colors bg-white text-primary hover:bg-stone-200">
+                Request Callback
+            </button>
+</div>
+</header>
+<main class="pt-24">
+<!-- Hero Section -->
+<section class="relative h-[921px] w-full overflow-hidden flex items-center justify-center bg-stone-900">
+<img alt="Cinematic landscape" class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale-[0.3]" data-alt="Cinematic low-angle wide shot of vast rolling golden hills at sunrise with long shadows and soft ethereal morning mist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3pD9howAiruiB8uhkjkK5w9UUp64zCHX93YsZMGVY4PPGOWcbcs8y_bG80zVACQFHb2S7Go1PQ-aywjTwkX10hbfVWm-UovCtTTVlXUpIIFDPk4Ovm0KouczsFYaEGhsSiv8ZvAvOI2IXMuPZyu5xUFYeVJMIIiaBypB19SJ_AnuJZlFUF_P7sLJzSGAf0yhmXjMd8KlrVfl7RWt7PahNfRoPuBpZLAY9T2OgoQ2VCQqhjH0KUgWYtXC50d1W0x_sOcM4YuZgGreQ"/>
+<div class="relative z-10 text-center max-w-4xl px-gutter">
+<h2 class="font-headline-lg text-display-xl text-white mb-6">Tres Marías: Strategic Land Bank</h2>
+<p class="font-body-lg text-white/80 max-w-2xl mx-auto mb-10 tracking-wide uppercase text-sm">Exclusive acquisition opportunities in high-growth corridors.</p>
+<div class="h-1 w-24 bg-white/40 mx-auto"></div>
+</div>
+</section>
+<!-- About Section -->
+<section class="bg-[#F4F3F1] py-32 px-12">
+<div class="max-w-[1440px] mx-auto">
+<div class="mb-20">
+<span class="font-sans text-[10px] uppercase tracking-[0.4em] text-stone-400 mb-4 block">Our Philosophy</span>
+<h2 class="font-headline-lg text-5xl text-primary max-w-xl">The Vision</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-24 items-start">
+<div class="space-y-8">
+<p class="font-headline-md text-2xl leading-relaxed text-primary">
+                        Founded on a legacy of stewardship, Tres Marías represents a paradigm shift in land acquisition, where environmental preservation meets strategic urban growth.
+                    </p>
+<div class="h-px w-20 bg-stone-300"></div>
+</div>
+<div class="space-y-8">
+<p class="font-body-lg text-stone-600 leading-loose">
+                        Our commitment to quality is unwavering. We identify and secure high-growth corridors before they reach the public market, ensuring our partners benefit from early-entry valuations and meticulous legal vetting. Every parcel in our bank is selected for its unique topography, infrastructure proximity, and long-term appreciation potential.
+                    </p>
+<p class="font-body-lg text-stone-600 leading-loose">
+                        This is more than a transaction; it is an invitation to participate in a curated legacy. We bridge the gap between institutional-grade intelligence and the bespoke requirements of private family offices, offering a seamless path to land ownership in the region's most promising sectors.
+                    </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Map Explorer Section -->
+<section class="flex flex-col md:flex-row h-screen border-t border-stone-200" id="explorer">
+<!-- SideNavBar Component Logic (Integrated) -->
+<aside class="w-full md:w-80 bg-white border-r border-stone-300/20 flex flex-col h-full z-40">
+<div class="p-8 border-b border-stone-100">
+<h3 class="font-serif text-lg text-stone-900 tracking-tight mb-1">ESTATE FILTERS</h3>
+<p class="font-sans text-[10px] uppercase tracking-widest text-stone-400">Select zoning type</p>
+<div class="mt-8 grid grid-cols-1 gap-2">
+<button class="flex items-center space-x-4 p-4 bg-stone-100 text-stone-900 font-semibold transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="map">map</span>
+<span class="font-sans text-xs uppercase tracking-widest">Overview</span>
+</button>
+<button class="flex items-center space-x-4 p-4 text-stone-400 hover:bg-stone-50 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="home_work">home_work</span>
+<span class="font-sans text-xs uppercase tracking-widest">Residential</span>
+</button>
+<button class="flex items-center space-x-4 p-4 text-stone-400 hover:bg-stone-50 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="business_center">business_center</span>
+<span class="font-sans text-xs uppercase tracking-widest">Commercial</span>
+</button>
+</div>
+</div>
+<!-- Plot List -->
+<div class="flex-1 overflow-y-auto px-4 py-6 bg-surface">
+<div class="space-y-4">
+<!-- Plot Item 1 -->
+<div class="p-4 border border-stone-200 bg-white group cursor-pointer hover:border-stone-400 transition-colors">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] uppercase tracking-tighter text-secondary font-bold">Residential</span>
+<span class="text-[10px] px-2 py-0.5 border border-stone-200 text-stone-500 uppercase">Available</span>
+</div>
+<h4 class="font-headline-md text-sm mb-1">Lote Alpha-12</h4>
+<p class="text-xs text-stone-400">4,200 Sq Ft • Sector 4</p>
+</div>
+<!-- Plot Item 2 -->
+<div class="p-4 border border-stone-200 bg-white group cursor-pointer hover:border-stone-400 transition-colors">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] uppercase tracking-tighter text-tertiary font-bold">Commercial</span>
+<span class="text-[10px] px-2 py-0.5 border border-stone-200 text-stone-500 uppercase">Reserved</span>
+</div>
+<h4 class="font-headline-md text-sm mb-1">Corner Block B</h4>
+<p class="text-xs text-stone-400">12,500 Sq Ft • Sector 1</p>
+</div>
+<!-- Repeat for 29 plots simulated... -->
+<div class="p-4 border border-stone-200 bg-white group cursor-pointer hover:border-stone-400 transition-colors">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] uppercase tracking-tighter text-secondary font-bold">Residential</span>
+<span class="text-[10px] px-2 py-0.5 border border-stone-200 text-stone-500 uppercase">Available</span>
+</div>
+<h4 class="font-headline-md text-sm mb-1">Meadow View 04</h4>
+<p class="text-xs text-stone-400">5,800 Sq Ft • Sector 3</p>
+</div>
+</div>
+</div>
+<div class="p-6 border-t border-stone-100">
+<a class="block text-center w-full bg-secondary text-white py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-secondary/90 transition-colors" href="https://wa.me/5555555555?text=I%20am%20interested%20in%20the%20Tres%20Marias%20land%20bank.">
+                        WhatsApp Concierge
+                    </a>
+</div>
+</aside>
+<!-- Map View Container -->
+<div class="flex-1 relative bg-stone-200 overflow-hidden">
+<img alt="Aerial satellite map view" class="absolute inset-0 w-full h-full object-cover" data-alt="High-altitude professional satellite hybrid map view showing detailed topography, geometric parcel boundaries in neon green and yellow, and strategic road infrastructure" data-location="Querétaro, Mexico" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5dkZXtMCN2v_ELtssGX0FbvTIw041KuaRKPFGTKnHNTXO_6RPC35zFRlPh59fjsJrXlFKsldFxDwSPfciOxyXve_WLpfOCEBF3kYp96bhuoBfP1rsP5_tpY6dfGeGK9Iyn2SJl7P_GFVILKEPyaqy-RLSlrxqnn_1S83FFzxiY63svs4oGVc5U33XU-qdRLNLqJ3udxtdkyEns280GFOymnyWzuPCtzjoXh_vKO3BVFZmPpFBiLFlDkxGmhxbXHJP4ocuISr90x6D"/>
+<!-- Simulated Interactive Boundaries Overlay -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40">
+<rect class="pointer-events-auto cursor-pointer" fill="none" height="150" stroke="#6b5d40" stroke-width="2" width="100" x="20%" y="30%"></rect>
+<rect class="pointer-events-auto cursor-pointer" fill="none" height="120" stroke="#171819" stroke-width="2" width="200" x="45%" y="15%"></rect>
+<rect class="pointer-events-auto cursor-pointer" fill="none" height="80" stroke="#6b5d40" stroke-width="2" width="120" x="10%" y="50%"></rect>
+</svg>
+<!-- Simulated Info Card Popup -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 bg-white p-8 border border-stone-200/50 shadow-2xl z-50">
+<div class="flex justify-between items-start mb-6">
+<div>
+<p class="text-[10px] font-sans uppercase tracking-widest text-stone-400 mb-1">Estate Reference</p>
+<h3 class="font-headline-md text-xl">Lote Alpha-12</h3>
+</div>
+<button class="text-stone-300 hover:text-stone-900 transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="space-y-4 mb-8">
+<div class="flex justify-between items-center border-b border-stone-100 pb-2">
+<span class="text-xs text-stone-400 uppercase tracking-widest">Zoning</span>
+<span class="text-xs font-semibold uppercase">Residential</span>
+</div>
+<div class="flex justify-between items-center border-b border-stone-100 pb-2">
+<span class="text-xs text-stone-400 uppercase tracking-widest">Acreage</span>
+<span class="text-xs font-semibold uppercase">0.14 Acres</span>
+</div>
+<div class="flex justify-between items-center border-b border-stone-100 pb-2">
+<span class="text-xs text-stone-400 uppercase tracking-widest">Status</span>
+<span class="text-xs font-semibold uppercase text-secondary">Immediate Possession</span>
+</div>
+</div>
+<a class="flex items-center justify-center space-x-3 w-full bg-primary text-on-primary py-4 hover:bg-stone-800 transition-colors group" href="https://wa.me/5555555555?text=I%20am%20interested%20in%20Lote%20Alpha-12.">
+<span class="material-symbols-outlined text-sm">chat</span>
+<span class="font-button text-[10px] uppercase tracking-widest">Contáctanos</span>
+</a>
+</div>
+<!-- Map Controls -->
+<div class="absolute bottom-10 right-10 flex flex-col space-y-2">
+<button class="w-12 h-12 bg-white flex items-center justify-center text-stone-900 border border-stone-200 hover:bg-stone-50">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button class="w-12 h-12 bg-white flex items-center justify-center text-stone-900 border border-stone-200 hover:bg-stone-50">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<button class="w-12 h-12 bg-white flex items-center justify-center text-stone-900 border border-stone-200 hover:bg-stone-50">
+<span class="material-symbols-outlined">layers</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Component -->
+<footer class="border-t bg-primary border-t border-stone-300/10">
+<div class="w-full py-16 px-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1440px] mx-auto">
+<div>
+<h4 class="font-serif text-xl tracking-tighter mb-4 text-white tracking-[0.3em]">TRES MARÍAS</h4>
+<p class="font-sans text-[10px] tracking-widest uppercase opacity-60 text-stone-400">© 2024 TRES MARÍAS. EXCLUSIVE LAND BANKING PRIVACY RESERVED.</p>
+</div>
+<div class="flex flex-wrap gap-8 justify-start md:justify-end">
+<a class="font-sans text-[10px] tracking-widest uppercase hover:text-stone-900 transition-colors text-stone-400 hover:text-white" href="#">Strategic Land</a>
+<a class="font-sans text-[10px] tracking-widest uppercase hover:text-stone-900 transition-colors text-stone-400 hover:text-white" href="#">Institutional</a>
+<a class="font-sans text-[10px] tracking-widest uppercase hover:text-stone-900 transition-colors text-stone-400 hover:text-white" href="#">Legal</a>
+<a class="font-sans text-[10px] tracking-widest uppercase hover:text-stone-900 transition-colors text-stone-400 hover:text-white" href="#">Request Callback</a>
+</div>
+</div>
+</footer>
+<!-- Floating CTA -->
+<a class="fixed bottom-8 right-8 z-[60] flex items-center space-x-3 bg-[#25D366] text-white px-6 py-4 rounded-full shadow-xl hover:scale-105 active:scale-95 transition-all duration-300" href="https://wa.me/5555555555?text=I%20am%20interested%20in%20the%20Tres%20Marias%20land%20bank.">
+<span class="material-symbols-outlined text-xl" data-icon="chat" data-weight="fill">chat</span>
+<span class="font-button text-xs uppercase font-bold tracking-wider">Contáctanos</span>
+</a>
+</body></html>
