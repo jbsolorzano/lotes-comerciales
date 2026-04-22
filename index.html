@@ -3,7 +3,7 @@
 <html class="light" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>TRES MARÍAS | Strategic Land Banking</title>
+<title>TRES MARÍAS | Lotes comerciales</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,300;0,400;0,700;1,400&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -99,6 +99,9 @@
           },
         }
     </script>
+<script async
+  src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&v=beta&libraries=maps3d">
+</script>    
 <style>
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
@@ -126,10 +129,19 @@
 </header>
 <main class="pt-24">
 <!-- Hero Section -->
-<section class="relative h-[921px] w-full overflow-hidden flex items-center justify-center bg-stone-900">
-<img alt="Cinematic landscape" class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale-[0.3]" data-alt="Cinematic low-angle wide shot of vast rolling golden hills at sunrise with long shadows and soft ethereal morning mist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3pD9howAiruiB8uhkjkK5w9UUp64zCHX93YsZMGVY4PPGOWcbcs8y_bG80zVACQFHb2S7Go1PQ-aywjTwkX10hbfVWm-UovCtTTVlXUpIIFDPk4Ovm0KouczsFYaEGhsSiv8ZvAvOI2IXMuPZyu5xUFYeVJMIIiaBypB19SJ_AnuJZlFUF_P7sLJzSGAf0yhmXjMd8KlrVfl7RWt7PahNfRoPuBpZLAY9T2OgoQ2VCQqhjH0KUgWYtXC50d1W0x_sOcM4YuZgGreQ"/>
+<section class="relative h-[800px] w-full overflow-hidden flex items-center justify-center bg-stone-900">
+<video
+  class="absolute inset-0 w-full h-full object-cover"
+  autoplay
+  muted
+  loop
+  playsinline
+>
+  <source src="assets/predios-overview.mp4" type="video/mp4" />
+</video>
+<div class="absolute inset-0 bg-black/50"></div>
 <div class="relative z-10 text-center max-w-4xl px-gutter">
-<h2 class="font-headline-lg text-display-xl text-white mb-6">Tres Marías: Strategic Land Bank</h2>
+<h2 class="font-headline-lg text-display-xl text-white mb-6">Tres Marías: Lotes Comerciales</h2>
 <p class="font-body-lg text-white/80 max-w-2xl mx-auto mb-10 tracking-wide uppercase text-sm">Exclusive acquisition opportunities in high-growth corridors.</p>
 <div class="h-1 w-24 bg-white/40 mx-auto"></div>
 </div>
@@ -221,15 +233,28 @@
 </aside>
 <!-- Map View Container -->
 <div class="flex-1 relative bg-stone-200 overflow-hidden">
-<img alt="Aerial satellite map view" class="absolute inset-0 w-full h-full object-cover" data-alt="High-altitude professional satellite hybrid map view showing detailed topography, geometric parcel boundaries in neon green and yellow, and strategic road infrastructure" data-location="Querétaro, Mexico" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5dkZXtMCN2v_ELtssGX0FbvTIw041KuaRKPFGTKnHNTXO_6RPC35zFRlPh59fjsJrXlFKsldFxDwSPfciOxyXve_WLpfOCEBF3kYp96bhuoBfP1rsP5_tpY6dfGeGK9Iyn2SJl7P_GFVILKEPyaqy-RLSlrxqnn_1S83FFzxiY63svs4oGVc5U33XU-qdRLNLqJ3udxtdkyEns280GFOymnyWzuPCtzjoXh_vKO3BVFZmPpFBiLFlDkxGmhxbXHJP4ocuISr90x6D"/>
-<!-- Simulated Interactive Boundaries Overlay -->
-<svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40">
-<rect class="pointer-events-auto cursor-pointer" fill="none" height="150" stroke="#6b5d40" stroke-width="2" width="100" x="20%" y="30%"></rect>
-<rect class="pointer-events-auto cursor-pointer" fill="none" height="120" stroke="#171819" stroke-width="2" width="200" x="45%" y="15%"></rect>
-<rect class="pointer-events-auto cursor-pointer" fill="none" height="80" stroke="#6b5d40" stroke-width="2" width="120" x="10%" y="50%"></rect>
-</svg>
+<div class="flex-1 relative bg-stone-200 overflow-hidden">
+
+  <!-- 🌍 3D Google Map -->
+  <gmp-map-3d
+    class="absolute inset-0 w-full h-full"
+    center="19.7008,-101.1844"
+    zoom="16"
+    tilt="65"
+    heading="40"
+    range="1500"
+    map-type-id="satellite"
+  >
+    <!-- 📍 Your KML plots -->
+    <!-- <gmp-kml-layer url="assets/predio-Tres-Marias.kml"></gmp-kml-layer> -->
+  </gmp-map-3d>
+
+  <!-- Optional dark overlay (keeps your aesthetic) -->
+  <div class="absolute inset-0 bg-black/30 pointer-events-none"></div>
+
+
 <!-- Simulated Info Card Popup -->
-<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 bg-white p-8 border border-stone-200/50 shadow-2xl z-50">
+<!-- <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 bg-white p-8 border border-stone-200/50 shadow-2xl z-50">
 <div class="flex justify-between items-start mb-6">
 <div>
 <p class="text-[10px] font-sans uppercase tracking-widest text-stone-400 mb-1">Estate Reference</p>
@@ -257,7 +282,7 @@
 <span class="material-symbols-outlined text-sm">chat</span>
 <span class="font-button text-[10px] uppercase tracking-widest">Contáctanos</span>
 </a>
-</div>
+</div> -->
 <!-- Map Controls -->
 <div class="absolute bottom-10 right-10 flex flex-col space-y-2">
 <button class="w-12 h-12 bg-white flex items-center justify-center text-stone-900 border border-stone-200 hover:bg-stone-50">
@@ -289,8 +314,12 @@
 </div>
 </footer>
 <!-- Floating CTA -->
-<a class="fixed bottom-8 right-8 z-[60] flex items-center space-x-3 bg-[#25D366] text-white px-6 py-4 rounded-full shadow-xl hover:scale-105 active:scale-95 transition-all duration-300" href="https://wa.me/5555555555?text=I%20am%20interested%20in%20the%20Tres%20Marias%20land%20bank.">
-<span class="material-symbols-outlined text-xl" data-icon="chat" data-weight="fill">chat</span>
-<span class="font-button text-xs uppercase font-bold tracking-wider">Contáctanos</span>
+<a href="https://wa.me/5555555555?text=I%20am%20interested%20in%20the%20Tres%20Marias%20land%20bank."
+   class="fixed bottom-8 right-8 z-[60] w-16 h-16 flex items-center justify-center bg-[#25D366] rounded-full shadow-xl hover:scale-110 active:scale-95 transition duration-300">
+
+  <img src="assets/WhatsApp.svg"
+       alt="WhatsApp"
+       class="w-10 h-10 object-contain" />
+
 </a>
 </body></html>
