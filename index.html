@@ -243,14 +243,16 @@
 </aside>
 <!-- Map View Container -->
 <div class="flex-1 relative bg-stone-200 overflow-hidden">
-  <gmp-map-3d mode="hybrid" center="37.841157, -122.551679" range="2000" tilt="75" heading="330"></gmp-map-3d>
+  <gmp-map-3d 
+    mode="hybrid" 
+    center="20.588, -100.389" 
+    range="1200"  
+    tilt="65"  
+    heading="0">
+  </gmp-map-3d>
     <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMVkVC9t1s4Fc-iJVmsvmGUgCvfnKfMMs&v=beta&libraries=maps3d"></script>
   <!-- <gmp-map-3d 
     id="main-map"
-    center="20.588, -100.389" 
-    tilt="65" 
-    range="1200" 
-    heading="0"
     class="absolute inset-0 w-full h-full">
     
     <gmp-kml-layer src="assets/predio-Tres-Marias.kml"></gmp-kml-layer>
