@@ -100,7 +100,7 @@
         }
     </script>
 
-<script>
+<!-- <script>
   function initMap() {
     // Your code to create the map goes here
     console.log("Map is ready!");
@@ -111,7 +111,7 @@
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMVkVC9t1s4Fc-iJVmsvmGUgCvfnKfMMs&libraries=maps3d&loading=async&callback=initMap" 
   async 
   defer>
-</script>
+</script> -->
 <style>
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
@@ -243,7 +243,9 @@
 </aside>
 <!-- Map View Container -->
 <div class="flex-1 relative bg-stone-200 overflow-hidden">
-  <gmp-map-3d 
+  <gmp-map-3d mode="hybrid" center="37.841157, -122.551679" range="2000" tilt="75" heading="330"></gmp-map-3d>
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMVkVC9t1s4Fc-iJVmsvmGUgCvfnKfMMs&v=beta&libraries=maps3d"></script>
+  <!-- <gmp-map-3d 
     id="main-map"
     center="20.588, -100.389" 
     tilt="65" 
@@ -251,9 +253,9 @@
     heading="0"
     class="absolute inset-0 w-full h-full">
     
-    <!-- <gmp-kml-layer src="assets/predio-Tres-Marias.kml"></gmp-kml-layer> -->
+    <gmp-kml-layer src="assets/predio-Tres-Marias.kml"></gmp-kml-layer>
     
-  </gmp-map-3d>
+  </gmp-map-3d> -->
   <!-- Optional dark overlay (keeps your aesthetic) -->
   <div class="absolute inset-0 bg-black/30 pointer-events-none"></div>
 </div>
