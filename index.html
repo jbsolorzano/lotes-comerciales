@@ -153,13 +153,13 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-24 items-start">
 <div class="space-y-8">
 <p class="font-headline-md text-2xl leading-relaxed text-primary">
-                        Founded on a legacy of stewardship, Tres Marías represents a paradigm shift in land acquisition, where environmental preservation meets strategic urban growth.
+                        Ubicada al Oriente de la ciudad de Morelia, aquí va algún texto inspiracional, por ejemplo, Tres Marías represents a paradigm shift in land acquisition, where environmental preservation meets strategic urban growth.
                     </p>
 <div class="h-px w-20 bg-stone-300"></div>
 </div>
 <div class="space-y-8">
 <p class="font-body-lg text-stone-600 leading-loose">
-                        Our commitment to quality is unwavering. We identify and secure high-growth corridors before they reach the public market, ensuring our partners benefit from early-entry valuations and meticulous legal vetting. Every parcel in our bank is selected for its unique topography, infrastructure proximity, and long-term appreciation potential.
+                        La reserva cuenta con un total de 58 Has. De las cuales 27 Has tienen con vocación empresarial destinadas a desarrollo de Corporativos/ Call Centers y áreas comerciales. 20 has por desarrollar en los próximos 5 años.
                     </p>
 <p class="font-body-lg text-stone-600 leading-loose">
                         This is more than a transaction; it is an invitation to participate in a curated legacy. We bridge the gap between institutional-grade intelligence and the bespoke requirements of private family offices, offering a seamless path to land ownership in the region's most promising sectors.
@@ -190,37 +190,9 @@
 </button>
 </div>
 </div>
-<!-- Plot List -->
+<!-- Plot List — populated dynamically from KML + lotes-data.json -->
 <div class="flex-1 overflow-y-auto px-4 py-6 bg-surface">
-<div class="space-y-4">
-<!-- Plot Item 1 -->
-<div class="p-4 border border-stone-200 bg-white group cursor-pointer hover:border-stone-400 transition-colors">
-<div class="flex justify-between items-start mb-2">
-<span class="text-[10px] uppercase tracking-tighter text-secondary font-bold">Residential</span>
-<span class="text-[10px] px-2 py-0.5 border border-stone-200 text-stone-500 uppercase">Available</span>
-</div>
-<h4 class="font-headline-md text-sm mb-1">Lote Alpha-12</h4>
-<p class="text-xs text-stone-400">4,200 Sq Ft • Sector 4</p>
-</div>
-<!-- Plot Item 2 -->
-<div class="p-4 border border-stone-200 bg-white group cursor-pointer hover:border-stone-400 transition-colors">
-<div class="flex justify-between items-start mb-2">
-<span class="text-[10px] uppercase tracking-tighter text-tertiary font-bold">Commercial</span>
-<span class="text-[10px] px-2 py-0.5 border border-stone-200 text-stone-500 uppercase">Reserved</span>
-</div>
-<h4 class="font-headline-md text-sm mb-1">Corner Block B</h4>
-<p class="text-xs text-stone-400">12,500 Sq Ft • Sector 1</p>
-</div>
-<!-- Repeat for 29 plots simulated... -->
-<div class="p-4 border border-stone-200 bg-white group cursor-pointer hover:border-stone-400 transition-colors">
-<div class="flex justify-between items-start mb-2">
-<span class="text-[10px] uppercase tracking-tighter text-secondary font-bold">Residential</span>
-<span class="text-[10px] px-2 py-0.5 border border-stone-200 text-stone-500 uppercase">Available</span>
-</div>
-<h4 class="font-headline-md text-sm mb-1">Meadow View 04</h4>
-<p class="text-xs text-stone-400">5,800 Sq Ft • Sector 3</p>
-</div>
-</div>
+<div id="plot-list" class="space-y-4"></div>
 </div>
 <div class="p-6 border-t border-stone-100">
 <a class="block text-center w-full bg-secondary text-white py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-secondary/90 transition-colors" href="https://wa.me/5555555555?text=I%20am%20interested%20in%20the%20Tres%20Marias%20land%20bank.">
@@ -238,61 +210,149 @@
     heading="0">
   </gmp-map-3d>
   <script>
+  const polygonMap = {};   // lotId → Polygon3DElement
+  const lotMetaMap = {};   // lotId → metadata
   let activePolygon = null;
+  let activeLotId   = null;
 
   async function loadKMLPolygons() {
     const { Polygon3DElement } = await google.maps.importLibrary('maps3d');
-    const res = await fetch('assets/predios-Tres-Marias.kml');
-    if (!res.ok) return;
-    const text = await res.text();
-    const kml = new DOMParser().parseFromString(text, 'text/xml');
+
+    const [kmlRes, dataRes] = await Promise.all([
+      fetch('assets/predios-Tres-Marias.kml'),
+      fetch('assets/lotes-data.json').catch(() => null),
+    ]);
+    if (!kmlRes.ok) return;
+    const kmlText   = await kmlRes.text();
+    const lotesData = dataRes?.ok ? await dataRes.json() : {};
+
+    const kml = new DOMParser().parseFromString(kmlText, 'text/xml');
     if (kml.querySelector('parsererror')) return;
 
-    const map = document.querySelector('gmp-map-3d');
+    const map      = document.querySelector('gmp-map-3d');
+    const plotList = document.getElementById('plot-list');
 
     for (const pm of kml.querySelectorAll('Placemark')) {
       const coordElem = pm.querySelector('coordinates');
       if (!coordElem) continue;
-      const path = coordElem.textContent.trim()
-        .split(/\s+/)
-        .filter(Boolean)
-        .map(c => {
-          const [lng, lat, altitude] = c.split(',').map(Number);
-          return { lat, lng, altitude: altitude || 0 };
-        });
 
+      const lotId  = pm.getAttribute('id') ?? '';
       const name   = pm.querySelector('name')?.textContent?.trim() ?? '—';
       const desc   = pm.querySelector('description')?.textContent?.trim() ?? '';
       const zoning = desc.match(/Uso:\s*([^|]+)/)?.[1]?.trim() ?? '—';
       const area   = desc.match(/Superficie:\s*([^|]+)/)?.[1]?.trim() ?? '—';
-      const lotId  = pm.getAttribute('id') ?? '';
+      const { estado = 'Disponible', sector = '—', precio = null } = lotesData[lotId] ?? {};
+
+      const meta = { name, zoning, area, lotId, estado, sector, precio };
+      lotMetaMap[lotId] = meta;
+
+      const path = coordElem.textContent.trim()
+        .split(/\s+/).filter(Boolean)
+        .map(c => { const [lng, lat, alt] = c.split(',').map(Number); return { lat, lng, altitude: alt || 0 }; });
 
       const polygon = new Polygon3DElement();
       polygon.altitudeMode = 'CLAMP_TO_GROUND';
-      polygon.fillColor  = 'rgba(244, 224, 188, 0.5)';
-      polygon.strokeColor = '#6b5d40';
-      polygon.strokeWidth = 2;
+      polygon.fillColor    = defaultFill(estado);
+      polygon.strokeColor  = '#6b5d40';
+      polygon.strokeWidth  = 2;
       polygon.path = path;
-
-      polygon.addEventListener('gmp-click', () => {
-        if (activePolygon && activePolygon !== polygon) {
-          activePolygon.fillColor  = 'rgba(244, 224, 188, 0.5)';
-          activePolygon.strokeColor = '#6b5d40';
-          activePolygon.strokeWidth = 2;
-        }
-        polygon.fillColor  = 'rgba(255, 178, 60, 0.75)';
-        polygon.strokeColor = '#b45309';
-        polygon.strokeWidth = 3;
-        activePolygon = polygon;
-        showLotCard({ name, zoning, area, lotId });
-      });
-
+      polygonMap[lotId] = polygon;
+      polygon.addEventListener('gmp-click', () => selectLot(lotId));
       map.appendChild(polygon);
+
+      // Sidebar item
+      const item = document.createElement('div');
+      item.className = 'p-4 border border-stone-200 bg-white cursor-pointer hover:border-stone-400 transition-all';
+      item.dataset.lotId = lotId;
+      item.innerHTML = sidebarItemHTML(meta);
+      item.addEventListener('click', () => selectLot(lotId));
+      plotList.appendChild(item);
     }
 
-    // gmp-map-3d has no public API for control position; reposition via shadow DOM
+    repositionControls();
+  }
+
+  function defaultFill(estado) {
+    if (estado === 'Vendido')   return 'rgba(160, 160, 160, 0.35)';
+    if (estado === 'Reservado') return 'rgba(251, 191, 36, 0.35)';
+    return 'rgba(244, 224, 188, 0.5)';
+  }
+
+  function sidebarItemHTML({ name, zoning, area, estado, sector, precio }) {
+    const badge = {
+      'Disponible': 'text-stone-500 border-stone-200',
+      'Reservado':  'text-amber-600 border-amber-300',
+      'Vendido':    'text-red-400 border-red-200',
+    }[estado] ?? 'text-stone-500 border-stone-200';
+    const precioLine = precio
+      ? `<p class="text-xs text-stone-600 font-semibold mt-1.5">$${precio.toLocaleString('es-MX')} MXN</p>`
+      : '';
+    return `
+      <div class="flex justify-between items-start mb-2">
+        <span class="text-[10px] uppercase tracking-tighter text-secondary font-bold">${zoning}</span>
+        <span class="text-[10px] px-2 py-0.5 border ${badge} uppercase">${estado}</span>
+      </div>
+      <h4 class="font-serif text-sm mb-1 text-primary">${name}</h4>
+      <p class="text-xs text-stone-400">${area} · ${sector}</p>
+      ${precioLine}`;
+  }
+
+  function selectLot(lotId) {
+    const meta    = lotMetaMap[lotId];
+    const polygon = polygonMap[lotId];
+    if (!meta || !polygon) return;
+
+    if (activePolygon && activeLotId !== lotId) {
+      activePolygon.fillColor  = defaultFill(lotMetaMap[activeLotId]?.estado);
+      activePolygon.strokeColor = '#6b5d40';
+      activePolygon.strokeWidth = 2;
+    }
+    polygon.fillColor  = 'rgba(255, 178, 60, 0.8)';
+    polygon.strokeColor = '#b45309';
+    polygon.strokeWidth = 3;
+    activePolygon = polygon;
+    activeLotId   = lotId;
+
+    document.querySelectorAll('#plot-list > div').forEach(el =>
+      el.classList.remove('border-stone-800', 'bg-stone-50'));
+    const sidebarItem = document.querySelector(`#plot-list > div[data-lot-id="${lotId}"]`);
+    if (sidebarItem) {
+      sidebarItem.classList.add('border-stone-800', 'bg-stone-50');
+      sidebarItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    showLotCard(meta);
+  }
+
+  function showLotCard({ name, zoning, area, lotId, estado, sector, precio }) {
+    document.getElementById('card-ref').textContent    = lotId.replace('_', '-').toUpperCase();
+    document.getElementById('card-name').textContent   = name;
+    document.getElementById('card-zoning').textContent = zoning;
+    document.getElementById('card-area').textContent   = area;
+    document.getElementById('card-sector').textContent = sector;
+    document.getElementById('card-estado').textContent = estado;
+    document.getElementById('card-precio').textContent = precio ? `$${precio.toLocaleString('es-MX')} MXN` : '—';
+    const msg = encodeURIComponent(`Estoy interesado en ${name} del proyecto Tres Marías.`);
+    document.getElementById('card-cta').href = `https://wa.me/5544996922?text=${msg}`;
+    document.getElementById('lot-detail-card').classList.remove('hidden');
+  }
+
+  function closeLotCard() {
+    document.getElementById('lot-detail-card').classList.add('hidden');
+    if (activePolygon) {
+      activePolygon.fillColor  = defaultFill(lotMetaMap[activeLotId]?.estado);
+      activePolygon.strokeColor = '#6b5d40';
+      activePolygon.strokeWidth = 2;
+    }
+    activePolygon = null;
+    activeLotId   = null;
+    document.querySelectorAll('#plot-list > div').forEach(el =>
+      el.classList.remove('border-stone-800', 'bg-stone-50'));
+  }
+
+  function repositionControls() {
     setTimeout(() => {
-      const shadow = map.shadowRoot;
+      const shadow = document.querySelector('gmp-map-3d').shadowRoot;
       if (!shadow) return;
       for (const el of shadow.querySelectorAll('div')) {
         const cs = getComputedStyle(el);
@@ -305,26 +365,6 @@
         }
       }
     }, 800);
-  }
-
-  function showLotCard({ name, zoning, area, lotId }) {
-    document.getElementById('card-ref').textContent  = lotId.replace('_', '-').toUpperCase();
-    document.getElementById('card-name').textContent = name;
-    document.getElementById('card-zoning').textContent = zoning;
-    document.getElementById('card-area').textContent   = area;
-    const msg = encodeURIComponent(`Estoy interesado en ${name} del proyecto Tres Marías.`);
-    document.getElementById('card-cta').href = `https://wa.me/5544996922?text=${msg}`;
-    document.getElementById('lot-detail-card').classList.remove('hidden');
-  }
-
-  function closeLotCard() {
-    document.getElementById('lot-detail-card').classList.add('hidden');
-    if (activePolygon) {
-      activePolygon.fillColor  = 'rgba(244, 224, 188, 0.5)';
-      activePolygon.strokeColor = '#6b5d40';
-      activePolygon.strokeWidth = 2;
-      activePolygon = null;
-    }
   }
   </script>
   <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMVkVC9t1s4Fc-iJVmsvmGUgCvfnKfMMs&v=beta&libraries=maps3d&loading=async&callback=loadKMLPolygons"></script>
@@ -351,8 +391,16 @@
           <span id="card-area" class="text-xs font-semibold uppercase">—</span>
         </div>
         <div class="flex justify-between items-center border-b border-stone-100 pb-2">
+          <span class="text-xs text-stone-400 uppercase tracking-widest">Sector</span>
+          <span id="card-sector" class="text-xs font-semibold uppercase">—</span>
+        </div>
+        <div class="flex justify-between items-center border-b border-stone-100 pb-2">
           <span class="text-xs text-stone-400 uppercase tracking-widest">Estado</span>
-          <span class="text-xs font-semibold uppercase text-secondary">Disponible</span>
+          <span id="card-estado" class="text-xs font-semibold uppercase">—</span>
+        </div>
+        <div class="flex justify-between items-center border-b border-stone-100 pb-2">
+          <span class="text-xs text-stone-400 uppercase tracking-widest">Precio</span>
+          <span id="card-precio" class="text-xs font-semibold">—</span>
         </div>
       </div>
       <a id="card-cta" href="#" target="_blank" class="flex items-center justify-center space-x-3 w-full bg-primary text-white py-4 hover:bg-stone-800 transition-colors">
