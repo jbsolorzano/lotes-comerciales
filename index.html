@@ -196,7 +196,7 @@
 </div>
 <div class="p-6 border-t border-stone-100">
 <a class="block text-center w-full bg-secondary text-white py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-secondary/90 transition-colors" href="https://wa.me/5555555555?text=I%20am%20interested%20in%20the%20Tres%20Marias%20land%20bank.">
-                        WhatsApp Concierge
+                        Contacto
                     </a>
 </div>
 </aside>
@@ -252,10 +252,10 @@
 
       const polygon = new Polygon3DElement();
       polygon.altitudeMode = 'CLAMP_TO_GROUND';
-      const { fill, stroke } = defaultStyle(estado);
+      const { fill, stroke, strokeWidth } = defaultStyle(estado);
       polygon.fillColor    = fill;
       polygon.strokeColor  = stroke;
-      polygon.strokeWidth  = 2;
+      polygon.strokeWidth  = strokeWidth;
       polygon.path = path;
       polygonMap[lotId] = polygon;
       polygon.addEventListener('gmp-click', () => selectLot(lotId));
@@ -274,9 +274,9 @@
   }
 
   function defaultStyle(estado) {
-    if (estado === 'Vendido')   return { fill: 'rgba(125, 123, 116, 0.45)', stroke: '#5a5a62' };
-    if (estado === 'Reservado') return { fill: 'rgba(160, 210, 212, 0.55)', stroke: '#5aaab0' };
-    return                             { fill: 'rgba(91,  110, 184, 0.55)', stroke: '#3d5298' };
+    if (estado === 'Vendido')   return { fill: 'rgba(70, 70, 78, 0.82)',    stroke: '#111116', strokeWidth: 2.5 };
+    if (estado === 'Reservado') return { fill: 'rgba(160, 210, 212, 0.55)', stroke: '#5aaab0', strokeWidth: 2   };
+    return                             { fill: 'rgba(91,  110, 184, 0.55)', stroke: '#3d5298', strokeWidth: 2   };
   }
 
   function sidebarItemHTML({ name, zoning, area, estado, sector, precio }) {
@@ -307,7 +307,7 @@
       const prev = defaultStyle(lotMetaMap[activeLotId]?.estado);
       activePolygon.fillColor  = prev.fill;
       activePolygon.strokeColor = prev.stroke;
-      activePolygon.strokeWidth = 2;
+      activePolygon.strokeWidth = prev.strokeWidth;
     }
     polygon.fillColor  = 'rgba(255, 178, 60, 0.8)';
     polygon.strokeColor = '#b45309';
@@ -345,7 +345,7 @@
       const prev = defaultStyle(lotMetaMap[activeLotId]?.estado);
       activePolygon.fillColor  = prev.fill;
       activePolygon.strokeColor = prev.stroke;
-      activePolygon.strokeWidth = 2;
+      activePolygon.strokeWidth = prev.strokeWidth;
     }
     activePolygon = null;
     activeLotId   = null;
