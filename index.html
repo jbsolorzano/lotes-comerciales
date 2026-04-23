@@ -239,32 +239,18 @@
   </gmp-map-3d>
   <script>
   async function loadKMLPolygons() {
-    console.log('[KML] callback fired, importing maps3d library...');
-    const lib = await google.maps.importLibrary('maps3d');
-    console.log('[KML] library exports:', Object.keys(lib));
-    const { Polygon3DElement } = lib;
-
-    console.log('[KML] fetching KML file...');
+    const { Polygon3DElement } = await google.maps.importLibrary('maps3d');
     const res = await fetch('assets/predios-Tres-Marias.kml');
-    if (!res.ok) { console.error('[KML] fetch failed:', res.status, res.url); return; }
+    if (!res.ok) return;
     const text = await res.text();
-    console.log('[KML] fetched, byte length:', text.length);
-
     const kml = new DOMParser().parseFromString(text, 'text/xml');
-    const parseErr = kml.querySelector('parsererror');
-    if (parseErr) { console.error('[KML] XML parse error:', parseErr.textContent); return; }
+    if (kml.querySelector('parsererror')) return;
 
     const map = document.querySelector('gmp-map-3d');
-    console.log('[KML] map element:', map);
 
-    const placemarks = kml.querySelectorAll('Placemark');
-    console.log('[KML] placemarks found:', placemarks.length);
-
-    let created = 0;
-    for (const pm of placemarks) {
+    for (const pm of kml.querySelectorAll('Placemark')) {
       const coordElem = pm.querySelector('coordinates');
-      if (!coordElem) { console.warn('[KML] placemark missing <coordinates>, skipping'); continue; }
-
+      if (!coordElem) continue;
       const path = coordElem.textContent.trim()
         .split(/\s+/)
         .filter(Boolean)
@@ -273,19 +259,30 @@
           return { lat, lng, altitude: altitude || 0 };
         });
 
-      if (created === 0) console.log('[KML] first polygon sample coords:', path.slice(0, 3));
-
       const polygon = new Polygon3DElement();
       polygon.altitudeMode = 'CLAMP_TO_GROUND';
       polygon.fillColor = 'rgba(244, 224, 188, 0.5)';
       polygon.strokeColor = '#6b5d40';
       polygon.strokeWidth = 2;
       polygon.path = path;
-      console.log('[KML] polygon path set, length:', polygon.path?.length ?? 'undefined — path may be wrong property');
       map.appendChild(polygon);
-      created++;
     }
-    console.log('[KML] done, polygons appended to map:', created);
+
+    // gmp-map-3d has no public API for control position; reposition via shadow DOM
+    setTimeout(() => {
+      const shadow = map.shadowRoot;
+      if (!shadow) return;
+      for (const el of shadow.querySelectorAll('div')) {
+        const cs = getComputedStyle(el);
+        if ((cs.position === 'absolute' || cs.position === 'fixed') &&
+            cs.bottom !== 'auto' && parseFloat(cs.bottom) < 100) {
+          el.style.setProperty('bottom', 'auto', 'important');
+          el.style.setProperty('top', '16px', 'important');
+          el.style.setProperty('right', '16px', 'important');
+          el.style.setProperty('left', 'auto', 'important');
+        }
+      }
+    }, 800);
   }
   </script>
   <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMVkVC9t1s4Fc-iJVmsvmGUgCvfnKfMMs&v=beta&libraries=maps3d&loading=async&callback=loadKMLPolygons"></script>
