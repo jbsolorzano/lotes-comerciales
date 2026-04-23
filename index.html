@@ -240,8 +240,9 @@
   <script>
   async function loadKMLPolygons() {
     console.log('[KML] callback fired, importing maps3d library...');
-    const { Polygon3DElement } = await google.maps.importLibrary('maps3d');
-    console.log('[KML] Polygon3DElement available:', !!Polygon3DElement);
+    const lib = await google.maps.importLibrary('maps3d');
+    console.log('[KML] library exports:', Object.keys(lib));
+    const { Polygon3DElement } = lib;
 
     console.log('[KML] fetching KML file...');
     const res = await fetch('assets/predios-Tres-Marias.kml');
@@ -272,13 +273,15 @@
           return { lat, lng, altitude: altitude || 0 };
         });
 
-      const polygon = new Polygon3DElement({
-        altitudeMode: 'CLAMP_TO_GROUND',
-        fillColor: 'rgba(244, 224, 188, 0.5)',
-        strokeColor: '#6b5d40',
-        strokeWidth: 2,
-      });
+      if (created === 0) console.log('[KML] first polygon sample coords:', path.slice(0, 3));
+
+      const polygon = new Polygon3DElement();
+      polygon.altitudeMode = 'CLAMP_TO_GROUND';
+      polygon.fillColor = 'rgba(244, 224, 188, 0.5)';
+      polygon.strokeColor = '#6b5d40';
+      polygon.strokeWidth = 2;
       polygon.path = path;
+      console.log('[KML] polygon path set, length:', polygon.path?.length ?? 'undefined — path may be wrong property');
       map.appendChild(polygon);
       created++;
     }
