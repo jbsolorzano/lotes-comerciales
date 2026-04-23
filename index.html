@@ -243,12 +243,12 @@
       const area   = desc.match(/Superficie:\s*([^|]+)/)?.[1]?.trim() ?? '—';
       const { estado = 'Disponible', sector = '—', precio = null } = lotesData[lotId] ?? {};
 
-      const meta = { name, zoning, area, lotId, estado, sector, precio };
-      lotMetaMap[lotId] = meta;
-
       const path = coordElem.textContent.trim()
         .split(/\s+/).filter(Boolean)
         .map(c => { const [lng, lat, alt] = c.split(',').map(Number); return { lat, lng, altitude: alt || 0 }; });
+
+      const meta = { name, zoning, area, lotId, estado, sector, precio, path };
+      lotMetaMap[lotId] = meta;
 
       const polygon = new Polygon3DElement();
       polygon.altitudeMode = 'CLAMP_TO_GROUND';
@@ -258,7 +258,6 @@
       polygon.strokeWidth  = strokeWidth;
       polygon.path = path;
       polygonMap[lotId] = polygon;
-      polygon.addEventListener('gmp-click', () => selectLot(lotId));
       map.appendChild(polygon);
 
       // Sidebar item
@@ -270,7 +269,32 @@
       plotList.appendChild(item);
     }
 
+    // Single map-level click listener: more reliable than per-polygon gmp-click in beta
+    map.addEventListener('gmp-click', (e) => {
+      if (!e.position) return;
+      const { lat, lng } = e.position;
+      for (const [lotId, meta] of Object.entries(lotMetaMap)) {
+        if (pointInPolygon({ lat, lng }, meta.path)) {
+          selectLot(lotId);
+          return;
+        }
+      }
+    });
+
     repositionControls();
+  }
+
+  function pointInPolygon({ lat, lng }, path) {
+    let inside = false;
+    for (let i = 0, j = path.length - 1; i < path.length; j = i++) {
+      const xi = path[i].lng, yi = path[i].lat;
+      const xj = path[j].lng, yj = path[j].lat;
+      if (((yi > lat) !== (yj > lat)) &&
+          (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi)) {
+        inside = !inside;
+      }
+    }
+    return inside;
   }
 
   function defaultStyle(estado) {
