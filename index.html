@@ -252,8 +252,9 @@
 
       const polygon = new Polygon3DElement();
       polygon.altitudeMode = 'CLAMP_TO_GROUND';
-      polygon.fillColor    = defaultFill(estado);
-      polygon.strokeColor  = '#6b5d40';
+      const { fill, stroke } = defaultStyle(estado);
+      polygon.fillColor    = fill;
+      polygon.strokeColor  = stroke;
       polygon.strokeWidth  = 2;
       polygon.path = path;
       polygonMap[lotId] = polygon;
@@ -272,18 +273,18 @@
     repositionControls();
   }
 
-  function defaultFill(estado) {
-    if (estado === 'Vendido')   return 'rgba(160, 160, 160, 0.35)';
-    if (estado === 'Reservado') return 'rgba(251, 191, 36, 0.35)';
-    return 'rgba(244, 224, 188, 0.5)';
+  function defaultStyle(estado) {
+    if (estado === 'Vendido')   return { fill: 'rgba(120, 120, 130, 0.45)', stroke: '#5a5a62' };
+    if (estado === 'Reservado') return { fill: 'rgba(160, 210, 212, 0.55)', stroke: '#5aaab0' };
+    return                             { fill: 'rgba(91,  110, 184, 0.55)', stroke: '#3d5298' };
   }
 
   function sidebarItemHTML({ name, zoning, area, estado, sector, precio }) {
     const badge = {
-      'Disponible': 'text-stone-500 border-stone-200',
-      'Reservado':  'text-amber-600 border-amber-300',
-      'Vendido':    'text-red-400 border-red-200',
-    }[estado] ?? 'text-stone-500 border-stone-200';
+      'Disponible': 'text-blue-500 border-blue-200',
+      'Reservado':  'text-cyan-500 border-cyan-200',
+      'Vendido':    'text-stone-400 border-stone-300',
+    }[estado] ?? 'text-blue-500 border-blue-200';
     const precioLine = precio
       ? `<p class="text-xs text-stone-600 font-semibold mt-1.5">$${precio.toLocaleString('es-MX')} MXN</p>`
       : '';
@@ -303,8 +304,9 @@
     if (!meta || !polygon) return;
 
     if (activePolygon && activeLotId !== lotId) {
-      activePolygon.fillColor  = defaultFill(lotMetaMap[activeLotId]?.estado);
-      activePolygon.strokeColor = '#6b5d40';
+      const prev = defaultStyle(lotMetaMap[activeLotId]?.estado);
+      activePolygon.fillColor  = prev.fill;
+      activePolygon.strokeColor = prev.stroke;
       activePolygon.strokeWidth = 2;
     }
     polygon.fillColor  = 'rgba(255, 178, 60, 0.8)';
@@ -340,8 +342,9 @@
   function closeLotCard() {
     document.getElementById('lot-detail-card').classList.add('hidden');
     if (activePolygon) {
-      activePolygon.fillColor  = defaultFill(lotMetaMap[activeLotId]?.estado);
-      activePolygon.strokeColor = '#6b5d40';
+      const prev = defaultStyle(lotMetaMap[activeLotId]?.estado);
+      activePolygon.fillColor  = prev.fill;
+      activePolygon.strokeColor = prev.stroke;
       activePolygon.strokeWidth = 2;
     }
     activePolygon = null;
