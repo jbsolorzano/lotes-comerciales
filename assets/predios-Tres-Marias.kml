@@ -174,8 +174,8 @@
         </outerBoundaryIs>
       </Polygon>
 </Placemark>
-<Placemark id="mz07L05">
-<name>mz07L05</name>
+<Placemark id="mz08L05">
+<name>mz08L05</name>
 <styleUrl>#plotStyle</styleUrl>
       <Polygon>
         <tessellate>1</tessellate>
@@ -282,7 +282,7 @@
         </outerBoundaryIs>
       </Polygon>
 </Placemark>
-<Placemark id="kml_p24">
+<!-- <Placemark id="kml_p24">
 <name>kml_p24</name>
 <styleUrl>#plotStyle</styleUrl>
       <Polygon>
@@ -293,7 +293,7 @@
           </LinearRing>
         </outerBoundaryIs>
       </Polygon>
-</Placemark>
+</Placemark> -->
 <Placemark id="mz13L03">
 <name>mz13L03</name>
 <styleUrl>#plotStyle</styleUrl>
@@ -402,8 +402,8 @@
         </outerBoundaryIs>
       </Polygon>
 </Placemark>
-<Placemark id="mz07L04">
-<name>mz07L04</name>
+<Placemark id="mz08L04">
+<name>mz08L04</name>
 <styleUrl>#plotStyle</styleUrl>
       <Polygon>
         <tessellate>1</tessellate>
@@ -414,8 +414,8 @@
         </outerBoundaryIs>
       </Polygon>
 </Placemark>
-<Placemark id="mz07L03">
-<name>mz07L03</name>
+<Placemark id="mz08L03">
+<name>mz08L03</name>
 <styleUrl>#plotStyle</styleUrl>
       <Polygon>
         <tessellate>1</tessellate>
@@ -498,7 +498,7 @@
         </outerBoundaryIs>
       </Polygon>
 </Placemark>
-<Placemark id="kml_p42">
+<!-- <Placemark id="kml_p42">
 <name>kml_p42</name>
 <styleUrl>#plotStyle</styleUrl>
       <Polygon>
@@ -509,7 +509,7 @@
           </LinearRing>
         </outerBoundaryIs>
       </Polygon>
-</Placemark>
+</Placemark> -->
 <Placemark id="mz06L19">
 <name>mz06L19</name>
 <styleUrl>#plotStyle</styleUrl>
@@ -618,6 +618,7 @@
         </outerBoundaryIs>
       </Polygon>
 </Placemark>
+<!-- 
 <Placemark id="kml_p52">
 <name>kml_p52</name>
 <styleUrl>#plotStyle</styleUrl>
@@ -630,5 +631,6 @@
         </outerBoundaryIs>
       </Polygon>
 </Placemark>
+-->
 </Folder>
 </Document></kml>
