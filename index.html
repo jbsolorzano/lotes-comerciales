@@ -238,6 +238,8 @@
     heading="0">
   </gmp-map-3d>
   <script>
+  let activePolygon = null;
+
   async function loadKMLPolygons() {
     const { Polygon3DElement } = await google.maps.importLibrary('maps3d');
     const res = await fetch('assets/predios-Tres-Marias.kml');
@@ -259,12 +261,32 @@
           return { lat, lng, altitude: altitude || 0 };
         });
 
+      const name   = pm.querySelector('name')?.textContent?.trim() ?? '—';
+      const desc   = pm.querySelector('description')?.textContent?.trim() ?? '';
+      const zoning = desc.match(/Uso:\s*([^|]+)/)?.[1]?.trim() ?? '—';
+      const area   = desc.match(/Superficie:\s*([^|]+)/)?.[1]?.trim() ?? '—';
+      const lotId  = pm.getAttribute('id') ?? '';
+
       const polygon = new Polygon3DElement();
       polygon.altitudeMode = 'CLAMP_TO_GROUND';
-      polygon.fillColor = 'rgba(244, 224, 188, 0.5)';
+      polygon.fillColor  = 'rgba(244, 224, 188, 0.5)';
       polygon.strokeColor = '#6b5d40';
       polygon.strokeWidth = 2;
       polygon.path = path;
+
+      polygon.addEventListener('gmp-click', () => {
+        if (activePolygon && activePolygon !== polygon) {
+          activePolygon.fillColor  = 'rgba(244, 224, 188, 0.5)';
+          activePolygon.strokeColor = '#6b5d40';
+          activePolygon.strokeWidth = 2;
+        }
+        polygon.fillColor  = 'rgba(255, 178, 60, 0.75)';
+        polygon.strokeColor = '#b45309';
+        polygon.strokeWidth = 3;
+        activePolygon = polygon;
+        showLotCard({ name, zoning, area, lotId });
+      });
+
       map.appendChild(polygon);
     }
 
@@ -284,43 +306,64 @@
       }
     }, 800);
   }
+
+  function showLotCard({ name, zoning, area, lotId }) {
+    document.getElementById('card-ref').textContent  = lotId.replace('_', '-').toUpperCase();
+    document.getElementById('card-name').textContent = name;
+    document.getElementById('card-zoning').textContent = zoning;
+    document.getElementById('card-area').textContent   = area;
+    const msg = encodeURIComponent(`Estoy interesado en ${name} del proyecto Tres Marías.`);
+    document.getElementById('card-cta').href = `https://wa.me/5544996922?text=${msg}`;
+    document.getElementById('lot-detail-card').classList.remove('hidden');
+  }
+
+  function closeLotCard() {
+    document.getElementById('lot-detail-card').classList.add('hidden');
+    if (activePolygon) {
+      activePolygon.fillColor  = 'rgba(244, 224, 188, 0.5)';
+      activePolygon.strokeColor = '#6b5d40';
+      activePolygon.strokeWidth = 2;
+      activePolygon = null;
+    }
+  }
   </script>
   <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMVkVC9t1s4Fc-iJVmsvmGUgCvfnKfMMs&v=beta&libraries=maps3d&loading=async&callback=loadKMLPolygons"></script>
 
+  <!-- Lot Detail Card -->
+  <div id="lot-detail-card" class="hidden absolute bottom-8 left-8 w-72 bg-white border border-stone-200 shadow-2xl z-50 pointer-events-auto">
+    <div class="p-8">
+      <div class="flex justify-between items-start mb-6">
+        <div>
+          <p id="card-ref" class="text-[10px] font-sans uppercase tracking-widest text-stone-400 mb-1">—</p>
+          <h3 id="card-name" class="font-serif text-xl text-primary">—</h3>
+        </div>
+        <button onclick="closeLotCard()" class="text-stone-300 hover:text-stone-900 transition-colors mt-1">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+      <div class="space-y-4 mb-8">
+        <div class="flex justify-between items-center border-b border-stone-100 pb-2">
+          <span class="text-xs text-stone-400 uppercase tracking-widest">Uso</span>
+          <span id="card-zoning" class="text-xs font-semibold uppercase">—</span>
+        </div>
+        <div class="flex justify-between items-center border-b border-stone-100 pb-2">
+          <span class="text-xs text-stone-400 uppercase tracking-widest">Superficie</span>
+          <span id="card-area" class="text-xs font-semibold uppercase">—</span>
+        </div>
+        <div class="flex justify-between items-center border-b border-stone-100 pb-2">
+          <span class="text-xs text-stone-400 uppercase tracking-widest">Estado</span>
+          <span class="text-xs font-semibold uppercase text-secondary">Disponible</span>
+        </div>
+      </div>
+      <a id="card-cta" href="#" target="_blank" class="flex items-center justify-center space-x-3 w-full bg-primary text-white py-4 hover:bg-stone-800 transition-colors">
+        <span class="material-symbols-outlined text-sm">chat</span>
+        <span class="font-sans text-[10px] uppercase tracking-widest font-semibold">Contáctanos</span>
+      </a>
+    </div>
+  </div>
   <!-- Optional dark overlay (keeps your aesthetic) -->
   <div class="absolute inset-0 bg-black/30 pointer-events-none"></div>
 </div>
-
-<!-- Simulated Info Card Popup -->
-<!-- <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 bg-white p-8 border border-stone-200/50 shadow-2xl z-50">
-<div class="flex justify-between items-start mb-6">
-<div>
-<p class="text-[10px] font-sans uppercase tracking-widest text-stone-400 mb-1">Estate Reference</p>
-<h3 class="font-headline-md text-xl">Lote Alpha-12</h3>
-</div>
-<button class="text-stone-300 hover:text-stone-900 transition-colors">
-<span class="material-symbols-outlined">close</span>
-</button>
-</div>
-<div class="space-y-4 mb-8">
-<div class="flex justify-between items-center border-b border-stone-100 pb-2">
-<span class="text-xs text-stone-400 uppercase tracking-widest">Zoning</span>
-<span class="text-xs font-semibold uppercase">Residential</span>
-</div>
-<div class="flex justify-between items-center border-b border-stone-100 pb-2">
-<span class="text-xs text-stone-400 uppercase tracking-widest">Acreage</span>
-<span class="text-xs font-semibold uppercase">0.14 Acres</span>
-</div>
-<div class="flex justify-between items-center border-b border-stone-100 pb-2">
-<span class="text-xs text-stone-400 uppercase tracking-widest">Status</span>
-<span class="text-xs font-semibold uppercase text-secondary">Immediate Possession</span>
-</div>
-</div>
-<a class="flex items-center justify-center space-x-3 w-full bg-primary text-on-primary py-4 hover:bg-stone-800 transition-colors group" href="https://wa.me/5555555555?text=I%20am%20interested%20in%20Lote%20Alpha-12.">
-<span class="material-symbols-outlined text-sm">chat</span>
-<span class="font-button text-[10px] uppercase tracking-widest">Contáctanos</span>
-</a>
-</div> -->
 </div>
 </section>
 </main>
