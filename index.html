@@ -230,25 +230,63 @@
 </aside>
 <!-- Map View Container -->
 <div class="flex-1 relative bg-stone-200 overflow-hidden">
-  <gmp-polygon-3d altitude-mode="clamp-to-ground" fill-color="rgba(255, 255, 255, 0.4)" stroke-color="#ffffff" stroke-width="3">
-    <gmp-line-string-3d>
-      <script type="application/json">
-        [
-          {"lat": 19.71342, "lng": -101.11907},
-          {"lat": 19.71328, "lng": -101.11953},
-          {"lat": 19.71177, "lng": -101.11942},
-          {"lat": 19.71231, "lng": -101.11891},
-          {"lat": 19.71342, "lng": -101.11907}
-        ]
-      </script>
-    </gmp-line-string-3d>
-  </gmp-polygon-3d>
-    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMVkVC9t1s4Fc-iJVmsvmGUgCvfnKfMMs&v=beta&libraries=maps3d&loading=async&callback=Function.prototype"></script>
+  <gmp-map-3d 
+    mode="hybrid" 
+    center="19.712, -101.119" 
+    range="2000" 
+    tilt="45">
+
+    <gmp-polygon-3d altitude-mode="clamp-to-ground" fill-color="rgba(255, 255, 255, 0.4)" stroke-color="#ffffff" stroke-width="3">
+      <gmp-line-string-3d>
+        <script type="application/json">
+          [
+            {"lat": 19.71342, "lng": -101.11907},
+            {"lat": 19.71328, "lng": -101.11953},
+            {"lat": 19.71177, "lng": -101.11942},
+            {"lat": 19.71231, "lng": -101.11891},
+            {"lat": 19.71342, "lng": -101.11907}
+          ]
+        </script>
+      </gmp-line-string-3d>
+    </gmp-polygon-3d>
+
+  </gmp-map-3d>
+  <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMVkVC9t1s4Fc-iJVmsvmGUgCvfnKfMMs&v=beta&libraries=maps3d&loading=async&callback=Function.prototype"></script>
 
   <!-- Optional dark overlay (keeps your aesthetic) -->
   <div class="absolute inset-0 bg-black/30 pointer-events-none"></div>
 </div>
 
+<!-- Simulated Info Card Popup -->
+<!-- <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 bg-white p-8 border border-stone-200/50 shadow-2xl z-50">
+<div class="flex justify-between items-start mb-6">
+<div>
+<p class="text-[10px] font-sans uppercase tracking-widest text-stone-400 mb-1">Estate Reference</p>
+<h3 class="font-headline-md text-xl">Lote Alpha-12</h3>
+</div>
+<button class="text-stone-300 hover:text-stone-900 transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="space-y-4 mb-8">
+<div class="flex justify-between items-center border-b border-stone-100 pb-2">
+<span class="text-xs text-stone-400 uppercase tracking-widest">Zoning</span>
+<span class="text-xs font-semibold uppercase">Residential</span>
+</div>
+<div class="flex justify-between items-center border-b border-stone-100 pb-2">
+<span class="text-xs text-stone-400 uppercase tracking-widest">Acreage</span>
+<span class="text-xs font-semibold uppercase">0.14 Acres</span>
+</div>
+<div class="flex justify-between items-center border-b border-stone-100 pb-2">
+<span class="text-xs text-stone-400 uppercase tracking-widest">Status</span>
+<span class="text-xs font-semibold uppercase text-secondary">Immediate Possession</span>
+</div>
+</div>
+<a class="flex items-center justify-center space-x-3 w-full bg-primary text-on-primary py-4 hover:bg-stone-800 transition-colors group" href="https://wa.me/5555555555?text=I%20am%20interested%20in%20Lote%20Alpha-12.">
+<span class="material-symbols-outlined text-sm">chat</span>
+<span class="font-button text-[10px] uppercase tracking-widest">Contáctanos</span>
+</a>
+</div> -->
 </div>
 </section>
 </main>
