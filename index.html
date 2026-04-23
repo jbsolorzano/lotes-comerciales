@@ -230,28 +230,44 @@
 </aside>
 <!-- Map View Container -->
 <div class="flex-1 relative bg-stone-200 overflow-hidden">
-  <gmp-map-3d 
-    mode="hybrid" 
-    center="19.712, -101.119" 
-    range="2000" 
-    tilt="45">
-
-    <gmp-polygon-3d altitude-mode="clamp-to-ground" fill-color="rgba(255, 255, 255, 0.4)" stroke-color="#ffffff" stroke-width="3">
-      <gmp-line-string-3d>
-        <script type="application/json">
-          [
-            {"lat": 19.71342, "lng": -101.11907},
-            {"lat": 19.71328, "lng": -101.11953},
-            {"lat": 19.71177, "lng": -101.11942},
-            {"lat": 19.71231, "lng": -101.11891},
-            {"lat": 19.71342, "lng": -101.11907}
-          ]
-        </script>
-      </gmp-line-string-3d>
-    </gmp-polygon-3d>
-
+  <gmp-map-3d
+    mode="hybrid"
+    center="19.7224545, -101.1175265"
+    range="5000"
+    tilt="0"
+    heading="0">
   </gmp-map-3d>
-  <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMVkVC9t1s4Fc-iJVmsvmGUgCvfnKfMMs&v=beta&libraries=maps3d&loading=async&callback=Function.prototype"></script>
+  <script>
+  async function loadKMLPolygons() {
+    const { Polygon3DElement } = await google.maps.importLibrary('maps3d');
+    const res = await fetch('assets/predios-Tres-Marias.kml');
+    const text = await res.text();
+    const kml = new DOMParser().parseFromString(text, 'text/xml');
+    const map = document.querySelector('gmp-map-3d');
+
+    for (const pm of kml.querySelectorAll('Placemark')) {
+      const coordElem = pm.querySelector('coordinates');
+      if (!coordElem) continue;
+      const outerCoordinates = coordElem.textContent.trim()
+        .split(/\s+/)
+        .filter(Boolean)
+        .map(c => {
+          const [lng, lat, altitude] = c.split(',').map(Number);
+          return { lat, lng, altitude: altitude || 0 };
+        });
+
+      const polygon = new Polygon3DElement({
+        altitudeMode: 'CLAMP_TO_GROUND',
+        fillColor: 'rgba(244, 224, 188, 0.5)',
+        strokeColor: '#6b5d40',
+        strokeWidth: 2,
+      });
+      polygon.outerCoordinates = outerCoordinates;
+      map.appendChild(polygon);
+    }
+  }
+  </script>
+  <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMVkVC9t1s4Fc-iJVmsvmGUgCvfnKfMMs&v=beta&libraries=maps3d&loading=async&callback=loadKMLPolygons"></script>
 
   <!-- Optional dark overlay (keeps your aesthetic) -->
   <div class="absolute inset-0 bg-black/30 pointer-events-none"></div>
@@ -306,7 +322,7 @@
 </div>
 </footer>
 <!-- Floating CTA -->
-<a href="https://wa.me/5555555555?text=I%20am%20interested%20in%20the%20Tres%20Marias%20land%20bank."
+<a href="https://wa.me/5544996922?text=I%20am%20interested%20in%20the%20Tres%20Marias%20land%20bank."
    class="fixed bottom-8 right-8 z-[60] w-16 h-16 flex items-center justify-center bg-[#25D366] rounded-full shadow-xl hover:scale-110 active:scale-95 transition duration-300">
 
   <img src="assets/WhatsApp.svg"
