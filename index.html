@@ -239,16 +239,32 @@
   </gmp-map-3d>
   <script>
   async function loadKMLPolygons() {
+    console.log('[KML] callback fired, importing maps3d library...');
     const { Polygon3DElement } = await google.maps.importLibrary('maps3d');
-    const res = await fetch('assets/predios-Tres-Marias.kml');
-    const text = await res.text();
-    const kml = new DOMParser().parseFromString(text, 'text/xml');
-    const map = document.querySelector('gmp-map-3d');
+    console.log('[KML] Polygon3DElement available:', !!Polygon3DElement);
 
-    for (const pm of kml.querySelectorAll('Placemark')) {
+    console.log('[KML] fetching KML file...');
+    const res = await fetch('assets/predios-Tres-Marias.kml');
+    if (!res.ok) { console.error('[KML] fetch failed:', res.status, res.url); return; }
+    const text = await res.text();
+    console.log('[KML] fetched, byte length:', text.length);
+
+    const kml = new DOMParser().parseFromString(text, 'text/xml');
+    const parseErr = kml.querySelector('parsererror');
+    if (parseErr) { console.error('[KML] XML parse error:', parseErr.textContent); return; }
+
+    const map = document.querySelector('gmp-map-3d');
+    console.log('[KML] map element:', map);
+
+    const placemarks = kml.querySelectorAll('Placemark');
+    console.log('[KML] placemarks found:', placemarks.length);
+
+    let created = 0;
+    for (const pm of placemarks) {
       const coordElem = pm.querySelector('coordinates');
-      if (!coordElem) continue;
-      const outerCoordinates = coordElem.textContent.trim()
+      if (!coordElem) { console.warn('[KML] placemark missing <coordinates>, skipping'); continue; }
+
+      const path = coordElem.textContent.trim()
         .split(/\s+/)
         .filter(Boolean)
         .map(c => {
@@ -262,9 +278,11 @@
         strokeColor: '#6b5d40',
         strokeWidth: 2,
       });
-      polygon.outerCoordinates = outerCoordinates;
+      polygon.path = path;
       map.appendChild(polygon);
+      created++;
     }
+    console.log('[KML] done, polygons appended to map:', created);
   }
   </script>
   <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMVkVC9t1s4Fc-iJVmsvmGUgCvfnKfMMs&v=beta&libraries=maps3d&loading=async&callback=loadKMLPolygons"></script>
