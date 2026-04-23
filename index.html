@@ -114,13 +114,13 @@
 <div class="flex justify-between items-center w-full px-12 py-6 max-w-[1440px] mx-auto">
 <h1 class="text-2xl font-light tracking-[0.3em] text-white">TRES MARÍAS</h1>
 <nav class="hidden md:flex items-center space-x-12">
-<a class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="#">Portfolio</a>
-<a class="font-sans uppercase tracking-[0.2em] text-sm border-b pb-1 text-white border-white" href="#">Insights</a>
-<a class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="#">Legacy</a>
-<a class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="#">Contact</a>
+<a id="nosotrosBtn" class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="#">Nosotros</a>
+<a id="portfolioBtn" class="font-sans uppercase tracking-[0.2em] text-sm border-b pb-1 text-white border-white" href="#">Portfolio</a>
+<!-- <a class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="#">Legacy</a> -->
+<a class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="#">Contacto</a>
 </nav>
 <button class="px-8 py-3 text-button font-button uppercase tracking-widest transition-colors bg-white text-primary hover:bg-stone-200">
-                Request Callback
+                Contacto
             </button>
 </div>
 </header>
@@ -139,16 +139,16 @@
 <div class="absolute inset-0 bg-black/50"></div>
 <div class="relative z-10 text-center max-w-4xl px-gutter">
 <h2 class="font-headline-lg text-display-xl text-white mb-6">Tres Marías: Lotes Comerciales</h2>
-<p class="font-body-lg text-white/80 max-w-2xl mx-auto mb-10 tracking-wide uppercase text-sm">Exclusive acquisition opportunities in high-growth corridors.</p>
+<p class="font-body-lg text-white/80 max-w-2xl mx-auto mb-10 tracking-wide uppercase text-sm">Oportunidades exclusivas de adquisición en corredores de alto crecimiento.</p>
 <div class="h-1 w-24 bg-white/40 mx-auto"></div>
 </div>
 </section>
 <!-- About Section -->
-<section class="bg-[#F4F3F1] py-32 px-12">
+<section id="about" class="bg-[#F4F3F1] py-32 px-12">
 <div class="max-w-[1440px] mx-auto">
 <div class="mb-20">
-<span class="font-sans text-[10px] uppercase tracking-[0.4em] text-stone-400 mb-4 block">Our Philosophy</span>
-<h2 class="font-headline-lg text-5xl text-primary max-w-xl">The Vision</h2>
+<span class="font-sans text-[10px] uppercase tracking-[0.4em] text-stone-400 mb-4 block">Sobre nosotros</span>
+<h2 class="font-headline-lg text-5xl text-primary max-w-xl">Reserva Territorial</h2>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-24 items-start">
 <div class="space-y-8">
@@ -159,10 +159,10 @@
 </div>
 <div class="space-y-8">
 <p class="font-body-lg text-stone-600 leading-loose">
-                        La reserva cuenta con un total de 58 Has. De las cuales 27 Has tienen con vocación empresarial destinadas a desarrollo de Corporativos/ Call Centers y áreas comerciales. 20 has por desarrollar en los próximos 5 años.
+                        La reserva cuenta con un total de 58 hectáreas, de las cuales 27 hectáreas cuentan con vocación empresarial, destinadas a desarrollos corporativos, call centers y áreas comerciales. Adicionalmente, se contemplan 20 hectáreas para desarrollo en los próximos cinco años, asegurando una expansión ordenada y sostenida en el tiempo.
                     </p>
 <p class="font-body-lg text-stone-600 leading-loose">
-                        This is more than a transaction; it is an invitation to participate in a curated legacy. We bridge the gap between institutional-grade intelligence and the bespoke requirements of private family offices, offering a seamless path to land ownership in the region's most promising sectors.
+                        Acompañamos a nuestros clientes en todo el proceso, desde la identificación del terreno ideal hasta la consolidación de su inversión, facilitando un camino claro y seguro hacia la creación de valor patrimonial en los corredores con mayor proyección de la región.
                     </p>
 </div>
 </div>
@@ -173,21 +173,47 @@
 <!-- SideNavBar Component Logic (Integrated) -->
 <aside class="w-full md:w-80 bg-white border-r border-stone-300/20 flex flex-col h-full z-40">
 <div class="p-8 border-b border-stone-100">
-<h3 class="font-serif text-lg text-stone-900 tracking-tight mb-1">ESTATE FILTERS</h3>
-<p class="font-sans text-[10px] uppercase tracking-widest text-stone-400">Select zoning type</p>
-<div class="mt-8 grid grid-cols-1 gap-2">
-<button class="flex items-center space-x-4 p-4 bg-stone-100 text-stone-900 font-semibold transition-all">
-<span class="material-symbols-outlined text-sm" data-icon="map">map</span>
-<span class="font-sans text-xs uppercase tracking-widest">Overview</span>
-</button>
-<button class="flex items-center space-x-4 p-4 text-stone-400 hover:bg-stone-50 transition-all">
-<span class="material-symbols-outlined text-sm" data-icon="home_work">home_work</span>
-<span class="font-sans text-xs uppercase tracking-widest">Residential</span>
-</button>
-<button class="flex items-center space-x-4 p-4 text-stone-400 hover:bg-stone-50 transition-all">
-<span class="material-symbols-outlined text-sm" data-icon="business_center">business_center</span>
-<span class="font-sans text-xs uppercase tracking-widest">Commercial</span>
-</button>
+<h3 class="font-serif text-lg text-stone-900 tracking-tight mb-6">FILTROS DE BÚSQUEDA</h3>
+<div id="filter-dropdown" class="relative">
+  <!-- Trigger -->
+  <button id="filter-trigger" class="w-full flex items-center justify-between px-4 py-3.5 border border-stone-200 bg-white hover:bg-stone-50 text-left" style="transition:background 150ms ease;">
+    <div>
+      <p class="font-sans text-[9px] uppercase tracking-[0.15em] text-stone-400 mb-0.5">Uso de suelo</p>
+      <p id="filter-label" class="font-sans text-[11px] uppercase tracking-widest text-stone-900 font-semibold" style="transition:opacity 150ms ease;">(Todos)</p>
+    </div>
+    <span id="filter-chevron" class="material-symbols-outlined text-base text-stone-400 select-none" style="transition:transform 150ms ease;">expand_more</span>
+  </button>
+  <!-- Dropdown panel -->
+  <div id="filter-panel" style="height:0;overflow:hidden;transition:height 260ms ease;position:relative;z-index:10;">
+    <div id="filter-inner" style="opacity:0;transform:translateY(-4px);transition:opacity 180ms ease-out,transform 180ms ease-out;">
+      <div class="border border-t-0 border-stone-200 bg-white divide-y divide-stone-100">
+        <button data-filter="all"                              data-label="(Todos)"      class="filter-option w-full flex items-center space-x-3 px-4 py-3 border-l-2 border-stone-900 text-left" style="transition:background 150ms ease;">
+          <span class="material-symbols-outlined text-sm text-stone-600">map</span>
+          <span class="font-sans text-[11px] uppercase tracking-widest text-stone-900 font-semibold">(Todos)</span>
+        </button>
+        <button data-filter="SERVICIOS"                        data-label="Servicios"    class="filter-option w-full flex items-center space-x-3 px-4 py-3 border-l-2 border-transparent text-left" style="transition:background 150ms ease;">
+          <span class="material-symbols-outlined text-sm text-stone-400">build</span>
+          <span class="font-sans text-[11px] uppercase tracking-widest text-stone-500">Servicios</span>
+        </button>
+        <button data-filter="COMERCIAL"                        data-label="Comercial"    class="filter-option w-full flex items-center space-x-3 px-4 py-3 border-l-2 border-transparent text-left" style="transition:background 150ms ease;">
+          <span class="material-symbols-outlined text-sm text-stone-400">storefront</span>
+          <span class="font-sans text-[11px] uppercase tracking-widest text-stone-500">Comercial</span>
+        </button>
+        <button data-filter="HABITACIONAL DENSIDAD MEDIA"      data-label="Habitacional" class="filter-option w-full flex items-center space-x-3 px-4 py-3 border-l-2 border-transparent text-left" style="transition:background 150ms ease;">
+          <span class="material-symbols-outlined text-sm text-stone-400">apartment</span>
+          <span class="font-sans text-[11px] uppercase tracking-widest text-stone-500">Habitacional</span>
+        </button>
+        <button data-filter="MIXTO"                            data-label="Mixto"        class="filter-option w-full flex items-center space-x-3 px-4 py-3 border-l-2 border-transparent text-left" style="transition:background 150ms ease;">
+          <span class="material-symbols-outlined text-sm text-stone-400">layers</span>
+          <span class="font-sans text-[11px] uppercase tracking-widest text-stone-500">Mixto</span>
+        </button>
+        <button data-filter="COMERCIAL (OFICINAS CORPORATIVAS)" data-label="Corporativo" class="filter-option w-full flex items-center space-x-3 px-4 py-3 border-l-2 border-transparent text-left" style="transition:background 150ms ease;">
+          <span class="material-symbols-outlined text-sm text-stone-400">corporate_fare</span>
+          <span class="font-sans text-[11px] uppercase tracking-widest text-stone-500">Corporativo</span>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 </div>
 <!-- Plot List — populated dynamically from KML + lotes-data.json -->
@@ -246,7 +272,7 @@
       if (!coordElem) continue;
 
       const lotId = pm.getAttribute('id') ?? '';
-      const { estado = 'Disponible', manzana = '—', lote = '—', uso_suelo = '—', superficie_m2 = '—', precio_por_m2 = null } = lotesData[lotId] ?? {};
+      const { estado = 'Disponible', manzana = '—', lote = '—', uso_suelo = '—', superficie_m2 = '—', precio_por_m2 = null, valor_final = null } = lotesData[lotId] ?? {};
       const area  = superficie_m2;
       const name  = (manzana !== '—' && lote !== '—')
         ? `MZ ${String(manzana).padStart(2, '0')} Lote ${String(lote).padStart(2, '0')}`
@@ -256,7 +282,7 @@
         .split(/\s+/).filter(Boolean)
         .map(c => { const [lng, lat, alt] = c.split(',').map(Number); return { lat, lng, altitude: alt || 0 }; });
 
-      const meta = { name, area, lotId, estado, manzana, lote, uso_suelo, precio_por_m2, path };
+      const meta = { name, area, lotId, estado, manzana, lote, uso_suelo, precio_por_m2, valor_final, path };
       lotMetaMap[lotId] = meta;
 
       const polygon = new Polygon3DElement();
@@ -272,7 +298,8 @@
       // Sidebar item
       const item = document.createElement('div');
       item.className = 'p-4 border border-stone-200 bg-white cursor-pointer hover:border-stone-400 transition-all';
-      item.dataset.lotId = lotId;
+      item.dataset.lotId   = lotId;
+      item.dataset.usoSuelo = uso_suelo;
       item.innerHTML = sidebarItemHTML(meta);
       item.addEventListener('click', () => selectLot(lotId));
       plotList.appendChild(item);
@@ -290,10 +317,10 @@
     // Hover: throttled with rAF so we don't run point-in-polygon on every pixel
     map.addEventListener('gmp-mousemove', (e) => {
       if (hoverFrame) return;
+      if (!e.position) return;
+      const { lat, lng } = e.position;
       hoverFrame = requestAnimationFrame(() => {
         hoverFrame = null;
-        if (!e.position) return;
-        const { lat, lng } = e.position;
 
         let foundId = null;
         for (const [id, meta] of Object.entries(lotMetaMap)) {
@@ -301,20 +328,19 @@
         }
         if (foundId === hoveredLotId) return;
 
-        // Reset previous hover (skip if it's the active selection)
         if (hoveredPolygon && hoveredLotId !== activeLotId) {
           const s = defaultStyle(lotMetaMap[hoveredLotId]?.estado);
-          hoveredPolygon.fillColor  = s.fill;
+          hoveredPolygon.fillColor   = s.fill;
           hoveredPolygon.strokeColor = s.stroke;
           hoveredPolygon.strokeWidth = s.strokeWidth;
         }
         hoveredLotId   = foundId;
         hoveredPolygon = foundId ? polygonMap[foundId] : null;
+        map.style.cursor = foundId ? 'pointer' : '';
 
-        // Apply hover style (skip if it's the active selection)
         if (hoveredPolygon && hoveredLotId !== activeLotId) {
           const s = hoverStyle(lotMetaMap[hoveredLotId].estado);
-          hoveredPolygon.fillColor  = s.fill;
+          hoveredPolygon.fillColor   = s.fill;
           hoveredPolygon.strokeColor = s.stroke;
           hoveredPolygon.strokeWidth = s.strokeWidth;
         }
@@ -325,12 +351,13 @@
     map.addEventListener('mouseleave', () => {
       if (hoveredPolygon && hoveredLotId !== activeLotId) {
         const s = defaultStyle(lotMetaMap[hoveredLotId]?.estado);
-        hoveredPolygon.fillColor  = s.fill;
+        hoveredPolygon.fillColor   = s.fill;
         hoveredPolygon.strokeColor = s.stroke;
         hoveredPolygon.strokeWidth = s.strokeWidth;
       }
       hoveredPolygon = null;
       hoveredLotId   = null;
+      map.style.cursor = '';
     });
 
     repositionControls();
@@ -350,28 +377,28 @@
   }
 
   function defaultStyle(estado) {
-    if (estado === 'VENDIDO')           return { fill: 'rgba(110, 110, 120, 0.82)', stroke: '#555560', strokeWidth: 2.5 };
-    if (estado === 'EN NEGOCIACIÓN')    return { fill: 'rgba(160, 210, 212, 0.60)', stroke: '#5aaab0', strokeWidth: 2   };
-    if (estado === 'DESARROLLO HERSO')  return { fill: 'rgba(220, 185, 175, 0.60)', stroke: '#c9897c', strokeWidth: 2   };
-    return                                     { fill: 'rgba(74,  111, 212, 0.60)', stroke: '#3a5aad', strokeWidth: 2   };
+    if (estado === 'VENDIDO')           return { fill: 'rgba(110, 110, 120, 0.82)', stroke: '#555560', strokeWidth: 4 };
+    if (estado === 'EN NEGOCIACIÓN')    return { fill: 'rgba(160, 210, 212, 0.60)', stroke: '#5aaab0', strokeWidth: 3   };
+    if (estado === 'DESARROLLO HERSO')  return { fill: 'rgba(220, 185, 175, 0.60)', stroke: '#c9897c', strokeWidth: 3   };
+    return                                     { fill: 'rgba(74,  111, 212, 0.60)', stroke: '#3a5aad', strokeWidth: 3   };
   }
 
   function hoverStyle(estado) {
-    if (estado === 'VENDIDO')           return { fill: 'rgba(130, 130, 140, 0.95)', stroke: '#333338', strokeWidth: 3   };
-    if (estado === 'EN NEGOCIACIÓN')    return { fill: 'rgba(130, 200, 205, 0.85)', stroke: '#3a8a90', strokeWidth: 3   };
-    if (estado === 'DESARROLLO HERSO')  return { fill: 'rgba(200, 155, 145, 0.85)', stroke: '#a86055', strokeWidth: 3   };
-    return                                     { fill: 'rgba(55,  90,  190, 0.85)', stroke: '#253f8a', strokeWidth: 3   };
+    if (estado === 'VENDIDO')           return { fill: 'rgba(130, 130, 140, 0.95)', stroke: '#333338', strokeWidth: 5   };
+    if (estado === 'EN NEGOCIACIÓN')    return { fill: 'rgba(130, 200, 205, 0.85)', stroke: '#3a8a90', strokeWidth: 5   };
+    if (estado === 'DESARROLLO HERSO')  return { fill: 'rgba(200, 155, 145, 0.85)', stroke: '#a86055', strokeWidth: 5   };
+    return                                     { fill: 'rgba(55,  90,  190, 0.85)', stroke: '#253f8a', strokeWidth: 5   };
   }
 
-  function sidebarItemHTML({ name, uso_suelo, area, estado, manzana, precio_por_m2 }) {
+  function sidebarItemHTML({ name, uso_suelo, area, estado, manzana, valor_final }) {
     const badge = {
       'DISPONIBLE':       'text-blue-600 border-blue-300',
       'VENDIDO':          'text-stone-500 border-stone-300',
       'EN NEGOCIACIÓN':   'text-cyan-600 border-cyan-300',
       'DESARROLLO HERSO': 'text-rose-400 border-rose-200',
     }[estado] ?? 'text-blue-600 border-blue-300';
-    const precioLine = precio_por_m2
-      ? `<p class="text-xs text-stone-600 font-semibold mt-1.5">${precio_por_m2} MXN/m²</p>`
+    const precioLine = valor_final
+      ? `<p class="text-xs text-stone-600 font-semibold mt-1.5">${valor_final} MXN</p>`
       : '';
     return `
       <div class="flex justify-between items-start mb-2">
@@ -412,14 +439,15 @@
   }
 
   function showLotCard(lotId) {
-    const { name, uso_suelo, area, estado, manzana, precio_por_m2 } = lotMetaMap[lotId];
-    document.getElementById('card-ref').textContent    = lotId.toUpperCase();
-    document.getElementById('card-name').textContent   = name;
-    document.getElementById('card-zoning').textContent = uso_suelo;
-    document.getElementById('card-area').textContent   = `${area} m²`;
-    document.getElementById('card-sector').textContent = `Manzana ${manzana}`;
-    document.getElementById('card-estado').textContent = estado;
-    document.getElementById('card-precio').textContent = precio_por_m2 ? `${precio_por_m2} MXN/m²` : '—';
+    const { name, uso_suelo, area, estado, manzana, precio_por_m2, valor_final } = lotMetaMap[lotId];
+    document.getElementById('card-ref').textContent      = lotId.toUpperCase();
+    document.getElementById('card-name').textContent     = name;
+    document.getElementById('card-zoning').textContent   = uso_suelo;
+    document.getElementById('card-area').textContent     = `${area} m²`;
+    document.getElementById('card-sector').textContent   = `Manzana ${manzana}`;
+    document.getElementById('card-estado').textContent   = estado;
+    document.getElementById('card-precio-m2').textContent = precio_por_m2 ? `${precio_por_m2} MXN/m²` : '—';
+    document.getElementById('card-precio').textContent   = valor_final ? `${valor_final} MXN` : '—';
     const msg = encodeURIComponent(`Estoy interesado en ${name} del proyecto Tres Marías.`);
     document.getElementById('card-cta').href = `https://wa.me/5544996922?text=${msg}`;
     document.getElementById('lot-detail-card').classList.remove('hidden');
@@ -455,6 +483,71 @@
       }
     }, 800);
   }
+
+  (function () {
+    const trigger  = document.getElementById('filter-trigger');
+    const panel    = document.getElementById('filter-panel');
+    const inner    = document.getElementById('filter-inner');
+    const chevron  = document.getElementById('filter-chevron');
+    const labelEl  = document.getElementById('filter-label');
+    const dropdown = document.getElementById('filter-dropdown');
+    let isOpen = false;
+
+    function openDropdown() {
+      isOpen = true;
+      panel.style.height = panel.scrollHeight + 'px';
+      chevron.style.transform = 'rotate(180deg)';
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        inner.style.opacity = '1';
+        inner.style.transform = 'translateY(0)';
+      }));
+    }
+
+    function closeDropdown() {
+      isOpen = false;
+      inner.style.opacity = '0';
+      inner.style.transform = 'translateY(-4px)';
+      panel.style.height = '0';
+      chevron.style.transform = '';
+    }
+
+    trigger.addEventListener('click', () => isOpen ? closeDropdown() : openDropdown());
+
+    document.addEventListener('click', (e) => {
+      if (isOpen && !dropdown.contains(e.target)) closeDropdown();
+    });
+
+    document.querySelectorAll('.filter-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        // Update active indicator on all options
+        document.querySelectorAll('.filter-option').forEach(o => {
+          o.style.borderLeftColor = 'transparent';
+          o.querySelector('span:last-child').style.cssText = 'color:rgb(120,113,108);font-weight:400;';
+          o.querySelector('.material-symbols-outlined').style.color = 'rgb(168,162,158)';
+        });
+        opt.style.borderLeftColor = 'rgb(28,25,23)';
+        opt.querySelector('span:last-child').style.cssText = 'color:rgb(28,25,23);font-weight:600;';
+        opt.querySelector('.material-symbols-outlined').style.color = 'rgb(87,83,78)';
+
+        // Crossfade label
+        labelEl.style.opacity = '0';
+        setTimeout(() => { labelEl.textContent = opt.dataset.label; labelEl.style.opacity = '1'; }, 150);
+
+        // Brief selection flash then close
+        opt.style.background = 'rgb(231,229,228)';
+        setTimeout(() => { opt.style.background = ''; closeDropdown(); }, 130);
+
+        // Apply plot filter
+        const filter = opt.dataset.filter;
+        document.querySelectorAll('#plot-list > div').forEach(item => {
+          const show = filter === 'all' || item.dataset.usoSuelo === filter;
+          item.style.display = show ? '' : 'none';
+          const poly = polygonMap[item.dataset.lotId];
+          if (poly) poly.style.display = show ? '' : 'none';
+        });
+      });
+    });
+  })();
   </script>
   <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMVkVC9t1s4Fc-iJVmsvmGUgCvfnKfMMs&v=beta&libraries=maps3d&loading=async&callback=loadKMLPolygons"></script>
 
@@ -489,6 +582,10 @@
         </div>
         <div class="flex justify-between items-center border-b border-stone-100 pb-2">
           <span class="text-xs text-stone-400 uppercase tracking-widest">Precio / m²</span>
+          <span id="card-precio-m2" class="text-xs font-semibold">—</span>
+        </div>
+        <div class="flex justify-between items-center border-b border-stone-100 pb-2">
+          <span class="text-xs text-stone-400 uppercase tracking-widest">Precio Total</span>
           <span id="card-precio" class="text-xs font-semibold">—</span>
         </div>
       </div>
@@ -515,7 +612,7 @@
 <a class="font-sans text-[10px] tracking-widest uppercase hover:text-stone-900 transition-colors text-stone-400 hover:text-white" href="#">Strategic Land</a>
 <a class="font-sans text-[10px] tracking-widest uppercase hover:text-stone-900 transition-colors text-stone-400 hover:text-white" href="#">Institutional</a>
 <a class="font-sans text-[10px] tracking-widest uppercase hover:text-stone-900 transition-colors text-stone-400 hover:text-white" href="#">Legal</a>
-<a class="font-sans text-[10px] tracking-widest uppercase hover:text-stone-900 transition-colors text-stone-400 hover:text-white" href="#">Request Callback</a>
+<a class="font-sans text-[10px] tracking-widest uppercase hover:text-stone-900 transition-colors text-stone-400 hover:text-white" href="#">Contacto</a>
 </div>
 </div>
 </footer>
@@ -528,4 +625,41 @@
        class="w-10 h-10 object-contain" />
 
 </a>
+<script>
+  (function () {
+    const DURATION   = 950;
+    const HEADER_OFF = 100;
+
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    function scrollToSection(target) {
+      const start    = window.scrollY;
+      const end      = target.getBoundingClientRect().top + start - HEADER_OFF;
+      const delta    = end - start;
+      const startTime = performance.now();
+
+      function tick(now) {
+        const elapsed  = now - startTime;
+        const progress = Math.min(elapsed / DURATION, 1);
+        window.scrollTo(0, start + delta * easeOutCubic(progress));
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    document.getElementById('nosotrosBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      scrollToSection(document.getElementById('about'));
+    });
+
+    document.getElementById('portfolioBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      scrollToSection(document.getElementById('explorer'));
+    });
+
+  })();
+</script>
 </body></html>
