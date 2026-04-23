@@ -225,32 +225,38 @@
       fetch('assets/predios-Tres-Marias.kml'),
       fetch('assets/lotes-data.json').catch(() => null),
     ]);
-    if (!kmlRes.ok) return;
+    if (!kmlRes.ok) { console.error('KML fetch failed:', kmlRes.status); return; }
     const kmlText   = await kmlRes.text();
     const lotesData = dataRes?.ok ? await dataRes.json() : {};
+    console.log('lotes-data keys:', Object.keys(lotesData).length);
 
     const kml = new DOMParser().parseFromString(kmlText, 'text/xml');
-    if (kml.querySelector('parsererror')) return;
+    const parseErr = kml.querySelector('parsererror') || kml.getElementsByTagName('parsererror')[0];
+    if (parseErr) { console.error('KML parse error:', parseErr.textContent); return; }
 
     const map      = document.querySelector('gmp-map-3d');
     const plotList = document.getElementById('plot-list');
 
-    for (const pm of kml.querySelectorAll('Placemark')) {
-      const coordElem = pm.querySelector('coordinates');
+    // getElementsByTagName is namespace-safe (querySelector can miss elements under xmlns)
+    const placemarks = Array.from(kml.getElementsByTagName('Placemark'));
+    console.log('Placemarks found:', placemarks.length);
+
+    for (const pm of placemarks) {
+      const coordElem = pm.getElementsByTagName('coordinates')[0];
       if (!coordElem) continue;
 
-      const lotId  = pm.getAttribute('id') ?? '';
-      const name   = pm.querySelector('name')?.textContent?.trim() ?? '—';
-      const desc   = pm.querySelector('description')?.textContent?.trim() ?? '';
-      const zoning = desc.match(/Uso:\s*([^|]+)/)?.[1]?.trim() ?? '—';
-      const area   = desc.match(/Superficie:\s*([^|]+)/)?.[1]?.trim() ?? '—';
-      const { estado = 'Disponible', sector = '—', precio = null } = lotesData[lotId] ?? {};
+      const lotId = pm.getAttribute('id') ?? '';
+      const { estado = 'Disponible', manzana = '—', lote = '—', uso_suelo = '—', superficie_m2 = '—', precio_por_m2 = null } = lotesData[lotId] ?? {};
+      const area  = superficie_m2;
+      const name  = (manzana !== '—' && lote !== '—')
+        ? `MZ ${String(manzana).padStart(2, '0')} Lote ${String(lote).padStart(2, '0')}`
+        : '—';
 
       const path = coordElem.textContent.trim()
         .split(/\s+/).filter(Boolean)
         .map(c => { const [lng, lat, alt] = c.split(',').map(Number); return { lat, lng, altitude: alt || 0 }; });
 
-      const meta = { name, zoning, area, lotId, estado, sector, precio, path };
+      const meta = { name, area, lotId, estado, manzana, lote, uso_suelo, precio_por_m2, path };
       lotMetaMap[lotId] = meta;
 
       const polygon = new Polygon3DElement();
@@ -344,33 +350,36 @@
   }
 
   function defaultStyle(estado) {
-    if (estado === 'Vendido')   return { fill: 'rgba(70,  70,  78,  0.82)', stroke: '#111116', strokeWidth: 2.5 };
-    if (estado === 'Reservado') return { fill: 'rgba(160, 210, 212, 0.55)', stroke: '#5aaab0', strokeWidth: 2   };
-    return                             { fill: 'rgba(91,  110, 184, 0.55)', stroke: '#3d5298', strokeWidth: 2   };
+    if (estado === 'VENDIDO')           return { fill: 'rgba(110, 110, 120, 0.82)', stroke: '#555560', strokeWidth: 2.5 };
+    if (estado === 'EN NEGOCIACIÓN')    return { fill: 'rgba(160, 210, 212, 0.60)', stroke: '#5aaab0', strokeWidth: 2   };
+    if (estado === 'DESARROLLO HERSO')  return { fill: 'rgba(220, 185, 175, 0.60)', stroke: '#c9897c', strokeWidth: 2   };
+    return                                     { fill: 'rgba(74,  111, 212, 0.60)', stroke: '#3a5aad', strokeWidth: 2   };
   }
 
   function hoverStyle(estado) {
-    if (estado === 'Vendido')   return { fill: 'rgba(90,  90,  100, 0.95)', stroke: '#111116', strokeWidth: 3   };
-    if (estado === 'Reservado') return { fill: 'rgba(130, 200, 205, 0.80)', stroke: '#3a8a90', strokeWidth: 3   };
-    return                             { fill: 'rgba(65,  90,  170, 0.80)', stroke: '#2a4080', strokeWidth: 3   };
+    if (estado === 'VENDIDO')           return { fill: 'rgba(130, 130, 140, 0.95)', stroke: '#333338', strokeWidth: 3   };
+    if (estado === 'EN NEGOCIACIÓN')    return { fill: 'rgba(130, 200, 205, 0.85)', stroke: '#3a8a90', strokeWidth: 3   };
+    if (estado === 'DESARROLLO HERSO')  return { fill: 'rgba(200, 155, 145, 0.85)', stroke: '#a86055', strokeWidth: 3   };
+    return                                     { fill: 'rgba(55,  90,  190, 0.85)', stroke: '#253f8a', strokeWidth: 3   };
   }
 
-  function sidebarItemHTML({ name, zoning, area, estado, sector, precio }) {
+  function sidebarItemHTML({ name, uso_suelo, area, estado, manzana, precio_por_m2 }) {
     const badge = {
-      'Disponible': 'text-blue-500 border-blue-200',
-      'Reservado':  'text-cyan-500 border-cyan-200',
-      'Vendido':    'text-stone-400 border-stone-300',
-    }[estado] ?? 'text-blue-500 border-blue-200';
-    const precioLine = precio
-      ? `<p class="text-xs text-stone-600 font-semibold mt-1.5">$${precio.toLocaleString('es-MX')} MXN</p>`
+      'DISPONIBLE':       'text-blue-600 border-blue-300',
+      'VENDIDO':          'text-stone-500 border-stone-300',
+      'EN NEGOCIACIÓN':   'text-cyan-600 border-cyan-300',
+      'DESARROLLO HERSO': 'text-rose-400 border-rose-200',
+    }[estado] ?? 'text-blue-600 border-blue-300';
+    const precioLine = precio_por_m2
+      ? `<p class="text-xs text-stone-600 font-semibold mt-1.5">${precio_por_m2} MXN/m²</p>`
       : '';
     return `
       <div class="flex justify-between items-start mb-2">
-        <span class="text-[10px] uppercase tracking-tighter text-secondary font-bold">${zoning}</span>
+        <span class="text-[10px] uppercase tracking-tighter text-secondary font-bold">${uso_suelo}</span>
         <span class="text-[10px] px-2 py-0.5 border ${badge} uppercase">${estado}</span>
       </div>
       <h4 class="font-serif text-sm mb-1 text-primary">${name}</h4>
-      <p class="text-xs text-stone-400">${area} · ${sector}</p>
+      <p class="text-xs text-stone-400">${area} m²</p>
       ${precioLine}`;
   }
 
@@ -399,17 +408,18 @@
       sidebarItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
-    showLotCard(meta);
+    showLotCard(lotId);
   }
 
-  function showLotCard({ name, zoning, area, lotId, estado, sector, precio }) {
-    document.getElementById('card-ref').textContent    = lotId.replace('_', '-').toUpperCase();
+  function showLotCard(lotId) {
+    const { name, uso_suelo, area, estado, manzana, precio_por_m2 } = lotMetaMap[lotId];
+    document.getElementById('card-ref').textContent    = lotId.toUpperCase();
     document.getElementById('card-name').textContent   = name;
-    document.getElementById('card-zoning').textContent = zoning;
-    document.getElementById('card-area').textContent   = area;
-    document.getElementById('card-sector').textContent = sector;
+    document.getElementById('card-zoning').textContent = uso_suelo;
+    document.getElementById('card-area').textContent   = `${area} m²`;
+    document.getElementById('card-sector').textContent = `Manzana ${manzana}`;
     document.getElementById('card-estado').textContent = estado;
-    document.getElementById('card-precio').textContent = precio ? `$${precio.toLocaleString('es-MX')} MXN` : '—';
+    document.getElementById('card-precio').textContent = precio_por_m2 ? `${precio_por_m2} MXN/m²` : '—';
     const msg = encodeURIComponent(`Estoy interesado en ${name} del proyecto Tres Marías.`);
     document.getElementById('card-cta').href = `https://wa.me/5544996922?text=${msg}`;
     document.getElementById('lot-detail-card').classList.remove('hidden');
@@ -462,7 +472,7 @@
       </div>
       <div class="space-y-4 mb-8">
         <div class="flex justify-between items-center border-b border-stone-100 pb-2">
-          <span class="text-xs text-stone-400 uppercase tracking-widest">Uso</span>
+          <span class="text-xs text-stone-400 uppercase tracking-widest">Uso de Suelo</span>
           <span id="card-zoning" class="text-xs font-semibold uppercase">—</span>
         </div>
         <div class="flex justify-between items-center border-b border-stone-100 pb-2">
@@ -470,7 +480,7 @@
           <span id="card-area" class="text-xs font-semibold uppercase">—</span>
         </div>
         <div class="flex justify-between items-center border-b border-stone-100 pb-2">
-          <span class="text-xs text-stone-400 uppercase tracking-widest">Sector</span>
+          <span class="text-xs text-stone-400 uppercase tracking-widest">Manzana</span>
           <span id="card-sector" class="text-xs font-semibold uppercase">—</span>
         </div>
         <div class="flex justify-between items-center border-b border-stone-100 pb-2">
@@ -478,7 +488,7 @@
           <span id="card-estado" class="text-xs font-semibold uppercase">—</span>
         </div>
         <div class="flex justify-between items-center border-b border-stone-100 pb-2">
-          <span class="text-xs text-stone-400 uppercase tracking-widest">Precio</span>
+          <span class="text-xs text-stone-400 uppercase tracking-widest">Precio / m²</span>
           <span id="card-precio" class="text-xs font-semibold">—</span>
         </div>
       </div>
