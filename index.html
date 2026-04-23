@@ -169,7 +169,7 @@
 </div>
 </section>
 <!-- Map Explorer Section -->
-<section class="flex flex-col md:flex-row h-[75vh] border-t border-stone-200" id="explorer">
+<section class="flex flex-col md:flex-row h-[80vh] border-t border-stone-200" id="explorer">
 <!-- SideNavBar Component Logic (Integrated) -->
 <aside class="w-full md:w-80 bg-white border-r border-stone-300/20 flex flex-col h-full z-40">
 <div class="p-8 border-b border-stone-100">
@@ -195,7 +195,7 @@
 <div id="plot-list" class="space-y-4"></div>
 </div>
 <div class="p-6 border-t border-stone-100">
-<a class="block text-center w-full bg-secondary text-white py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-secondary/90 transition-colors" href="https://wa.me/5555555555?text=Me%20interesa%20conocer%20mas%20de%20los%20lotes%20comerciales%20en%20Tres%20Marias.">
+<a class="block text-center w-full bg-secondary text-white py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-secondary/90 transition-colors" href="https://wa.me/5544996922?text=Me%20interesa%20conocer%20mas%20de%20los%20lotes%20comerciales%20en%20Tres%20Marias.">
                         Contacto
                     </a>
 </div>
@@ -212,8 +212,11 @@
   <script>
   const polygonMap = {};   // lotId → Polygon3DElement
   const lotMetaMap = {};   // lotId → metadata
-  let activePolygon = null;
-  let activeLotId   = null;
+  let activePolygon  = null;
+  let activeLotId    = null;
+  let hoveredPolygon = null;
+  let hoveredLotId   = null;
+  let hoverFrame     = null;
 
   async function loadKMLPolygons() {
     const { Polygon3DElement } = await google.maps.importLibrary('maps3d');
@@ -269,16 +272,59 @@
       plotList.appendChild(item);
     }
 
-    // Single map-level click listener: more reliable than per-polygon gmp-click in beta
+    // Map-level click — more reliable than per-polygon gmp-click in beta
     map.addEventListener('gmp-click', (e) => {
       if (!e.position) return;
       const { lat, lng } = e.position;
       for (const [lotId, meta] of Object.entries(lotMetaMap)) {
-        if (pointInPolygon({ lat, lng }, meta.path)) {
-          selectLot(lotId);
-          return;
-        }
+        if (pointInPolygon({ lat, lng }, meta.path)) { selectLot(lotId); return; }
       }
+    });
+
+    // Hover: throttled with rAF so we don't run point-in-polygon on every pixel
+    map.addEventListener('gmp-mousemove', (e) => {
+      if (hoverFrame) return;
+      hoverFrame = requestAnimationFrame(() => {
+        hoverFrame = null;
+        if (!e.position) return;
+        const { lat, lng } = e.position;
+
+        let foundId = null;
+        for (const [id, meta] of Object.entries(lotMetaMap)) {
+          if (pointInPolygon({ lat, lng }, meta.path)) { foundId = id; break; }
+        }
+        if (foundId === hoveredLotId) return;
+
+        // Reset previous hover (skip if it's the active selection)
+        if (hoveredPolygon && hoveredLotId !== activeLotId) {
+          const s = defaultStyle(lotMetaMap[hoveredLotId]?.estado);
+          hoveredPolygon.fillColor  = s.fill;
+          hoveredPolygon.strokeColor = s.stroke;
+          hoveredPolygon.strokeWidth = s.strokeWidth;
+        }
+        hoveredLotId   = foundId;
+        hoveredPolygon = foundId ? polygonMap[foundId] : null;
+
+        // Apply hover style (skip if it's the active selection)
+        if (hoveredPolygon && hoveredLotId !== activeLotId) {
+          const s = hoverStyle(lotMetaMap[hoveredLotId].estado);
+          hoveredPolygon.fillColor  = s.fill;
+          hoveredPolygon.strokeColor = s.stroke;
+          hoveredPolygon.strokeWidth = s.strokeWidth;
+        }
+      });
+    });
+
+    // Reset hover when mouse leaves the map
+    map.addEventListener('mouseleave', () => {
+      if (hoveredPolygon && hoveredLotId !== activeLotId) {
+        const s = defaultStyle(lotMetaMap[hoveredLotId]?.estado);
+        hoveredPolygon.fillColor  = s.fill;
+        hoveredPolygon.strokeColor = s.stroke;
+        hoveredPolygon.strokeWidth = s.strokeWidth;
+      }
+      hoveredPolygon = null;
+      hoveredLotId   = null;
     });
 
     repositionControls();
@@ -298,9 +344,15 @@
   }
 
   function defaultStyle(estado) {
-    if (estado === 'Vendido')   return { fill: 'rgba(70, 70, 78, 0.82)',    stroke: '#111116', strokeWidth: 2.5 };
+    if (estado === 'Vendido')   return { fill: 'rgba(70,  70,  78,  0.82)', stroke: '#111116', strokeWidth: 2.5 };
     if (estado === 'Reservado') return { fill: 'rgba(160, 210, 212, 0.55)', stroke: '#5aaab0', strokeWidth: 2   };
     return                             { fill: 'rgba(91,  110, 184, 0.55)', stroke: '#3d5298', strokeWidth: 2   };
+  }
+
+  function hoverStyle(estado) {
+    if (estado === 'Vendido')   return { fill: 'rgba(90,  90,  100, 0.95)', stroke: '#111116', strokeWidth: 3   };
+    if (estado === 'Reservado') return { fill: 'rgba(130, 200, 205, 0.80)', stroke: '#3a8a90', strokeWidth: 3   };
+    return                             { fill: 'rgba(65,  90,  170, 0.80)', stroke: '#2a4080', strokeWidth: 3   };
   }
 
   function sidebarItemHTML({ name, zoning, area, estado, sector, precio }) {
@@ -458,7 +510,7 @@
 </div>
 </footer>
 <!-- Floating CTA -->
-<a href="https://wa.me/5544996922?text=I%20am%20interested%20in%20the%20Tres%20Marias%20land%20bank."
+<a href="https://wa.me/5544996922?text=Me%20interesa%20conocer%20mas%20de%20los%20lotes%20comerciales%20en%20Tres%20Marias."
    class="fixed bottom-8 right-8 z-[60] w-16 h-16 flex items-center justify-center bg-[#25D366] rounded-full shadow-xl hover:scale-110 active:scale-95 transition duration-300">
 
   <img src="assets/WhatsApp.svg"
