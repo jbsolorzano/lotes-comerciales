@@ -100,6 +100,15 @@
         }
     </script>
 <style>
+      gmp-map-3d {
+        display: block; /* Ensure it behaves like a block element */
+        height: 100%;   /* Fill the parent */
+        width: 100%;
+        filter: brightness(0.7);
+      }
+        #explorer .flex-1.relative {
+    min-height: 400px; /* Forces a minimum visibility on mobile devices */
+  }
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
         }
@@ -227,7 +236,7 @@
 </div>
 </aside>
 <!-- Map View Container -->
-<div class="flex-1 relative bg-stone-200 overflow-hidden">
+<div class="flex-1 relative bg-stone-200 overflow-hidden min-h-[400px]">
   <gmp-map-3d
     mode="hybrid"
     center="19.7224545, -101.1175265"
@@ -596,7 +605,7 @@
     </div>
   </div>
   <!-- Optional dark overlay (keeps your aesthetic) -->
-  <div class="absolute inset-0 bg-black/30 pointer-events-none"></div>
+  <!-- <div class="absolute inset-0 bg-black/30 pointer-events-none"></div> -->
 </div>
 </div>
 </section>
