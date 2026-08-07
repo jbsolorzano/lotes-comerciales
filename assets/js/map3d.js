@@ -135,7 +135,10 @@ async function open(lotId) {
     polygon.fillColor = 'rgba(255, 178, 60, 0.55)';
     polygon.strokeColor = '#B45309';
     polygon.strokeWidth = 4;
-    polygon.outerCoordinates = lot.path.map(({ lat, lng }) => ({ lat, lng, altitude: 0 }));
+    // `path` replaces the deprecated `outerCoordinates`. CLAMP_TO_GROUND ignores
+    // the altitude component, so plain LatLngLiterals are enough — but they must
+    // be fresh objects, since lot.path is shared with the 2D polygon.
+    polygon.path = lot.path.map(({ lat, lng }) => ({ lat, lng }));
     mapEl.append(polygon);
 
     stage.append(mapEl);
