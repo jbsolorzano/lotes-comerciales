@@ -30,22 +30,31 @@ const estadoKeyOf = (estado) => {
 
 /* ── Style tables ───────────────────────────────────────────────────────────
    The 3D API took a single rgba() fill; google.maps.Polygon splits colour and
-   opacity, so alpha moves into fillOpacity. Opacities sit ~0.08 above the old
-   alpha values to compensate for the flat dim overlay replacing the CSS
-   brightness filter on the map surface. */
+   opacity, so alpha moves into fillOpacity. Most opacities sit ~0.08 above the
+   old alpha values to compensate for the flat dim overlay that replaced the CSS
+   brightness filter on the map surface — DISPONIBLE is the deliberate exception,
+   see the note on it below. */
 
 const STYLES = {
   DEFAULT: {
     'VENDIDO':          { fillColor: '#6E6E78', fillOpacity: 0.88, strokeColor: '#555560', strokeWeight: 2 },
     'NEGOCIACION':      { fillColor: '#A0D2D4', fillOpacity: 0.68, strokeColor: '#5AAAB0', strokeWeight: 2 },
     'DESARROLLO HERSO': { fillColor: '#DCB9AF', fillOpacity: 0.68, strokeColor: '#C9897C', strokeWeight: 2 },
-    'DISPONIBLE':       { fillColor: '#4A6FD4', fillOpacity: 0.68, strokeColor: '#3A5AAD', strokeWeight: 2 },
+    // Deliberately the lightest fill and the darkest border of the four.
+    // DISPONIBLE is the state visitors actually inspect, so its parcel outlines
+    // have to be legible. The old #3A5AAD stroke was only a darker shade of the
+    // fill hue, so at 0.68 the border disappeared into it; thinning the fill
+    // alone was not enough, hence the deeper #1E3A8A at 3px.
+    'DISPONIBLE':       { fillColor: '#4A6FD4', fillOpacity: 0.42, strokeColor: '#1E3A8A', strokeWeight: 3 },
   },
   HOVER: {
     'VENDIDO':          { fillColor: '#82828C', fillOpacity: 0.95, strokeColor: '#333338', strokeWeight: 3 },
     'NEGOCIACION':      { fillColor: '#82C8CD', fillOpacity: 0.88, strokeColor: '#3A8A90', strokeWeight: 3 },
     'DESARROLLO HERSO': { fillColor: '#C89B91', fillOpacity: 0.88, strokeColor: '#A86055', strokeWeight: 3 },
-    'DISPONIBLE':       { fillColor: '#375ABE', fillOpacity: 0.88, strokeColor: '#253F8A', strokeWeight: 3 },
+    // Lighter fill than the other states for the same reason as the default,
+    // but the border must still escalate: darker and heavier than the 3px
+    // #1E3A8A it sits on top of, or hovering would soften the outline.
+    'DISPONIBLE':       { fillColor: '#375ABE', fillOpacity: 0.62, strokeColor: '#14285E', strokeWeight: 4 },
   },
 };
 
@@ -85,6 +94,31 @@ function boundsOf(path) {
 }
 
 const centerOf = (b) => ({ lat: (b.north + b.south) / 2, lng: (b.east + b.west) / 2 });
+
+/**
+ * Area-weighted centroid — what the 3D camera aims at, since the bbox centre
+ * drifts off an L-shaped or wedge-shaped parcel (5 m median here, 30 m at worst).
+ * Degrees are fine as the working units: the centroid formula is affine, so the
+ * lat/lng-to-metres scaling would cancel out.
+ *
+ * Three KML rings are numerical junk — one is a 1.3 x 2.3 m artefact with a
+ * signed area of 0.09 m2 — and this formula divides by that area, which threw
+ * the centroid 74 km away in testing. A centroid may legitimately fall outside
+ * a concave polygon but never outside its own bounding box, so that is the
+ * guard; NaN from a zero area fails the comparison and falls back too.
+ */
+function centroidOf(path, b) {
+  let a2 = 0, cx = 0, cy = 0;
+  for (let i = 0, j = path.length - 1; i < path.length; j = i++) {
+    const cross = path[j].lng * path[i].lat - path[i].lng * path[j].lat;
+    a2 += cross;
+    cx += (path[j].lng + path[i].lng) * cross;
+    cy += (path[j].lat + path[i].lat) * cross;
+  }
+  const c = { lat: cy / (3 * a2), lng: cx / (3 * a2) };
+  const sane = c.lat >= b.south && c.lat <= b.north && c.lng >= b.west && c.lng <= b.east;
+  return sane ? c : centerOf(b);
+}
 
 /**
  * @returns {Promise<{lots: Array, byId: Object, bounds: Object}>}
@@ -160,7 +194,8 @@ export async function loadLots() {
       valor_final,
       path,
       bounds,
-      center: centerOf(bounds),
+      center: centerOf(bounds),   // 2D framing
+      centroid: centroidOf(path, bounds), // 3D camera target
     };
 
     lots.push(lot);
