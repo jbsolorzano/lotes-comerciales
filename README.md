@@ -9,6 +9,39 @@ dominio propio y HTTPS forzado.
 
 ---
 
+## Pendientes (TO DO)
+
+- [ ] **Falta `assets/favicon.png`.** El `index.html` ya lo referencia (`<link
+  rel="icon">` y `<link rel="apple-touch-icon">` en el `<head>`), así que basta
+  con dejar el archivo ahí: no hay que tocar el marcado. **512×512** es la
+  medida segura — baja bien a los 16px de la pestaña y alcanza para el icono de
+  pantalla de inicio en iOS. Mientras no exista, el navegador se lleva un 404 en
+  cada carga.
+
+- [ ] **No hay Aviso de privacidad.** La LFPDPPP obliga a publicarlo en cuanto
+  se recaben datos personales. Hoy el sitio no recaba nada por sí mismo, pero
+  **esto se vuelve obligatorio el día que exista el formulario de contacto**
+  (ver el punto siguiente) — conviene resolver los dos juntos. El enlace *Legal*
+  del pie apunta a `href="#"` y es el lugar natural para colgarlo. El contenido
+  concreto hay que validarlo con un abogado; aquí solo queda anotado que falta.
+
+- [ ] **Falta el endpoint del formulario de contacto.** No existe ningún
+  `<form>` en el sitio: los enlaces *Contacto* del header y del pie apuntan a
+  `href="#"`. Como no hay backend ni build, un formulario necesita un endpoint
+  de terceros (Formspree, Netlify Forms, Google Forms) — o bien resolverse con
+  WhatsApp, que es lo que ya hace la ficha del lote y no requiere infraestructura
+  nueva. Decidir cuál antes de maquetar el formulario.
+
+- [ ] **Transiciones ease-in-out del scroll del header.** `nav.js` usa
+  `scrollIntoView({ behavior: 'smooth' })`; la curva y la duración las elige el
+  navegador y no son iguales en Chrome, Firefox y Safari, así que el ease-in-out
+  no está realmente bajo nuestro control. Para tenerlo, hay que hacer el tween a
+  mano con `requestAnimationFrame`, igual que `panCameraTo()` en `map2d.js`
+  — ahí ya vive una `easeInOut` cúbica que convendría mover a un módulo
+  compartido en vez de duplicarla. Respetar `prefersReducedMotion()` como ahora.
+
+---
+
 ## Probar en local
 
 ### Requisitos
