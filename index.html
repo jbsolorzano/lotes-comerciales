@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 
-<html class="light" lang="en"><head>
+<html class="light" lang="es"><head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
 <title>TRES MARÍAS | Lotes comerciales</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://maps.googleapis.com"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,300;0,400;0,700;1,400&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -100,73 +102,135 @@
         }
     </script>
 <style>
-      gmp-map-3d {
-        display: block; /* Ensure it behaves like a block element */
-        height: 100%;   /* Fill the parent */
-        width: 100%;
-        filter: brightness(0.7);
-      }
-        #explorer .flex-1.relative {
-    min-height: 400px; /* Forces a minimum visibility on mobile devices */
-  }
+        /* Tailwind's display utilities out-specify the UA [hidden] rule, so make
+           the attribute authoritative — the JS uses it as the show/hide switch. */
+        [hidden] { display: none !important; }
+
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
         }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #707072; }
+
+        /* Fixed-header offset for anchor jumps, replacing the old hardcoded
+           HEADER_OFF constant in the scroll script. */
+        #about, #explorer { scroll-margin-top: 100px; }
+
+        /* On mobile the explorer is exactly 100svh, so any anchor offset pushes
+           the sheet's peek height below the fold and the handle out of reach.
+           Align it flush with the viewport instead; the fixed header just
+           overlays the top of the full-bleed map. */
+        @media (max-width: 767px) {
+          #about    { scroll-margin-top: 64px; }
+          #explorer { scroll-margin-top: 0; }
+        }
+
+        /* The 3D map only ever exists inside the on-demand modal.
+           No brightness filter here: re-running a CSS filter over a
+           continuously repainting map surface costs a full composite per frame. */
+        gmp-map-3d { display: block; width: 100%; height: 100%; }
+
+        #lot3d-stage .lot3d-msg { display: none; }
+        #lot3d-stage[data-status="loading"] .lot3d-loading,
+        #lot3d-stage[data-status="error"]   .lot3d-error { display: flex; }
+
+        /* Bottom sheet — mobile only. The initial transform keeps the sheet at
+           its peek height before main.js runs, so there is no flash of a sheet
+           covering the whole map. */
+        @media (max-width: 767px) {
+          #lot-sheet { transform: translateY(calc(88svh - 88px)); }
+          /* --sheet-body is written by sheet.js on every snap: the sheet is a
+             tall element slid down by a transform, so its scroll areas must be
+             capped to the part that is actually on screen. */
+          #sheet-list-view, #sheet-detail-view { max-height: var(--sheet-body, 88svh); }
+          #sheet-list-view { overflow: hidden; }
+          .fab-hidden { opacity: 0; pointer-events: none; transform: scale(0.85); }
+          /* The sheet's "todos los lotes" back button already closes the card. */
+          #card-close { display: none; }
+        }
+        #sheet-handle { touch-action: none; }
+        .scroll-area { overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+
+        @media (prefers-reduced-motion: reduce) {
+          *, ::before, ::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+          }
+        }
     </style>
 </head>
 <body class="bg-background text-on-background font-body-md selection:bg-secondary-container">
 <!-- TopAppBar -->
 <header class="fixed top-0 left-0 right-0 z-50 border-b border-stone-300/30 bg-primary">
-<div class="flex justify-between items-center w-full px-12 py-6 max-w-[1440px] mx-auto">
-<h1 class="text-2xl font-light tracking-[0.3em] text-white">TRES MARÍAS</h1>
+<div class="flex justify-between items-center gap-4 w-full px-6 md:px-12 py-4 md:py-6 max-w-[1440px] mx-auto">
+<h1 class="text-base sm:text-xl md:text-2xl font-light tracking-[0.2em] sm:tracking-[0.3em] text-white whitespace-nowrap">TRES MARÍAS</h1>
 <nav class="hidden md:flex items-center space-x-12">
-<a id="nosotrosBtn" class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="#">Nosotros</a>
-<a id="portfolioBtn" class="font-sans uppercase tracking-[0.2em] text-sm border-b pb-1 text-white border-white" href="#">Portfolio</a>
-<!-- <a class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="#">Legacy</a> -->
+<a id="nosotrosBtn" class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="#about">Nosotros</a>
+<a id="portfolioBtn" class="font-sans uppercase tracking-[0.2em] text-sm border-b pb-1 text-white border-white" href="#explorer">Portfolio</a>
 <a class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="#">Contacto</a>
 </nav>
-<button class="px-8 py-3 text-button font-button uppercase tracking-widest transition-colors bg-white text-primary hover:bg-stone-200">
+<div class="flex items-center gap-1">
+<button class="hidden sm:block px-4 md:px-8 py-2.5 md:py-3 text-button font-button uppercase tracking-widest transition-colors bg-white text-primary hover:bg-stone-200">
                 Contacto
             </button>
+<button id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Abrir menú"
+        class="md:hidden p-2 -mr-2 text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+<div id="mobile-menu" hidden class="md:hidden border-t border-white/10 bg-primary px-6 py-4 space-y-4">
+<a id="nav-nosotros" class="block font-sans uppercase tracking-[0.2em] text-sm text-stone-300" href="#about">Nosotros</a>
+<a id="nav-portfolio" class="block font-sans uppercase tracking-[0.2em] text-sm text-white" href="#explorer">Portfolio</a>
+<a class="block font-sans uppercase tracking-[0.2em] text-sm text-stone-300" href="https://wa.me/5544996922?text=Me%20interesa%20conocer%20mas%20de%20los%20lotes%20comerciales%20en%20Tres%20Marias.">Contacto</a>
 </div>
 </header>
 <main>
-<!-- Hero Section -->
-<section class="relative h-[800px] w-full overflow-hidden flex items-center justify-center bg-stone-900">
+<!-- Hero Section — the video is the background unconditionally, on every viewport.
+     src/autoplay live in the markup rather than being attached by JS so playback
+     starts without waiting for the module to load; the hero is above the fold, so
+     deferring the fetch bought nothing anyway. The poster only covers the moment
+     before the first frame decodes. hero.js just pauses it off-screen and retries
+     if the browser refuses to autoplay. -->
+<section class="relative h-[70svh] md:h-[800px] w-full overflow-hidden flex items-center justify-center bg-stone-900">
 <video
+  id="hero-video"
   class="absolute inset-0 w-full h-full object-cover"
+  poster="assets/hero-poster.jpg"
+  src="assets/predios-overview.mp4"
+  preload="auto"
   autoplay
   muted
   loop
   playsinline
->
-  <source src="assets/predios-overview.mp4" type="video/mp4" />
-</video>
+  disablepictureinpicture
+  aria-hidden="true"
+></video>
 <div class="absolute inset-0 bg-black/50"></div>
-<div class="relative z-10 text-center max-w-4xl px-gutter">
-<h2 class="font-headline-lg text-display-xl text-white mb-6">Tres Marías: Lotes Comerciales</h2>
-<p class="font-body-lg text-white/80 max-w-2xl mx-auto mb-10 tracking-wide uppercase text-sm">Oportunidades exclusivas de adquisición en corredores de alto crecimiento.</p>
+<div class="relative z-10 text-center max-w-4xl px-6 md:px-gutter">
+<h2 class="font-headline-lg text-3xl sm:text-5xl md:text-display-xl text-white mb-4 md:mb-6">Tres Marías: Lotes Comerciales</h2>
+<p class="font-body-lg text-white/80 max-w-2xl mx-auto mb-8 md:mb-10 tracking-wide uppercase text-xs sm:text-sm">Oportunidades exclusivas de adquisición en corredores de alto crecimiento.</p>
 <div class="h-1 w-24 bg-white/40 mx-auto"></div>
 </div>
 </section>
 <!-- About Section -->
-<section id="about" class="bg-[#F4F3F1] py-32 px-12">
+<section id="about" class="bg-[#F4F3F1] py-16 md:py-32 px-6 md:px-12">
 <div class="max-w-[1440px] mx-auto">
-<div class="mb-20">
+<div class="mb-12 md:mb-20">
 <span class="font-sans text-[10px] uppercase tracking-[0.4em] text-stone-400 mb-4 block">Sobre nosotros</span>
-<h2 class="font-headline-lg text-5xl text-primary max-w-xl">Reserva Territorial</h2>
+<h2 class="font-headline-lg text-3xl md:text-5xl text-primary max-w-xl">Reserva Territorial</h2>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-24 items-start">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-24 items-start">
 <div class="space-y-8">
-<p class="font-headline-md text-2xl leading-relaxed text-primary">
+<p class="font-headline-md text-xl md:text-2xl leading-relaxed text-primary">
                         Ubicada al Oriente de la ciudad de Morelia, Tres Marías representa un cambio de paradigma en la adquisición de terrenos, donde la preservación ambiental se encuentra con el crecimiento urbano estratégico.
                     </p>
 <div class="h-px w-20 bg-stone-300"></div>
 </div>
-<div class="space-y-8">
+<div class="space-y-6 md:space-y-8">
 <p class="font-body-lg text-stone-600 leading-loose">
                         La reserva cuenta con un total de 58 hectáreas, de las cuales 27 hectáreas cuentan con vocación empresarial, destinadas a desarrollos corporativos, call centers y áreas comerciales. Adicionalmente, se contemplan 20 hectáreas para desarrollo en los próximos cinco años, asegurando una expansión ordenada y sostenida en el tiempo.
                     </p>
@@ -177,15 +241,34 @@
 </div>
 </div>
 </section>
-<!-- Map Explorer Section -->
-<section class="flex flex-col md:flex-row h-[80vh] border-t border-stone-200" id="explorer">
-<!-- SideNavBar Component Logic (Integrated) -->
-<aside class="w-full md:w-80 bg-white border-r border-stone-300/20 flex flex-col h-full z-40">
-<div class="p-8 border-b border-stone-100">
-<h3 class="font-serif text-lg text-stone-900 tracking-tight mb-6">FILTROS DE BÚSQUEDA</h3>
+
+<!-- Map Explorer -->
+<section id="explorer" class="relative flex flex-col md:flex-row h-[100svh] md:h-[80vh] min-h-[560px] overflow-hidden border-t border-stone-200">
+
+<!-- Sidebar on md+, draggable bottom sheet below it -->
+<aside id="lot-sheet"
+       class="absolute inset-x-0 bottom-0 z-30 h-[88svh] flex flex-col bg-white will-change-transform
+              shadow-[0_-8px_32px_rgba(0,0,0,0.18)]
+              md:relative md:inset-auto md:z-40 md:h-full md:w-80 md:shrink-0
+              md:shadow-none md:will-change-auto md:border-r md:border-stone-300/20">
+
+<!-- Drag handle (mobile). Tap cycles peek → half → full. -->
+<div id="sheet-handle" role="button" tabindex="0" aria-label="Ajustar panel de lotes"
+     class="md:hidden shrink-0 pt-3 pb-2 cursor-grab active:cursor-grabbing select-none">
+<div class="mx-auto h-1 w-10 rounded-full bg-stone-300"></div>
+</div>
+
+<!-- List view -->
+<div id="sheet-list-view" class="flex-1 min-h-0 flex flex-col">
+<div class="shrink-0 px-6 md:px-8 pt-2 md:pt-8 pb-6 md:pb-8 border-b border-stone-100">
+<div class="flex items-baseline justify-between gap-3 mb-4 md:mb-6">
+<h3 class="font-serif text-base md:text-[15px] text-stone-900 tracking-tight whitespace-nowrap">FILTROS DE BÚSQUEDA</h3>
+<span id="plot-count" class="text-[10px] uppercase tracking-widest text-stone-400 whitespace-nowrap"></span>
+</div>
 <div id="filter-dropdown" class="relative">
   <!-- Trigger -->
-  <button id="filter-trigger" class="w-full flex items-center justify-between px-4 py-3.5 border border-stone-200 bg-white hover:bg-stone-50 text-left" style="transition:background 150ms ease;">
+  <button id="filter-trigger" type="button" aria-expanded="false" aria-controls="filter-panel"
+          class="w-full flex items-center justify-between px-4 py-3.5 border border-stone-200 bg-white hover:bg-stone-50 text-left" style="transition:background 150ms ease;">
     <div>
       <p class="font-sans text-[9px] uppercase tracking-[0.15em] text-stone-400 mb-0.5">Uso de suelo</p>
       <p id="filter-label" class="font-sans text-[11px] uppercase tracking-widest text-stone-900 font-semibold" style="transition:opacity 150ms ease;">(Todos)</p>
@@ -195,480 +278,177 @@
   <!-- Dropdown panel -->
   <div id="filter-panel" style="height:0;overflow:hidden;transition:height 260ms ease;position:relative;z-index:10;">
     <div id="filter-inner" style="opacity:0;transform:translateY(-4px);transition:opacity 180ms ease-out,transform 180ms ease-out;">
-      <div class="border border-t-0 border-stone-200 bg-white divide-y divide-stone-100">
-        <button data-filter="all"                              data-label="(Todos)"      class="filter-option w-full flex items-center space-x-3 px-4 py-3 border-l-2 border-stone-900 text-left" style="transition:background 150ms ease;">
+      <div class="border border-t-0 border-stone-200 bg-white divide-y divide-stone-100" role="radiogroup" aria-label="Uso de suelo">
+        <button data-filter="all"                              data-label="(Todos)"      role="radio" aria-checked="true"  class="filter-option w-full flex items-center space-x-3 px-4 py-3 border-l-2 border-stone-900 text-left" style="transition:background 150ms ease;">
           <span class="material-symbols-outlined text-sm text-stone-600">map</span>
           <span class="font-sans text-[11px] uppercase tracking-widest text-stone-900 font-semibold">(Todos)</span>
         </button>
-        <button data-filter="SERVICIOS"                        data-label="Servicios"    class="filter-option w-full flex items-center space-x-3 px-4 py-3 border-l-2 border-transparent text-left" style="transition:background 150ms ease;">
+        <button data-filter="SERVICIOS"                        data-label="Servicios"    role="radio" aria-checked="false" class="filter-option w-full flex items-center space-x-3 px-4 py-3 border-l-2 border-transparent text-left" style="transition:background 150ms ease;">
           <span class="material-symbols-outlined text-sm text-stone-400">build</span>
           <span class="font-sans text-[11px] uppercase tracking-widest text-stone-500">Servicios</span>
         </button>
-        <button data-filter="COMERCIAL"                        data-label="Comercial"    class="filter-option w-full flex items-center space-x-3 px-4 py-3 border-l-2 border-transparent text-left" style="transition:background 150ms ease;">
+        <button data-filter="COMERCIAL"                        data-label="Comercial"    role="radio" aria-checked="false" class="filter-option w-full flex items-center space-x-3 px-4 py-3 border-l-2 border-transparent text-left" style="transition:background 150ms ease;">
           <span class="material-symbols-outlined text-sm text-stone-400">storefront</span>
           <span class="font-sans text-[11px] uppercase tracking-widest text-stone-500">Comercial</span>
         </button>
-        <button data-filter="HABITACIONAL DENSIDAD MEDIA"      data-label="Habitacional" class="filter-option w-full flex items-center space-x-3 px-4 py-3 border-l-2 border-transparent text-left" style="transition:background 150ms ease;">
+        <button data-filter="HABITACIONAL DENSIDAD MEDIA"      data-label="Habitacional" role="radio" aria-checked="false" class="filter-option w-full flex items-center space-x-3 px-4 py-3 border-l-2 border-transparent text-left" style="transition:background 150ms ease;">
           <span class="material-symbols-outlined text-sm text-stone-400">apartment</span>
           <span class="font-sans text-[11px] uppercase tracking-widest text-stone-500">Habitacional</span>
         </button>
-        <button data-filter="MIXTO"                            data-label="Mixto"        class="filter-option w-full flex items-center space-x-3 px-4 py-3 border-l-2 border-transparent text-left" style="transition:background 150ms ease;">
+        <button data-filter="MIXTO"                            data-label="Mixto"        role="radio" aria-checked="false" class="filter-option w-full flex items-center space-x-3 px-4 py-3 border-l-2 border-transparent text-left" style="transition:background 150ms ease;">
           <span class="material-symbols-outlined text-sm text-stone-400">layers</span>
           <span class="font-sans text-[11px] uppercase tracking-widest text-stone-500">Mixto</span>
         </button>
-        <button data-filter="COMERCIAL (OFICINAS CORPORATIVAS)" data-label="Corporativo" class="filter-option w-full flex items-center space-x-3 px-4 py-3 border-l-2 border-transparent text-left" style="transition:background 150ms ease;">
+        <button data-filter="COMERCIAL (OFICINAS CORPORATIVAS)" data-label="Corporativo" role="radio" aria-checked="false" class="filter-option w-full flex items-center space-x-3 px-4 py-3 border-l-2 border-transparent text-left" style="transition:background 150ms ease;">
           <span class="material-symbols-outlined text-sm text-stone-400">corporate_fare</span>
           <span class="font-sans text-[11px] uppercase tracking-widest text-stone-500">Corporativo</span>
+        </button>
+        <button data-filter="ÁREAS VERDES"                     data-label="Áreas verdes" role="radio" aria-checked="false" class="filter-option w-full flex items-center space-x-3 px-4 py-3 border-l-2 border-transparent text-left" style="transition:background 150ms ease;">
+          <span class="material-symbols-outlined text-sm text-stone-400">park</span>
+          <span class="font-sans text-[11px] uppercase tracking-widest text-stone-500">Áreas verdes</span>
         </button>
       </div>
     </div>
   </div>
 </div>
 </div>
-<!-- Plot List — populated dynamically from KML + lotes-data.json -->
-<div class="flex-1 overflow-y-auto px-4 py-6 bg-surface">
-<div id="plot-list" class="space-y-4"></div>
+<!-- Plot List — populated from the KML + lotes-data.json join -->
+<div class="scroll-area flex-1 min-h-0 overflow-y-auto px-4 py-6 bg-surface">
+<div id="plot-list" role="list" class="space-y-4"></div>
+<p id="plot-empty" hidden class="text-center text-xs text-stone-400 py-10 uppercase tracking-widest">Sin lotes para este uso de suelo</p>
 </div>
-<div class="p-6 border-t border-stone-100">
+<div class="shrink-0 p-4 md:p-6 border-t border-stone-100">
 <a class="block text-center w-full bg-secondary text-white py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-secondary/90 transition-colors" href="https://wa.me/5544996922?text=Me%20interesa%20conocer%20mas%20de%20los%20lotes%20comerciales%20en%20Tres%20Marias.">
                         Contacto
                     </a>
 </div>
+</div>
+
+<!-- Detail view (mobile only) — the single #lot-detail-card is relocated here
+     by sheet.js below the md breakpoint. -->
+<div id="sheet-detail-view" hidden class="scroll-area flex-1 min-h-0 overflow-y-auto md:hidden">
+<div class="px-4 pt-1 pb-1">
+<button id="sheet-back" type="button" class="flex items-center gap-1 py-2 text-[10px] uppercase tracking-widest text-stone-500">
+<span class="material-symbols-outlined text-base">arrow_back</span> Todos los lotes
+</button>
+</div>
+</div>
 </aside>
-<!-- Map View Container -->
-<div class="flex-1 relative bg-stone-200 overflow-hidden min-h-[400px]">
-  <gmp-map-3d
-    mode="hybrid"
-    center="19.7224545, -101.1175265"
-    range="5000"
-    tilt="0"
-    heading="0">
-  </gmp-map-3d>
-  <script>
-  const polygonMap = {};   // lotId → Polygon3DElement
-  const lotMetaMap = {};   // lotId → metadata
-  let activePolygon  = null;
-  let activeLotId    = null;
-  let hoveredPolygon = null;
-  let hoveredLotId   = null;
-  let hoverFrame     = null;
 
-  async function loadKMLPolygons() {
-    const { Polygon3DElement } = await google.maps.importLibrary('maps3d');
-
-    const [kmlRes, dataRes] = await Promise.all([
-      fetch('assets/predios-Tres-Marias.kml'),
-      fetch('assets/lotes-data.json').catch(() => null),
-    ]);
-    if (!kmlRes.ok) { console.error('KML fetch failed:', kmlRes.status); return; }
-    const kmlText   = await kmlRes.text();
-    const lotesData = dataRes?.ok ? await dataRes.json() : {};
-    console.log('lotes-data keys:', Object.keys(lotesData).length);
-
-    const kml = new DOMParser().parseFromString(kmlText, 'text/xml');
-    const parseErr = kml.querySelector('parsererror') || kml.getElementsByTagName('parsererror')[0];
-    if (parseErr) { console.error('KML parse error:', parseErr.textContent); return; }
-
-    const map      = document.querySelector('gmp-map-3d');
-    const plotList = document.getElementById('plot-list');
-
-    // getElementsByTagName is namespace-safe (querySelector can miss elements under xmlns)
-    const placemarks = Array.from(kml.getElementsByTagName('Placemark'));
-    console.log('Placemarks found:', placemarks.length);
-
-    for (const pm of placemarks) {
-      const coordElem = pm.getElementsByTagName('coordinates')[0];
-      if (!coordElem) continue;
-
-      const lotId = pm.getAttribute('id') ?? '';
-      const { estado = 'Disponible', manzana = '—', lote = '—', uso_suelo = '—', superficie_m2 = '—', precio_por_m2 = null, valor_final = null } = lotesData[lotId] ?? {};
-      const area  = superficie_m2;
-      const name  = (manzana !== '—' && lote !== '—')
-        ? `MZ ${String(manzana).padStart(2, '0')} Lote ${String(lote).padStart(2, '0')}`
-        : '—';
-
-      const path = coordElem.textContent.trim()
-        .split(/\s+/).filter(Boolean)
-        .map(c => { const [lng, lat, alt] = c.split(',').map(Number); return { lat, lng, altitude: alt || 0 }; });
-
-      const meta = { name, area, lotId, estado, manzana, lote, uso_suelo, precio_por_m2, valor_final, path };
-      lotMetaMap[lotId] = meta;
-
-      const polygon = new Polygon3DElement();
-      polygon.altitudeMode = 'CLAMP_TO_GROUND';
-      const { fill, stroke, strokeWidth } = defaultStyle(estado);
-      polygon.fillColor    = fill;
-      polygon.strokeColor  = stroke;
-      polygon.strokeWidth  = strokeWidth;
-      polygon.path = path;
-      polygonMap[lotId] = polygon;
-      map.appendChild(polygon);
-
-      // Sidebar item
-      const item = document.createElement('div');
-      item.className = 'p-4 border border-stone-200 bg-white cursor-pointer hover:border-stone-400 transition-all';
-      item.dataset.lotId   = lotId;
-      item.dataset.usoSuelo = uso_suelo;
-      item.innerHTML = sidebarItemHTML(meta);
-      item.addEventListener('click', () => selectLot(lotId));
-      plotList.appendChild(item);
-    }
-
-    // Map-level click — more reliable than per-polygon gmp-click in beta
-    map.addEventListener('gmp-click', (e) => {
-      if (!e.position) return;
-      const { lat, lng } = e.position;
-      for (const [lotId, meta] of Object.entries(lotMetaMap)) {
-        if (pointInPolygon({ lat, lng }, meta.path)) { selectLot(lotId); return; }
-      }
-    });
-
-    // Hover: throttled with rAF so we don't run point-in-polygon on every pixel
-    map.addEventListener('gmp-mousemove', (e) => {
-      if (hoverFrame) return;
-      if (!e.position) return;
-      const { lat, lng } = e.position;
-      hoverFrame = requestAnimationFrame(() => {
-        hoverFrame = null;
-
-        let foundId = null;
-        for (const [id, meta] of Object.entries(lotMetaMap)) {
-          if (pointInPolygon({ lat, lng }, meta.path)) { foundId = id; break; }
-        }
-        if (foundId === hoveredLotId) return;
-
-        if (hoveredPolygon && hoveredLotId !== activeLotId) {
-          const s = defaultStyle(lotMetaMap[hoveredLotId]?.estado);
-          hoveredPolygon.fillColor   = s.fill;
-          hoveredPolygon.strokeColor = s.stroke;
-          hoveredPolygon.strokeWidth = s.strokeWidth;
-        }
-        hoveredLotId   = foundId;
-        hoveredPolygon = foundId ? polygonMap[foundId] : null;
-        map.style.cursor = foundId ? 'pointer' : '';
-
-        if (hoveredPolygon && hoveredLotId !== activeLotId) {
-          const s = hoverStyle(lotMetaMap[hoveredLotId].estado);
-          hoveredPolygon.fillColor   = s.fill;
-          hoveredPolygon.strokeColor = s.stroke;
-          hoveredPolygon.strokeWidth = s.strokeWidth;
-        }
-      });
-    });
-
-    // Reset hover when mouse leaves the map
-    map.addEventListener('mouseleave', () => {
-      if (hoveredPolygon && hoveredLotId !== activeLotId) {
-        const s = defaultStyle(lotMetaMap[hoveredLotId]?.estado);
-        hoveredPolygon.fillColor   = s.fill;
-        hoveredPolygon.strokeColor = s.stroke;
-        hoveredPolygon.strokeWidth = s.strokeWidth;
-      }
-      hoveredPolygon = null;
-      hoveredLotId   = null;
-      map.style.cursor = '';
-    });
-
-    repositionControls();
-  }
-
-  function pointInPolygon({ lat, lng }, path) {
-    let inside = false;
-    for (let i = 0, j = path.length - 1; i < path.length; j = i++) {
-      const xi = path[i].lng, yi = path[i].lat;
-      const xj = path[j].lng, yj = path[j].lat;
-      if (((yi > lat) !== (yj > lat)) &&
-          (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi)) {
-        inside = !inside;
-      }
-    }
-    return inside;
-  }
-
-  function defaultStyle(estado) {
-    if (estado === 'VENDIDO')           return { fill: 'rgba(110, 110, 120, 0.82)', stroke: '#555560', strokeWidth: 4 };
-    if (estado === 'EN NEGOCIACIÓN')    return { fill: 'rgba(160, 210, 212, 0.60)', stroke: '#5aaab0', strokeWidth: 3   };
-    if (estado === 'DESARROLLO HERSO')  return { fill: 'rgba(220, 185, 175, 0.60)', stroke: '#c9897c', strokeWidth: 3   };
-    return                                     { fill: 'rgba(74,  111, 212, 0.60)', stroke: '#3a5aad', strokeWidth: 3   };
-  }
-
-  function hoverStyle(estado) {
-    if (estado === 'VENDIDO')           return { fill: 'rgba(130, 130, 140, 0.95)', stroke: '#333338', strokeWidth: 5   };
-    if (estado === 'EN NEGOCIACIÓN')    return { fill: 'rgba(130, 200, 205, 0.85)', stroke: '#3a8a90', strokeWidth: 5   };
-    if (estado === 'DESARROLLO HERSO')  return { fill: 'rgba(200, 155, 145, 0.85)', stroke: '#a86055', strokeWidth: 5   };
-    return                                     { fill: 'rgba(55,  90,  190, 0.85)', stroke: '#253f8a', strokeWidth: 5   };
-  }
-
-  function sidebarItemHTML({ name, uso_suelo, area, estado, manzana, valor_final }) {
-    const badge = {
-      'DISPONIBLE':       'text-blue-600 border-blue-300',
-      'VENDIDO':          'text-stone-500 border-stone-300',
-      'EN NEGOCIACIÓN':   'text-cyan-600 border-cyan-300',
-      'DESARROLLO HERSO': 'text-rose-400 border-rose-200',
-    }[estado] ?? 'text-blue-600 border-blue-300';
-    const precioLine = valor_final
-      ? `<p class="text-xs text-stone-600 font-semibold mt-1.5">${valor_final} MXN</p>`
-      : '';
-    return `
-      <div class="flex justify-between items-start mb-2">
-        <span class="text-[10px] uppercase tracking-tighter text-secondary font-bold">${uso_suelo}</span>
-        <span class="text-[10px] px-2 py-0.5 border ${badge} uppercase">${estado}</span>
+<!-- Map: full-bleed behind the sheet on mobile, flex sibling on md+ -->
+<div id="map-container" class="absolute inset-0 z-0 overflow-hidden bg-stone-200 md:relative md:inset-auto md:z-auto md:flex-1 md:h-full">
+<div id="map-canvas" class="absolute inset-0"></div>
+<!-- Static dim layer. Replaces the per-frame CSS brightness filter that used to
+     sit on the map element itself. -->
+<div class="pointer-events-none absolute inset-0 z-[1] bg-black/20"></div>
+<div id="map-status" class="absolute inset-0 z-10 flex items-center justify-center bg-stone-200 text-[10px] uppercase tracking-widest text-stone-500">
+        Cargando mapa…
       </div>
-      <h4 class="font-serif text-sm mb-1 text-primary">${name}</h4>
-      <p class="text-xs text-stone-400">${area} m²</p>
-      ${precioLine}`;
-  }
 
-  function selectLot(lotId) {
-    const meta    = lotMetaMap[lotId];
-    const polygon = polygonMap[lotId];
-    if (!meta || !polygon) return;
-
-    if (activePolygon && activeLotId !== lotId) {
-      const prev = defaultStyle(lotMetaMap[activeLotId]?.estado);
-      activePolygon.fillColor  = prev.fill;
-      activePolygon.strokeColor = prev.stroke;
-      activePolygon.strokeWidth = prev.strokeWidth;
-    }
-    polygon.fillColor  = 'rgba(255, 178, 60, 0.8)';
-    polygon.strokeColor = '#b45309';
-    polygon.strokeWidth = 3;
-    activePolygon = polygon;
-    activeLotId   = lotId;
-
-    document.querySelectorAll('#plot-list > div').forEach(el =>
-      el.classList.remove('border-stone-800', 'bg-stone-50'));
-    const sidebarItem = document.querySelector(`#plot-list > div[data-lot-id="${lotId}"]`);
-    if (sidebarItem) {
-      sidebarItem.classList.add('border-stone-800', 'bg-stone-50');
-      sidebarItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-
-    showLotCard(lotId);
-  }
-
-  function showLotCard(lotId) {
-    const { name, uso_suelo, area, estado, manzana, precio_por_m2, valor_final } = lotMetaMap[lotId];
-    document.getElementById('card-ref').textContent      = lotId.toUpperCase();
-    document.getElementById('card-name').textContent     = name;
-    document.getElementById('card-zoning').textContent   = uso_suelo;
-    document.getElementById('card-area').textContent     = `${area} m²`;
-    document.getElementById('card-sector').textContent   = `Manzana ${manzana}`;
-    document.getElementById('card-estado').textContent   = estado;
-    document.getElementById('card-precio-m2').textContent = precio_por_m2 ? `${precio_por_m2} MXN/m²` : '—';
-    document.getElementById('card-precio').textContent   = valor_final ? `${valor_final} MXN` : '—';
-    const msg = encodeURIComponent(`Estoy interesado en ${name} del proyecto Tres Marías.`);
-    document.getElementById('card-cta').href = `https://wa.me/5544996922?text=${msg}`;
-    document.getElementById('lot-detail-card').classList.remove('hidden');
-  }
-
-  function closeLotCard() {
-    document.getElementById('lot-detail-card').classList.add('hidden');
-    if (activePolygon) {
-      const prev = defaultStyle(lotMetaMap[activeLotId]?.estado);
-      activePolygon.fillColor  = prev.fill;
-      activePolygon.strokeColor = prev.stroke;
-      activePolygon.strokeWidth = prev.strokeWidth;
-    }
-    activePolygon = null;
-    activeLotId   = null;
-    document.querySelectorAll('#plot-list > div').forEach(el =>
-      el.classList.remove('border-stone-800', 'bg-stone-50'));
-  }
-
-  function repositionControls() {
-    setTimeout(() => {
-      const shadow = document.querySelector('gmp-map-3d').shadowRoot;
-      if (!shadow) return;
-      for (const el of shadow.querySelectorAll('div')) {
-        const cs = getComputedStyle(el);
-        if ((cs.position === 'absolute' || cs.position === 'fixed') &&
-            cs.bottom !== 'auto' && parseFloat(cs.bottom) < 100) {
-          el.style.setProperty('bottom', 'auto', 'important');
-          el.style.setProperty('top', '16px', 'important');
-          el.style.setProperty('right', '16px', 'important');
-          el.style.setProperty('left', 'auto', 'important');
-        }
-      }
-    }, 800);
-  }
-
-  (function () {
-    const trigger  = document.getElementById('filter-trigger');
-    const panel    = document.getElementById('filter-panel');
-    const inner    = document.getElementById('filter-inner');
-    const chevron  = document.getElementById('filter-chevron');
-    const labelEl  = document.getElementById('filter-label');
-    const dropdown = document.getElementById('filter-dropdown');
-    let isOpen = false;
-
-    function openDropdown() {
-      isOpen = true;
-      panel.style.height = panel.scrollHeight + 'px';
-      chevron.style.transform = 'rotate(180deg)';
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        inner.style.opacity = '1';
-        inner.style.transform = 'translateY(0)';
-      }));
-    }
-
-    function closeDropdown() {
-      isOpen = false;
-      inner.style.opacity = '0';
-      inner.style.transform = 'translateY(-4px)';
-      panel.style.height = '0';
-      chevron.style.transform = '';
-    }
-
-    trigger.addEventListener('click', () => isOpen ? closeDropdown() : openDropdown());
-
-    document.addEventListener('click', (e) => {
-      if (isOpen && !dropdown.contains(e.target)) closeDropdown();
-    });
-
-    document.querySelectorAll('.filter-option').forEach(opt => {
-      opt.addEventListener('click', () => {
-        // Update active indicator on all options
-        document.querySelectorAll('.filter-option').forEach(o => {
-          o.style.borderLeftColor = 'transparent';
-          o.querySelector('span:last-child').style.cssText = 'color:rgb(120,113,108);font-weight:400;';
-          o.querySelector('.material-symbols-outlined').style.color = 'rgb(168,162,158)';
-        });
-        opt.style.borderLeftColor = 'rgb(28,25,23)';
-        opt.querySelector('span:last-child').style.cssText = 'color:rgb(28,25,23);font-weight:600;';
-        opt.querySelector('.material-symbols-outlined').style.color = 'rgb(87,83,78)';
-
-        // Crossfade label
-        labelEl.style.opacity = '0';
-        setTimeout(() => { labelEl.textContent = opt.dataset.label; labelEl.style.opacity = '1'; }, 150);
-
-        // Brief selection flash then close
-        opt.style.background = 'rgb(231,229,228)';
-        setTimeout(() => { opt.style.background = ''; closeDropdown(); }, 130);
-
-        // Apply plot filter
-        const filter = opt.dataset.filter;
-        document.querySelectorAll('#plot-list > div').forEach(item => {
-          const show = filter === 'all' || item.dataset.usoSuelo === filter;
-          item.style.display = show ? '' : 'none';
-          const poly = polygonMap[item.dataset.lotId];
-          if (poly) poly.style.display = show ? '' : 'none';
-        });
-      });
-    });
-  })();
-  </script>
-  <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMVkVC9t1s4Fc-iJVmsvmGUgCvfnKfMMs&v=beta&libraries=maps3d&loading=async&callback=loadKMLPolygons"></script>
-
-  <!-- Lot Detail Card -->
-  <div id="lot-detail-card" class="hidden fixed md:absolute bottom-4 left-4 right-4 md:right-auto md:w-80 bg-white border border-stone-200 shadow-2xl z-[100] pointer-events-auto">
-    <div class="p-8">
+<!-- Lot Detail Card (moves into the sheet on mobile) -->
+<div id="lot-detail-card" hidden class="absolute bottom-4 left-4 w-80 max-h-[calc(100%-2rem)] overflow-y-auto bg-white border border-stone-200 shadow-2xl z-20">
+    <div class="p-6 md:p-8">
       <div class="flex justify-between items-start mb-6">
         <div>
           <p id="card-ref" class="text-[10px] font-sans uppercase tracking-widest text-stone-400 mb-1">—</p>
           <h3 id="card-name" class="font-serif text-xl text-primary">—</h3>
         </div>
-        <button onclick="closeLotCard()" class="text-stone-300 hover:text-stone-900 transition-colors mt-1">
+        <button id="card-close" type="button" aria-label="Cerrar detalle" class="text-stone-300 hover:text-stone-900 transition-colors mt-1 p-1 -mr-1">
           <span class="material-symbols-outlined text-base">close</span>
         </button>
       </div>
-      <div class="space-y-4 mb-8">
-        <div class="flex justify-between items-center border-b border-stone-100 pb-2">
-          <span class="text-xs text-stone-400 uppercase tracking-widest">Uso de Suelo</span>
-          <span id="card-zoning" class="text-xs font-semibold uppercase">—</span>
+      <dl class="space-y-4 mb-6">
+        <div class="flex justify-between items-center gap-3 border-b border-stone-100 pb-2">
+          <dt class="text-xs text-stone-400 uppercase tracking-widest">Uso de Suelo</dt>
+          <dd id="card-zoning" class="text-xs font-semibold uppercase text-right">—</dd>
         </div>
-        <div class="flex justify-between items-center border-b border-stone-100 pb-2">
-          <span class="text-xs text-stone-400 uppercase tracking-widest">Superficie</span>
-          <span id="card-area" class="text-xs font-semibold uppercase">—</span>
+        <div class="flex justify-between items-center gap-3 border-b border-stone-100 pb-2">
+          <dt class="text-xs text-stone-400 uppercase tracking-widest">Superficie</dt>
+          <dd id="card-area" class="text-xs font-semibold uppercase text-right">—</dd>
         </div>
-        <div class="flex justify-between items-center border-b border-stone-100 pb-2">
-          <span class="text-xs text-stone-400 uppercase tracking-widest">Manzana</span>
-          <span id="card-sector" class="text-xs font-semibold uppercase">—</span>
+        <div class="flex justify-between items-center gap-3 border-b border-stone-100 pb-2">
+          <dt class="text-xs text-stone-400 uppercase tracking-widest">Manzana</dt>
+          <dd id="card-sector" class="text-xs font-semibold uppercase text-right">—</dd>
         </div>
-        <div class="flex justify-between items-center border-b border-stone-100 pb-2">
-          <span class="text-xs text-stone-400 uppercase tracking-widest">Estado</span>
-          <span id="card-estado" class="text-xs font-semibold uppercase">—</span>
+        <div class="flex justify-between items-center gap-3 border-b border-stone-100 pb-2">
+          <dt class="text-xs text-stone-400 uppercase tracking-widest">Estado</dt>
+          <dd id="card-estado" class="text-xs font-semibold uppercase text-right">—</dd>
         </div>
-        <div class="flex justify-between items-center border-b border-stone-100 pb-2">
-          <span class="text-xs text-stone-400 uppercase tracking-widest">Precio / m²</span>
-          <span id="card-precio-m2" class="text-xs font-semibold">—</span>
+        <div class="flex justify-between items-center gap-3 border-b border-stone-100 pb-2">
+          <dt class="text-xs text-stone-400 uppercase tracking-widest">Precio / m²</dt>
+          <dd id="card-precio-m2" class="text-xs font-semibold text-right">—</dd>
         </div>
-        <div class="flex justify-between items-center border-b border-stone-100 pb-2">
-          <span class="text-xs text-stone-400 uppercase tracking-widest">Precio Total</span>
-          <span id="card-precio" class="text-xs font-semibold">—</span>
+        <div class="flex justify-between items-center gap-3 border-b border-stone-100 pb-2">
+          <dt class="text-xs text-stone-400 uppercase tracking-widest">Precio Total</dt>
+          <dd id="card-precio" class="text-xs font-semibold text-right">—</dd>
         </div>
+      </dl>
+      <div class="space-y-2">
+        <a id="card-cta" href="#" target="_blank" rel="noopener" class="flex items-center justify-center space-x-3 w-full bg-primary text-white py-4 hover:bg-stone-800 transition-colors">
+          <span class="material-symbols-outlined text-sm">chat</span>
+          <span class="font-sans text-[10px] uppercase tracking-widest font-semibold">Contáctanos</span>
+        </a>
+        <button id="card-3d" type="button" class="flex items-center justify-center space-x-2 w-full border border-stone-300 text-stone-700 py-3 hover:bg-stone-50 transition-colors">
+          <span class="material-symbols-outlined text-sm">deployed_code</span>
+          <span class="font-sans text-[10px] uppercase tracking-widest font-semibold">Ver en 3D</span>
+        </button>
       </div>
-      <a id="card-cta" href="#" target="_blank" class="flex items-center justify-center space-x-3 w-full bg-primary text-white py-4 hover:bg-stone-800 transition-colors">
-        <span class="material-symbols-outlined text-sm">chat</span>
-        <span class="font-sans text-[10px] uppercase tracking-widest font-semibold">Contáctanos</span>
-      </a>
     </div>
   </div>
-  <!-- Optional dark overlay (keeps your aesthetic) -->
-  <!-- <div class="absolute inset-0 bg-black/30 pointer-events-none"></div> -->
-</div>
 </div>
 </section>
 </main>
 <!-- Footer Component -->
 <footer class="border-t bg-primary border-t border-stone-300/10">
-<div class="w-full py-16 px-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1440px] mx-auto">
+<div class="w-full py-10 md:py-16 px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1440px] mx-auto">
 <div>
-<h4 class="font-serif text-xl tracking-tighter mb-4 text-white tracking-[0.3em]">TRES MARÍAS</h4>
+<h4 class="font-serif text-lg md:text-xl mb-4 text-white tracking-[0.3em]">TRES MARÍAS</h4>
 <p class="font-sans text-[10px] tracking-widest uppercase opacity-60 text-stone-400">© 2024 TRES MARÍAS. EXCLUSIVE LAND BANKING PRIVACY RESERVED.</p>
 </div>
-<div class="flex flex-wrap gap-8 justify-start md:justify-end">
-<a class="font-sans text-[10px] tracking-widest uppercase hover:text-stone-900 transition-colors text-stone-400 hover:text-white" href="#">Strategic Land</a>
-<a class="font-sans text-[10px] tracking-widest uppercase hover:text-stone-900 transition-colors text-stone-400 hover:text-white" href="#">Institutional</a>
-<a class="font-sans text-[10px] tracking-widest uppercase hover:text-stone-900 transition-colors text-stone-400 hover:text-white" href="#">Legal</a>
-<a class="font-sans text-[10px] tracking-widest uppercase hover:text-stone-900 transition-colors text-stone-400 hover:text-white" href="#">Contacto</a>
+<div class="flex flex-wrap gap-6 md:gap-8 justify-start md:justify-end">
+<a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="#">Strategic Land</a>
+<a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="#">Institutional</a>
+<a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="#">Legal</a>
+<a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="#">Contacto</a>
 </div>
 </div>
 </footer>
+
+<!-- On-demand 3D view, one lot at a time. maps3d is only fetched on first open. -->
+<div id="lot3d-modal" hidden role="dialog" aria-modal="true" aria-labelledby="lot3d-title" class="fixed inset-0 z-[200]">
+<div data-backdrop class="absolute inset-0 bg-black/70"></div>
+<div class="absolute inset-3 md:inset-12 bg-stone-900 shadow-2xl flex flex-col overflow-hidden">
+<div class="shrink-0 flex items-center justify-between gap-4 px-5 py-3 border-b border-white/10">
+<div>
+<p class="text-[10px] uppercase tracking-widest text-white/40">Vista 3D</p>
+<h3 id="lot3d-title" class="font-serif text-white text-lg">—</h3>
+</div>
+<button id="lot3d-close" type="button" aria-label="Cerrar vista 3D" class="text-white/60 hover:text-white p-2">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div id="lot3d-stage" data-status="idle" class="relative flex-1 min-h-0 bg-stone-900">
+<p class="lot3d-msg lot3d-loading absolute inset-0 items-center justify-center text-white/50 text-[10px] uppercase tracking-widest">Cargando vista 3D…</p>
+<p class="lot3d-msg lot3d-error absolute inset-0 items-center justify-center text-white/50 text-[10px] uppercase tracking-widest">No fue posible cargar la vista 3D</p>
+</div>
+</div>
+</div>
+
 <!-- Floating CTA -->
-<a href="https://wa.me/5544996922?text=Me%20interesa%20conocer%20mas%20de%20los%20lotes%20comerciales%20en%20Tres%20Marias."
-   class="fixed bottom-8 right-8 z-[60] w-16 h-16 flex items-center justify-center bg-[#25D366] rounded-full shadow-xl hover:scale-110 active:scale-95 transition duration-300">
-
-  <img src="assets/WhatsApp.svg"
-       alt="WhatsApp"
-       class="w-10 h-10 object-contain" />
-
+<a id="whatsapp-fab" href="https://wa.me/5544996922?text=Me%20interesa%20conocer%20mas%20de%20los%20lotes%20comerciales%20en%20Tres%20Marias."
+   aria-label="Contactar por WhatsApp"
+   class="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[60] w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-[#25D366] rounded-full shadow-xl hover:scale-110 active:scale-95 transition duration-300">
+  <img src="assets/WhatsApp.svg" alt="" class="w-8 h-8 md:w-10 md:h-10 object-contain" />
 </a>
+
+<!-- Google Maps bootstrap loader. Defines google.maps.importLibrary without a
+     global callback, so modules can await the libraries they need — and so
+     maps3d is only fetched when the 3D modal is opened. -->
 <script>
-  (function () {
-    const DURATION   = 950;
-    const HEADER_OFF = 100;
-
-    function easeOutCubic(t) {
-      return 1 - Math.pow(1 - t, 3);
-    }
-
-    function scrollToSection(target) {
-      const start    = window.scrollY;
-      const end      = target.getBoundingClientRect().top + start - HEADER_OFF;
-      const delta    = end - start;
-      const startTime = performance.now();
-
-      function tick(now) {
-        const elapsed  = now - startTime;
-        const progress = Math.min(elapsed / DURATION, 1);
-        window.scrollTo(0, start + delta * easeOutCubic(progress));
-        if (progress < 1) requestAnimationFrame(tick);
-      }
-
-      requestAnimationFrame(tick);
-    }
-
-    document.getElementById('nosotrosBtn').addEventListener('click', (e) => {
-      e.preventDefault();
-      scrollToSection(document.getElementById('about'));
-    });
-
-    document.getElementById('portfolioBtn').addEventListener('click', (e) => {
-      e.preventDefault();
-      scrollToSection(document.getElementById('explorer'));
-    });
-
-  })();
+  (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+    key: "AIzaSyAMVkVC9t1s4Fc-iJVmsvmGUgCvfnKfMMs",
+    v: "weekly",
+  });
 </script>
+<script type="module" src="assets/js/main.js"></script>
 </body></html>
