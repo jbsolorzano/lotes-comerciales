@@ -109,7 +109,7 @@ function showCard(lotId) {
   setText('card-precio-m2', lot.precio_por_m2 ? `${lot.precio_por_m2} MXN/m²` : '—');
   setText('card-precio', lot.valor_final ? `${lot.valor_final} MXN` : '—');
 
-  const msg = encodeURIComponent(`Estoy interesado en ${lot.name} del proyecto Tres Marías.`);
+  const msg = encodeURIComponent(`Estoy interesado en ${lot.name} del proyecto Distrito Zalce.`);
   document.getElementById('card-cta').href = `https://wa.me/${WHATSAPP}?text=${msg}`;
 
   document.getElementById('lot-detail-card').hidden = false;

@@ -14,7 +14,7 @@ import { state } from './state.js';
    `range`, the camera-to-target distance in metres, is the only zoom control.
 
    Both inputs were wrong before. `center.altitude` is documented as "meters
-   above the mean sea level", and it was 0 — but Tres Marías sits at 2015 m, a
+   above the mean sea level", and it was 0 — but Distrito Zalce sits at 2015 m, a
    figure the KML itself carries on three of its placemarks. The camera was
    aimed two kilometres underground, which is what knocked the parcel off
    centre. And `range` was a flat 700 m whether the lot was 2,200 m2 or

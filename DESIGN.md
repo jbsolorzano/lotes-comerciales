@@ -1,5 +1,5 @@
 ---
-name: Tres Marías Architectural Identity
+name: Distrito Zalce Architectural Identity
 colors:
   surface: '#faf9f7'
   surface-dim: '#dadad8'
