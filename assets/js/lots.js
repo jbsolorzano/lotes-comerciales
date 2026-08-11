@@ -6,8 +6,14 @@
  * have no geometry and are intentionally not surfaced anywhere.
  */
 
-const KML_URL  = 'assets/predios-Tres-Marias.kml';
-const DATA_URL = 'assets/lotes-data.json';
+// Relativas al módulo, no al documento. /contacto/ vive un nivel por debajo de
+// la raíz, así que 'assets/…' resolvería a /contacto/assets/… y daría 404.
+// import.meta.url expresa el invariante real —los datos están junto a la carpeta
+// del módulo— y no asume que el sitio se sirve desde la raíz del dominio.
+// (Se rompería si algún día se pegara este módulo dentro de un <script> del
+// HTML, porque entonces resolvería contra el documento. Hoy nadie hace eso.)
+const KML_URL  = new URL('../predios-Tres-Marias.kml', import.meta.url);
+const DATA_URL = new URL('../lotes-data.json', import.meta.url);
 
 /** Accent- and whitespace-insensitive upper-case key, so "NEGOCIACION" and
  *  "EN NEGOCIACIÓN" resolve to the same style. */
