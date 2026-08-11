@@ -35,17 +35,30 @@ dominio propio y HTTPS forzado.
     saber qué versión aceptó ni de notar que cambió. Conviene sellarlo con una
     fecha visible al final del documento.
 
-  Además, falta que **un abogado valide el contenido completo**, y cuando exista
-  el formulario de contacto (ver el punto siguiente) hay que enlazar el aviso
-  **desde el formulario mismo**: ése es el momento en que la LFPDPPP exige
-  ponerlo a la vista, no el pie de página.
+  Además, falta que **un abogado valide el contenido completo**. Lo de enlazar el
+  aviso desde el formulario ya está resuelto: la casilla de consentimiento de
+  `/contacto/` lo enlaza en el momento mismo en que se recaban los datos, que es
+  lo que la LFPDPPP exige.
 
-- [ ] **Falta el endpoint del formulario de contacto.** No existe ningún
-  `<form>` en el sitio: los enlaces *Contacto* del header y del pie apuntan a
-  `href="#"`. Como no hay backend ni build, un formulario necesita un endpoint
-  de terceros (Formspree, Netlify Forms, Google Forms) — o bien resolverse con
-  WhatsApp, que es lo que ya hace la ficha del lote y no requiere infraestructura
-  nueva. Decidir cuál antes de maquetar el formulario.
+- [x] **Formulario de contacto publicado** en `/contacto/`, con endpoint en
+  **Web3Forms**. La `access_key` va a la vista en el HTML: es pública por
+  necesidad, exactamente por la misma razón que la clave de Maps (el envío sale
+  del navegador y no hay build que pueda esconderla). Cómo está armado:
+  [Formulario de contacto](#formulario-de-contacto).
+
+  > **Endurecimiento pendiente:** en el panel de Web3Forms se puede restringir el
+  > dominio desde el que se aceptan envíos. Mientras no se haga, cualquiera puede
+  > copiar la clave y mandar mensajes al buzón desde otro sitio.
+
+- [ ] **Falta el correo y el teléfono de ventas.** La columna lateral de
+  `/contacto/` sale solo con WhatsApp porque **no existe en el repo ninguna
+  dirección ni teléfono comercial**, y no se inventan. Cuando los haya, se
+  agregan ahí con enlaces `mailto:` y `tel:`.
+
+  > **Ojo:** `privacidaddedatos@grupoherso.com.mx` y el `(443) 324 24 39` del
+  > aviso de privacidad **no sirven para esto**. Son del encargado de datos
+  > personales, para solicitudes ARCO; reutilizarlos mandaría prospectos al
+  > buzón equivocado.
 
 - [ ] **Transiciones ease-in-out del scroll del header.** `nav.js` usa
   `scrollIntoView({ behavior: 'smooth' })`; la curva y la duración las elige el
@@ -157,6 +170,20 @@ build); la clave real vive en `index.html`.
   scroll horizontal** — el correo `privacidaddedatos@grupoherso.com.mx` es una
   cadena larga sin espacios y desborda si se le quita `break-words`. En Network
   no debe aparecer ninguna petición a `maps.googleapis.com`.
+- **Formulario** (`/contacto/`). Sin mandar nada al buzón real: en la consola,
+  `window.fetch = async () => new Response('{}', {status:200})` antes de enviar.
+  - Enviar vacío: cuatro errores en español, borde rojo y el foco en *Nombre*.
+    Al corregir un campo su error se va **solo**, sin tocar los demás.
+  - Camino feliz: el formulario se sustituye por el bloque de éxito y el foco
+    salta ahí.
+  - Con el stub lanzando error: aparece la alerta con la salida por WhatsApp,
+    el botón vuelve a "Enviar mensaje" y **lo escrito sigue ahí**.
+  - El `<select>` de lote debe traer 49 opciones agrupadas por manzana. Si sale
+    con una sola, el KML no cargó — revisar rutas (ver [Datos](#datos)).
+  - **A 320px no debe haber scroll horizontal**, y hay que medirlo *después* de
+    que se llenen las opciones: el ancho del `<select>` cambia al llegar.
+  - Sin JavaScript (DevTools → Settings → Debugger → *Disable JavaScript*): el
+    formulario debe verse completo y el navegador debe validar con sus burbujas.
 
 ---
 
@@ -166,9 +193,14 @@ build); la clave real vive en `index.html`.
 index.html              Portada: marcado + cargador de Google Maps
 aviso-de-privacidad/
   index.html            Aviso de privacidad — la carpeta ES la ruta pública
+contacto/
+  index.html            Formulario de contacto
+  gracias/
+    index.html          Aterrizaje del envío sin JavaScript (noindex)
 assets/
   js/
-    tailwind-config.js  Tokens de DESIGN.md; lo cargan las dos páginas
+    tailwind-config.js  Tokens de DESIGN.md; lo cargan todas las páginas
+    contact.js          Validación, envío a Web3Forms y selector de lote
     main.js             Arranque y cableado (solo la portada)
     lots.js             Carga y unión de KML + JSON, normalización, estilos
     state.js            Estado (selección/hover/filtro) y bus de eventos
@@ -190,9 +222,9 @@ DESIGN.md               Tokens de diseño y guía de estilo
 
 No hay router: **en GitHub Pages una carpeta con `index.html` es una ruta.**
 `aviso-de-privacidad/index.html` se sirve en `/aviso-de-privacidad/`, y
-`/aviso-de-privacidad` (sin barra) recibe un 301 a la versión con barra. Para
-agregar otra página legal basta con crear otra carpeta igual; no hay nada que
-configurar.
+`/aviso-de-privacidad` (sin barra) recibe un 301 a la versión con barra. Lo mismo
+vale para `/contacto/` y `/contacto/gracias/`. Para agregar otra página basta con
+crear otra carpeta igual; no hay nada que configurar.
 
 Como esa página vive un nivel por debajo de la raíz, **sus rutas a assets llevan
 `../`** (`../assets/js/nav.js`). Es el único cuidado al copiar marcado desde
@@ -226,6 +258,72 @@ Cada sección del aviso tiene `id` (`#identidad`, `#finalidades`,
 `#derechos-arco`…), así que se puede enlazar directo a un apartado; la regla
 `main [id] { scroll-margin-top }` del `<style>` evita que el header fijo lo tape.
 
+### Formulario de contacto
+
+`/contacto/` es el único `<form>` del sitio. El endpoint es **Web3Forms**
+(`https://api.web3forms.com/submit`), porque sin backend ni build no hay dónde
+recibir un POST propio.
+
+**Todo el JavaScript es mejora progresiva.** El `<form>` lleva su `action`, su
+`method` y sus atributos de validación en el marcado, así que si `contact.js` no
+carga, el navegador hace el POST y valida por su cuenta. De ahí salen tres
+decisiones que parecen rarezas y no lo son:
+
+- **`form.noValidate` se pone desde JS, nunca en el HTML.** Con el atributo
+  `novalidate` escrito en el marcado, quien no tenga JavaScript mandaría campos
+  vacíos a Web3Forms. Puesto desde JS: con JavaScript salen nuestros mensajes en
+  español, sin él salen las burbujas del navegador. Las reglas viven en un solo
+  lugar (los atributos) y no se duplican.
+- **El campo del correo se llama `email`, no `correo`.** Web3Forms toma de ahí la
+  dirección de respuesta *por el nombre del campo*. Con cualquier otro nombre, el
+  asesor le daría «responder» y no le llegaría a quien escribió.
+- **`fetch(form.action)`**, no una constante con la URL repetida. Una sola fuente
+  de verdad, y para probar en local basta con apuntar el `action` a otro lado.
+
+El campo oculto `redirect` es **solo** para el camino sin JavaScript: manda al
+visitante a `/contacto/gracias/`. `contact.js` lo borra del payload AJAX, porque
+si viaja, Web3Forms contesta una redirección en vez del JSON que esperamos. La
+respuesta se juzga por el código HTTP: la documentación no garantiza la llave
+`success`, así que exigirla rompería el día que dejen de mandarla.
+
+**El selector de lote se llena con `loadLots()`**, el mismo módulo que alimenta el
+mapa. Es a propósito: el KML es lo único que sabe cuáles lotes son públicos
+—`lotes-data.json` trae 63 registros y 14 no tienen polígono—, y el formato del
+nombre (`MZ 06 Lote 16`) ya vive ahí, así que reimplementarlo daría dos
+ortografías del mismo lote en el mismo buzón. Cuesta **31 KB comprimidos**, es
+asíncrono y ya viene en caché si el visitante llegó desde el mapa. Si esa carga
+falla, el `<select>` se queda con su opción única y el formulario se envía igual:
+el campo nunca es obligatorio.
+
+Hay un enlace profundo listo, `/contacto/?lote=mz06L16`, que preselecciona el
+lote. **Hoy nada del sitio lo genera** — la ficha del lote manda a WhatsApp a
+propósito —, pero queda por si algún día se quiere cambiar eso.
+
+> **Los inputs se apartan de DESIGN.md a propósito.** DESIGN.md pide campos con
+> solo borde inferior; el único control tipo campo que ya estaba publicado (el
+> disparador del filtro) es una caja completa de 1px sobre blanco. Se siguió el
+> control publicado: un formulario con otro estilo leería como otro sitio. El
+> texto que se escribe va además en caja normal a 13px y no en versalitas
+> espaciadas como el resto de las etiquetas — un correo así es ilegible.
+
+**Qué enlace va a dónde.** Es deliberado y conviene no «terminar el trabajo»:
+
+| Enlace | Destino |
+|---|---|
+| *Contacto* del header (escritorio, menú móvil y botón blanco) | `/contacto/` |
+| *Contacto* del pie | `/contacto/` |
+| CTA de la hoja lateral del explorador | WhatsApp |
+| *Contáctanos* de la ficha del lote (`#card-cta`) | WhatsApp, con el nombre del lote en el mensaje |
+| Botón flotante | WhatsApp |
+
+La lógica: el header y el pie son navegación del sitio; los CTA de en medio
+aparecen cuando el visitante ya está viendo un lote concreto, y ahí WhatsApp
+convierte mejor que un formulario. El menú móvil **sí** va al formulario aunque
+esté "dentro" del header desplegable: es la navegación del header por debajo de
+768px, y el botón blanco que lleva al formulario está oculto en ese ancho, así
+que dejarlo en WhatsApp haría el formulario inalcanzable desde el header en un
+teléfono.
+
 ### Datos
 
 El mapa y el listado se construyen **desde el KML**: solo aparecen los 49 lotes
@@ -236,6 +334,12 @@ publicarlos hay que agregar su polígono al KML.
 
 El `id` de cada `<Placemark>` es la llave que une ambos archivos
 (p. ej. `mz06L16`).
+
+`lots.js` resuelve las rutas de los dos archivos contra `import.meta.url`, no
+contra el documento. Por eso `loadLots()` funciona igual desde la portada que
+desde `/contacto/`, que vive un nivel más abajo: con rutas relativas al documento
+el formulario habría pedido `/contacto/assets/predios-Tres-Marias.kml` y recibido
+un 404.
 
 ### Video del hero
 
