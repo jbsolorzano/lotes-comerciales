@@ -1,6 +1,6 @@
 # lotes-comerciales
 
-Lotes Tres Marías — sitio estático con un explorador de lotes sobre Google Maps.
+Lotes Distrito Zalce — sitio estático con un explorador de lotes sobre Google Maps.
 
 No hay build ni dependencias: el sitio se publica tal cual con `git push`.
 
@@ -18,12 +18,27 @@ dominio propio y HTTPS forzado.
   pantalla de inicio en iOS. Mientras no exista, el navegador se lleva un 404 en
   cada carga.
 
-- [ ] **No hay Aviso de privacidad.** La LFPDPPP obliga a publicarlo en cuanto
-  se recaben datos personales. Hoy el sitio no recaba nada por sí mismo, pero
-  **esto se vuelve obligatorio el día que exista el formulario de contacto**
-  (ver el punto siguiente) — conviene resolver los dos juntos. El enlace *Legal*
-  del pie apunta a `href="#"` y es el lugar natural para colgarlo. El contenido
-  concreto hay que validarlo con un abogado; aquí solo queda anotado que falta.
+- [x] **Aviso de privacidad publicado** en `/aviso-de-privacidad/` y enlazado
+  desde el pie de las dos páginas — es el enlace que antes decía *Legal* y
+  apuntaba a `href="#"`. Cómo está armado: [Páginas y rutas](#páginas-y-rutas).
+
+- [ ] **Al texto del aviso le faltan dos cosas.** El contenido se publicó tal
+  cual lo entregó la empresa —sin reescribir ni resumir—, así que esto son
+  huecos del documento legal, no del marcado:
+
+  - La sección *«¿Cómo puede limitar el uso o divulgación de su información
+    personal?»* anuncia que «contamos con los siguientes listados de exclusión»
+    y luego **no enumera ninguno**. O se listan, o se reformula la frase: tal
+    como está, promete algo que no entrega.
+  - **No hay fecha de última actualización ni versión.** El propio aviso dice
+    que «puede sufrir modificaciones», y sin fecha el titular no tiene forma de
+    saber qué versión aceptó ni de notar que cambió. Conviene sellarlo con una
+    fecha visible al final del documento.
+
+  Además, falta que **un abogado valide el contenido completo**, y cuando exista
+  el formulario de contacto (ver el punto siguiente) hay que enlazar el aviso
+  **desde el formulario mismo**: ése es el momento en que la LFPDPPP exige
+  ponerlo a la vista, no el pie de página.
 
 - [ ] **Falta el endpoint del formulario de contacto.** No existe ningún
   `<form>` en el sitio: los enlaces *Contacto* del header y del pie apuntan a
@@ -137,16 +152,24 @@ build); la clave real vive en `index.html`.
   presupuesto de 16.6 ms por frame.
 - **Red:** `maps3d` no debe aparecer en la pestaña Network hasta pulsar
   "Ver en 3D".
+- **Aviso de privacidad** (`/aviso-de-privacidad/`): que el enlace del pie lleve
+  ahí desde la portada, que el menú móvil abra, y que **a 320px de ancho no haya
+  scroll horizontal** — el correo `privacidaddedatos@grupoherso.com.mx` es una
+  cadena larga sin espacios y desborda si se le quita `break-words`. En Network
+  no debe aparecer ninguna petición a `maps.googleapis.com`.
 
 ---
 
 ## Estructura
 
 ```
-index.html              Marcado + config de Tailwind + cargador de Google Maps
+index.html              Portada: marcado + cargador de Google Maps
+aviso-de-privacidad/
+  index.html            Aviso de privacidad — la carpeta ES la ruta pública
 assets/
   js/
-    main.js             Arranque y cableado
+    tailwind-config.js  Tokens de DESIGN.md; lo cargan las dos páginas
+    main.js             Arranque y cableado (solo la portada)
     lots.js             Carga y unión de KML + JSON, normalización, estilos
     state.js            Estado (selección/hover/filtro) y bus de eventos
     map2d.js            Mapa 2D, polígonos, eventos nativos, encuadre
@@ -162,6 +185,46 @@ assets/
   WhatsApp.svg
 DESIGN.md               Tokens de diseño y guía de estilo
 ```
+
+### Páginas y rutas
+
+No hay router: **en GitHub Pages una carpeta con `index.html` es una ruta.**
+`aviso-de-privacidad/index.html` se sirve en `/aviso-de-privacidad/`, y
+`/aviso-de-privacidad` (sin barra) recibe un 301 a la versión con barra. Para
+agregar otra página legal basta con crear otra carpeta igual; no hay nada que
+configurar.
+
+Como esa página vive un nivel por debajo de la raíz, **sus rutas a assets llevan
+`../`** (`../assets/js/nav.js`). Es el único cuidado al copiar marcado desde
+`index.html`.
+
+**Qué comparte con la portada y qué no.** El header, el pie y el botón flotante
+de WhatsApp son el mismo marcado, e importa `nav.js` para el menú móvil en vez
+de duplicarlo — `initAnchors()` e `initFab()` no encuentran sus elementos
+(`#nosotrosBtn`, `#explorer`) y salen solos. Lo que **no** carga es `main.js`:
+sin mapa ni video, la página no toca la API de Google Maps y no gasta cuota.
+
+Los tokens de color y tipografía salen de `assets/js/tailwind-config.js`, que
+antes estaba en línea dentro de `index.html`. Se sacó a un archivo para que las
+dos páginas no se separen visualmente con el tiempo.
+
+> **`tailwind-config.js` no es un módulo ES.** Se carga con un `<script src>`
+> normal —bloqueante, justo después del CDN de Tailwind y antes del `<style>`—
+> porque Tailwind tiene que leer `tailwind.config` antes de generar las clases.
+> Si se le pone `type="module"` o `defer`, se ejecuta demasiado tarde y la
+> página se cae al Tailwind por defecto: la paleta y las fuentes desaparecen.
+
+> **Ese HTML es la única copia del aviso que existe en el repo.** El texto se
+> publicó palabra por palabra como lo entregó la empresa; el marcado solo le da
+> formato (jerarquía de encabezados, listas, `mailto:`/`tel:`). Al tocar esa
+> página **no se corrige ni se reescribe el texto legal** —ni una coma— aunque
+> se le vea una errata: eso se cambia con quien firma el aviso, no aquí. Si
+> alguna vez se vuelve a editar en Word o Markdown, el archivo fuente va al
+> repo y esta nota se actualiza.
+
+Cada sección del aviso tiene `id` (`#identidad`, `#finalidades`,
+`#derechos-arco`…), así que se puede enlazar directo a un apartado; la regla
+`main [id] { scroll-margin-top }` del `<style>` evita que el header fijo lo tape.
 
 ### Datos
 

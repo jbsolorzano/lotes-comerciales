@@ -3,7 +3,7 @@
 <html class="light" lang="es"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
-<title>TRES MARÍAS | Lotes comerciales</title>
+<title>DISTRITO ZALCE | Lotes comerciales</title>
 <!-- Sin esto el navegador pide /favicon.ico por su cuenta y recibe un 404.
      El PNG aún no existe; al agregarlo, basta con este nombre de archivo. -->
 <link rel="icon" type="image/png" href="assets/favicon.png"/>
@@ -13,98 +13,10 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,300;0,400;0,700;1,400&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-        tailwind.config = {
-          darkMode: "class",
-          theme: {
-            extend: {
-              "colors": {
-                      "surface-variant": "#e3e2e0",
-                      "secondary-fixed-dim": "#d7c4a1",
-                      "on-secondary-fixed-variant": "#52452a",
-                      "on-primary": "#ffffff",
-                      "surface-container-highest": "#e3e2e0",
-                      "surface": "#faf9f7",
-                      "on-secondary-fixed": "#241a04",
-                      "inverse-on-surface": "#f1f1ef",
-                      "surface-tint": "#5f5e60",
-                      "primary-container": "#2c2c2e",
-                      "tertiary-container": "#2b2c2e",
-                      "secondary": "#6b5d40",
-                      "tertiary-fixed": "#e3e2e4",
-                      "tertiary": "#171819",
-                      "outline-variant": "#c7c6ca",
-                      "error-container": "#ffdad6",
-                      "on-secondary-container": "#6f6144",
-                      "inverse-primary": "#c8c6c8",
-                      "on-error-container": "#93000a",
-                      "on-tertiary-fixed": "#1b1c1d",
-                      "secondary-fixed": "#f4e0bc",
-                      "on-tertiary-container": "#939395",
-                      "surface-dim": "#dadad8",
-                      "surface-container": "#efeeec",
-                      "tertiary-fixed-dim": "#c7c6c8",
-                      "on-surface-variant": "#46464a",
-                      "on-tertiary": "#ffffff",
-                      "on-surface": "#1a1c1b",
-                      "secondary-container": "#f1ddb9",
-                      "primary": "#171819",
-                      "surface-bright": "#faf9f7",
-                      "on-background": "#1a1c1b",
-                      "on-primary-fixed": "#1b1b1d",
-                      "surface-container-low": "#f4f3f1",
-                      "inverse-surface": "#2f3130",
-                      "on-tertiary-fixed-variant": "#464749",
-                      "on-primary-container": "#949395",
-                      "surface-container-lowest": "#ffffff",
-                      "background": "#faf9f7",
-                      "on-secondary": "#ffffff",
-                      "surface-container-high": "#e9e8e6",
-                      "primary-fixed": "#e4e2e4",
-                      "on-primary-fixed-variant": "#474649",
-                      "outline": "#77777b",
-                      "on-error": "#ffffff",
-                      "error": "#ba1a1a",
-                      "primary-fixed-dim": "#c8c6c8"
-              },
-              "borderRadius": {
-                      "DEFAULT": "0.25rem",
-                      "lg": "0.5rem",
-                      "xl": "0.75rem",
-                      "full": "9999px"
-              },
-              "spacing": {
-                      "stack-lg": "48px",
-                      "stack-md": "24px",
-                      "section-gap": "128px",
-                      "container-max": "1440px",
-                      "margin-edge": "64px",
-                      "gutter": "32px",
-                      "unit": "8px",
-                      "stack-sm": "12px"
-              },
-              "fontFamily": {
-                      "headline-lg": ["Noto Serif"],
-                      "body-md": ["Manrope"],
-                      "body-lg": ["Manrope"],
-                      "headline-md": ["Noto Serif"],
-                      "display-xl": ["Noto Serif"],
-                      "label-caps": ["Manrope"],
-                      "button": ["Manrope"]
-              },
-              "fontSize": {
-                      "headline-lg": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "400"}],
-                      "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
-                      "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0.01em", "fontWeight": "400"}],
-                      "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "400"}],
-                      "display-xl": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "400"}],
-                      "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.15em", "fontWeight": "600"}],
-                      "button": ["14px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500"}]
-              }
-            },
-          },
-        }
-    </script>
+<!-- Los tokens viven en un archivo aparte para que aviso-de-privacidad/ use
+     exactamente la misma paleta y escala tipográfica. Script clásico y
+     bloqueante: tiene que ejecutarse antes de que Tailwind genere las clases. -->
+<script id="tailwind-config" src="assets/js/tailwind-config.js"></script>
 <style>
         /* Tailwind's display utilities out-specify the UA [hidden] rule, so make
            the attribute authoritative — the JS uses it as the show/hide switch. */
@@ -170,7 +82,7 @@
 <!-- TopAppBar -->
 <header class="fixed top-0 left-0 right-0 z-50 border-b border-stone-300/30 bg-primary">
 <div class="flex justify-between items-center gap-4 w-full px-6 md:px-12 py-4 md:py-6 max-w-[1440px] mx-auto">
-<h1 class="text-base sm:text-xl md:text-2xl font-light tracking-[0.2em] sm:tracking-[0.3em] text-white whitespace-nowrap">TRES MARÍAS</h1>
+<h1 class="text-base sm:text-xl md:text-2xl font-light tracking-[0.2em] sm:tracking-[0.3em] text-white whitespace-nowrap">DISTRITO ZALCE</h1>
 <nav class="hidden md:flex items-center space-x-12">
 <a id="nosotrosBtn" class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="#about">Nosotros</a>
 <a id="portfolioBtn" class="font-sans uppercase tracking-[0.2em] text-sm border-b pb-1 text-white border-white" href="#explorer">Portfolio</a>
@@ -215,7 +127,7 @@
 ></video>
 <div class="absolute inset-0 bg-black/50"></div>
 <div class="relative z-10 text-center max-w-4xl px-6 md:px-gutter">
-<h2 class="font-headline-lg text-3xl sm:text-5xl md:text-display-xl text-white mb-4 md:mb-6">Tres Marías: Lotes Comerciales</h2>
+<h2 class="font-headline-lg text-3xl sm:text-5xl md:text-display-xl text-white mb-4 md:mb-6">Distrito Zalce: Lotes Comerciales</h2>
 <p class="font-body-lg text-white/80 max-w-2xl mx-auto mb-8 md:mb-10 tracking-wide uppercase text-xs sm:text-sm">Oportunidades exclusivas de adquisición en corredores de alto crecimiento.</p>
 <div class="h-1 w-24 bg-white/40 mx-auto"></div>
 </div>
@@ -230,7 +142,7 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-24 items-start">
 <div class="space-y-8">
 <p class="font-headline-md text-xl md:text-2xl leading-relaxed text-primary">
-                        Ubicada al Oriente de la ciudad de Morelia, Tres Marías representa un cambio de paradigma en la adquisición de terrenos, donde la preservación ambiental se encuentra con el crecimiento urbano estratégico.
+                        Ubicada al Oriente de la ciudad de Morelia, Distrito Zalce representa un cambio de paradigma en la adquisición de terrenos, donde la preservación ambiental se encuentra con el crecimiento urbano estratégico.
                     </p>
 <div class="h-px w-20 bg-stone-300"></div>
 </div>
@@ -415,13 +327,13 @@
 <footer class="border-t bg-primary border-t border-stone-300/10">
 <div class="w-full py-10 md:py-16 px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1440px] mx-auto">
 <div>
-<h4 class="font-serif text-lg md:text-xl mb-4 text-white tracking-[0.3em]">TRES MARÍAS</h4>
-<p class="font-sans text-[10px] tracking-widest uppercase opacity-60 text-stone-400">© 2024 TRES MARÍAS. EXCLUSIVE LAND BANKING PRIVACY RESERVED.</p>
+<h4 class="font-serif text-lg md:text-xl mb-4 text-white tracking-[0.3em]">DISTRITO ZALCE</h4>
+<p class="font-sans text-[10px] tracking-widest uppercase opacity-60 text-stone-400">© 2026 DISTRITO ZALCE. EXCLUSIVE LAND BANKING PRIVACY RESERVED.</p>
 </div>
 <div class="flex flex-wrap gap-6 md:gap-8 justify-start md:justify-end">
 <a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="#">Strategic Land</a>
 <a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="#">Institutional</a>
-<a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="#">Legal</a>
+<a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="aviso-de-privacidad/">Aviso de privacidad</a>
 <a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="#">Contacto</a>
 </div>
 </div>
