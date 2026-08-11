@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<!-- Ruta pública: /contacto/gracias/
+     Es el aterrizaje del camino SIN JavaScript: Web3Forms redirige aquí tras el
+     POST nativo (el campo oculto `redirect` de /contacto/). Con JavaScript nadie
+     ve esta página — el éxito se muestra dentro del propio formulario.
+     Va con noindex porque suelta, fuera de ese flujo, no significa nada. -->
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Mensaje enviado | DISTRITO ZALCE</title>
+<meta name="robots" content="noindex"/>
+<link rel="icon" type="image/png" href="../../assets/favicon.png"/>
+<link rel="apple-touch-icon" href="../../assets/favicon.png"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,300;0,400;0,700;1,400&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config" src="../../assets/js/tailwind-config.js"></script>
+<style>
+        [hidden] { display: none !important; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #707072; }
+
+        @media (prefers-reduced-motion: reduce) {
+          *, ::before, ::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+          }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-secondary-container">
+<header class="fixed top-0 left-0 right-0 z-50 border-b border-stone-300/30 bg-primary">
+<div class="flex justify-between items-center gap-4 w-full px-6 md:px-12 py-4 md:py-6 max-w-[1440px] mx-auto">
+<a href="../../" class="text-base sm:text-xl md:text-2xl font-light tracking-[0.2em] sm:tracking-[0.3em] text-white whitespace-nowrap">DISTRITO ZALCE</a>
+<nav class="hidden md:flex items-center space-x-12">
+<a class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="../../#about">Nosotros</a>
+<a class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="../../#explorer">Portfolio</a>
+<a class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="../">Contacto</a>
+</nav>
+<div class="flex items-center gap-1">
+<a class="hidden sm:block px-4 md:px-8 py-2.5 md:py-3 text-button font-button uppercase tracking-widest transition-colors bg-white text-primary hover:bg-stone-200" href="../">
+                Contacto
+            </a>
+<button id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Abrir menú"
+        class="md:hidden p-2 -mr-2 text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+<div id="mobile-menu" hidden class="md:hidden border-t border-white/10 bg-primary px-6 py-4 space-y-4">
+<a class="block font-sans uppercase tracking-[0.2em] text-sm text-stone-300" href="../../#about">Nosotros</a>
+<a class="block font-sans uppercase tracking-[0.2em] text-sm text-stone-300" href="../../#explorer">Portfolio</a>
+<a class="block font-sans uppercase tracking-[0.2em] text-sm text-stone-300" href="../">Contacto</a>
+</div>
+</header>
+
+<main class="pt-[72px] md:pt-[96px]">
+<section class="bg-[#F4F3F1] py-16 md:py-32 px-6 md:px-12">
+<div class="max-w-[1440px] mx-auto">
+<span class="font-sans text-[10px] uppercase tracking-[0.4em] text-stone-400 mb-4 block">Contacto</span>
+<h1 class="font-headline-lg text-3xl md:text-5xl text-primary max-w-xl">Mensaje enviado</h1>
+<div class="h-px w-20 bg-stone-300 mt-8 md:mt-10"></div>
+</div>
+</section>
+
+<section class="py-16 md:py-24 px-6 md:px-12">
+<div class="max-w-[1440px] mx-auto">
+<div class="max-w-3xl">
+<span class="material-symbols-outlined text-4xl text-secondary" aria-hidden="true">mark_email_read</span>
+<p class="font-body-lg text-stone-600 leading-loose mt-6">
+            Gracias por escribirnos. Recibimos tu mensaje y un asesor se pondrá en contacto
+            contigo a la brevedad.
+        </p>
+<p class="font-body-lg text-stone-600 leading-loose mt-6">
+            Si prefieres una respuesta inmediata, escríbenos por
+            <a class="text-primary font-semibold underline underline-offset-4 decoration-stone-300 hover:decoration-primary transition-colors"
+               href="https://wa.me/5544996922?text=Me%20interesa%20conocer%20mas%20de%20los%20lotes%20comerciales%20en%20Tres%20Marias.">WhatsApp</a>.
+        </p>
+<div class="border-t border-stone-200 mt-12 md:mt-16 pt-12 md:pt-16">
+<a class="inline-flex items-center gap-2 font-sans text-[10px] uppercase tracking-widest text-stone-500 hover:text-primary transition-colors" href="../../">
+<span class="material-symbols-outlined text-base" aria-hidden="true">arrow_back</span> Volver al inicio
+</a>
+</div>
+</div>
+</div>
+</section>
+</main>
+
+<footer class="border-t bg-primary border-t border-stone-300/10">
+<div class="w-full py-10 md:py-16 px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1440px] mx-auto">
+<div>
+<h4 class="font-serif text-lg md:text-xl mb-4 text-white tracking-[0.3em]">DISTRITO ZALCE</h4>
+<p class="font-sans text-[10px] tracking-widest uppercase opacity-60 text-stone-400">© 2026 DISTRITO ZALCE. EXCLUSIVE LAND BANKING PRIVACY RESERVED.</p>
+</div>
+<div class="flex flex-wrap gap-6 md:gap-8 justify-start md:justify-end">
+<a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="#">Strategic Land</a>
+<a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="#">Institutional</a>
+<a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="../../aviso-de-privacidad/">Aviso de privacidad</a>
+<a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="../">Contacto</a>
+</div>
+</div>
+<div class="w-full px-6 md:px-12 pb-10 md:pb-12 max-w-[1440px] mx-auto">
+<p class="font-sans text-[10px] leading-relaxed text-stone-400 border-t border-stone-300/10 pt-6 max-w-3xl">
+Los precios publicados no constituyen una oferta vinculante y pueden modificarse sin previo aviso.
+La disponibilidad, promociones, formas de pago y condiciones comerciales pueden afectar el precio
+final. Para conocer el precio vigente y las condiciones aplicables, comuníquese con un asesor de ventas.
+</p>
+</div>
+</footer>
+
+<a id="whatsapp-fab" href="https://wa.me/5544996922?text=Me%20interesa%20conocer%20mas%20de%20los%20lotes%20comerciales%20en%20Tres%20Marias."
+   aria-label="Contactar por WhatsApp"
+   class="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[60] w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-[#25D366] rounded-full shadow-xl hover:scale-110 active:scale-95 transition duration-300">
+  <img src="../../assets/WhatsApp.svg" alt="" class="w-8 h-8 md:w-10 md:h-10 object-contain" />
+</a>
+
+<script type="module">
+  import { initNav } from '../../assets/js/nav.js';
+  initNav();
+</script>
+</body></html>

@@ -86,12 +86,14 @@
 <nav class="hidden md:flex items-center space-x-12">
 <a id="nosotrosBtn" class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="#about">Nosotros</a>
 <a id="portfolioBtn" class="font-sans uppercase tracking-[0.2em] text-sm border-b pb-1 text-white border-white" href="#explorer">Portfolio</a>
-<a class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="#">Contacto</a>
+<a class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="contacto/">Contacto</a>
 </nav>
 <div class="flex items-center gap-1">
-<button class="hidden sm:block px-4 md:px-8 py-2.5 md:py-3 text-button font-button uppercase tracking-widest transition-colors bg-white text-primary hover:bg-stone-200">
+<!-- Era un <button> sin manejador y sin id: no hacía absolutamente nada. Ahora
+     es un <a>, como el equivalente de las otras páginas. -->
+<a class="hidden sm:block px-4 md:px-8 py-2.5 md:py-3 text-button font-button uppercase tracking-widest transition-colors bg-white text-primary hover:bg-stone-200" href="contacto/">
                 Contacto
-            </button>
+            </a>
 <button id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Abrir menú"
         class="md:hidden p-2 -mr-2 text-white">
 <span class="material-symbols-outlined">menu</span>
@@ -101,7 +103,10 @@
 <div id="mobile-menu" hidden class="md:hidden border-t border-white/10 bg-primary px-6 py-4 space-y-4">
 <a id="nav-nosotros" class="block font-sans uppercase tracking-[0.2em] text-sm text-stone-300" href="#about">Nosotros</a>
 <a id="nav-portfolio" class="block font-sans uppercase tracking-[0.2em] text-sm text-white" href="#explorer">Portfolio</a>
-<a class="block font-sans uppercase tracking-[0.2em] text-sm text-stone-300" href="https://wa.me/5544996922?text=Me%20interesa%20conocer%20mas%20de%20los%20lotes%20comerciales%20en%20Tres%20Marias.">Contacto</a>
+<!-- Este menú ES la navegación del header por debajo de md, así que "Contacto"
+     lleva al formulario igual que su gemelo de escritorio. Los CTA de en medio
+     (hoja lateral, ficha del lote) y el botón flotante siguen yendo a WhatsApp. -->
+<a class="block font-sans uppercase tracking-[0.2em] text-sm text-stone-300" href="contacto/">Contacto</a>
 </div>
 </header>
 <main>
@@ -334,7 +339,7 @@
 <a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="#">Strategic Land</a>
 <a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="#">Institutional</a>
 <a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="aviso-de-privacidad/">Aviso de privacidad</a>
-<a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="#">Contacto</a>
+<a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="contacto/">Contacto</a>
 </div>
 </div>
 <!-- El mismo aviso, a nivel de sitio: la barra lateral también publica precios

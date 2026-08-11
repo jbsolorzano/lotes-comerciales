@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<!-- Ruta pública: /contacto/
+     Como en /aviso-de-privacidad/, la carpeta ES la ruta: GitHub Pages sirve el
+     index.html de cada carpeta y no hay router ni build que configurar.
+     Las rutas a assets llevan ../ porque esta página vive un nivel bajo la raíz. -->
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Contacto | DISTRITO ZALCE</title>
+<meta name="description" content="Escríbenos para conocer disponibilidad, precios y condiciones de los lotes comerciales de Distrito Zalce en Morelia, Michoacán."/>
+<link rel="canonical" href="https://distritozalce.com/contacto/"/>
+<link rel="icon" type="image/png" href="../assets/favicon.png"/>
+<link rel="apple-touch-icon" href="../assets/favicon.png"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://api.web3forms.com"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,300;0,400;0,700;1,400&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Mismos tokens que index.html. Ver assets/js/tailwind-config.js. -->
+<script id="tailwind-config" src="../assets/js/tailwind-config.js"></script>
+<style>
+        /* Igual que en las otras páginas: las utilidades de display de Tailwind
+           ganan por especificidad a la regla [hidden] del navegador, y el JS usa
+           el atributo como interruptor (menú móvil, formulario, éxito, alerta). */
+        [hidden] { display: none !important; }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #707072; }
+
+        main [id] { scroll-margin-top: 100px; }
+        @media (max-width: 767px) {
+          main [id] { scroll-margin-top: 80px; }
+        }
+
+        /* El estado de error se resuelve en CSS y no alternando clases de
+           Tailwind: `border-error` y `border-stone-200` escriben la misma
+           propiedad y el orden en la hoja que genera el CDN no está bajo nuestro
+           control, así que cuál gana sería un volado. */
+        .field-control[aria-invalid="true"] { border-color: #ba1a1a; }
+        .field-control[aria-invalid="true"]:focus {
+          border-color: #ba1a1a;
+          --tw-ring-color: #ba1a1a;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          *, ::before, ::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+          }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-secondary-container">
+<!-- TopAppBar — mismo componente que las otras páginas. -->
+<header class="fixed top-0 left-0 right-0 z-50 border-b border-stone-300/30 bg-primary">
+<div class="flex justify-between items-center gap-4 w-full px-6 md:px-12 py-4 md:py-6 max-w-[1440px] mx-auto">
+<a href="../" class="text-base sm:text-xl md:text-2xl font-light tracking-[0.2em] sm:tracking-[0.3em] text-white whitespace-nowrap">DISTRITO ZALCE</a>
+<nav class="hidden md:flex items-center space-x-12">
+<a class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="../#about">Nosotros</a>
+<a class="font-sans uppercase tracking-[0.2em] text-sm transition-colors duration-300 text-stone-400 hover:text-white" href="../#explorer">Portfolio</a>
+<a aria-current="page" class="font-sans uppercase tracking-[0.2em] text-sm border-b pb-1 text-white border-white" href="./">Contacto</a>
+</nav>
+<div class="flex items-center gap-1">
+<a aria-current="page" class="hidden sm:block px-4 md:px-8 py-2.5 md:py-3 text-button font-button uppercase tracking-widest transition-colors bg-white text-primary hover:bg-stone-200" href="./">
+                Contacto
+            </a>
+<button id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Abrir menú"
+        class="md:hidden p-2 -mr-2 text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+<div id="mobile-menu" hidden class="md:hidden border-t border-white/10 bg-primary px-6 py-4 space-y-4">
+<a class="block font-sans uppercase tracking-[0.2em] text-sm text-stone-300" href="../#about">Nosotros</a>
+<a class="block font-sans uppercase tracking-[0.2em] text-sm text-stone-300" href="../#explorer">Portfolio</a>
+<a aria-current="page" class="block font-sans uppercase tracking-[0.2em] text-sm text-white" href="./">Contacto</a>
+</div>
+</header>
+
+<main class="pt-[72px] md:pt-[96px]">
+
+<!-- Encabezado del documento — misma banda tonal que "Sobre nosotros". -->
+<section class="bg-[#F4F3F1] py-16 md:py-32 px-6 md:px-12">
+<div class="max-w-[1440px] mx-auto">
+<span class="font-sans text-[10px] uppercase tracking-[0.4em] text-stone-400 mb-4 block">Contacto</span>
+<h1 class="font-headline-lg text-3xl md:text-5xl text-primary max-w-xl">Hablemos de tu inversión</h1>
+<div class="h-px w-20 bg-stone-300 mt-8 md:mt-10"></div>
+</div>
+</section>
+
+<section class="py-16 md:py-24 px-6 md:px-12">
+<div class="max-w-[1440px] mx-auto">
+<!-- minmax(0,1fr) y min-w-0 son la protección contra desbordamiento: una pista
+     de grid vale min-width:auto por defecto, y el <select> con "MZ 06 Lote 16
+     (DESARROLLO HERSO)" dentro es justo el hijo de ancho intrínseco que empuja
+     la página más allá del viewport en pantallas de 320px. -->
+<div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_300px] gap-12 lg:gap-20 max-w-5xl">
+
+<div class="min-w-0">
+<p class="font-body-lg text-stone-600 leading-loose mb-10 md:mb-12 max-w-2xl">
+                Cuéntanos qué buscas y un asesor te responderá con disponibilidad, precios
+                vigentes y condiciones comerciales. Todos los campos marcados con
+                <span class="text-error">*</span> son obligatorios.
+            </p>
+
+<!-- El `action` y el `method` no son decorativos: sin JavaScript el navegador
+     hace el POST por su cuenta y Web3Forms redirige a /contacto/gracias/.
+     contact.js intercepta el submit y lo convierte en fetch(). -->
+<form id="contact-form" action="https://api.web3forms.com/submit" method="POST" class="space-y-6 md:space-y-7">
+
+<!-- La access_key es pública por diseño, igual que la clave de Maps en
+     index.html: el formulario se envía desde el navegador y no hay forma de
+     ocultarla. Se protege restringiendo el dominio en el panel de Web3Forms. -->
+<input type="hidden" name="access_key" value="acd1c9df-c510-401c-94ee-71c30c131823">
+<input type="hidden" name="subject" value="Nuevo mensaje desde distritozalce.com">
+<input type="hidden" name="from_name" value="Distrito Zalce — Formulario de contacto">
+<!-- Solo sirve al camino sin JavaScript. contact.js lo quita del payload AJAX
+     para que Web3Forms conteste JSON en vez de una instrucción de redirección.
+     Tiene que ser absoluta y del mismo dominio (el plan gratuito no redirige
+     fuera del sitio). -->
+<input type="hidden" name="redirect" value="https://distritozalce.com/contacto/gracias/">
+<!-- Honeypot de Web3Forms: invisible para la vista, para el teclado y para el
+     lector de pantalla. Si llega marcado, el envío es de un bot. -->
+<input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-7">
+
+<div class="min-w-0">
+<label for="f-nombre" class="block font-sans text-[9px] uppercase tracking-[0.15em] text-stone-500 mb-1.5">
+                    Nombre <span class="text-error" aria-hidden="true">*</span>
+                </label>
+<!-- El texto que se escribe va en caja normal a 13px, no en versalitas con
+     tracking ancho como el resto de las etiquetas del sitio: un correo
+     electrónico en mayúsculas espaciadas es ilegible. -->
+<input id="f-nombre" name="nombre" type="text" required maxlength="80" autocomplete="name"
+       aria-describedby="e-nombre"
+       class="field-control w-full px-4 py-3.5 bg-white border border-stone-200 rounded-none
+              font-sans text-[13px] text-stone-900 placeholder:text-stone-300
+              focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors">
+<p id="e-nombre" class="field-error empty:hidden font-sans text-[11px] leading-snug text-error mt-1.5"></p>
+</div>
+
+<div class="min-w-0">
+<label for="f-email" class="block font-sans text-[9px] uppercase tracking-[0.15em] text-stone-500 mb-1.5">
+                    Correo electrónico <span class="text-error" aria-hidden="true">*</span>
+                </label>
+<!-- El campo se llama "email" a propósito: Web3Forms toma de ahí la dirección
+     de respuesta automáticamente. Con otro nombre (correo, mail…) las
+     respuestas del asesor no llegarían a quien escribió. -->
+<input id="f-email" name="email" type="email" required maxlength="120" autocomplete="email"
+       inputmode="email" spellcheck="false" aria-describedby="e-email"
+       class="field-control w-full px-4 py-3.5 bg-white border border-stone-200 rounded-none
+              font-sans text-[13px] text-stone-900 placeholder:text-stone-300
+              focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors">
+<p id="e-email" class="field-error empty:hidden font-sans text-[11px] leading-snug text-error mt-1.5"></p>
+</div>
+
+<div class="min-w-0">
+<label for="f-telefono" class="block font-sans text-[9px] uppercase tracking-[0.15em] text-stone-500 mb-1.5">
+                    Teléfono / WhatsApp <span class="text-stone-400 normal-case tracking-normal">(opcional)</span>
+                </label>
+<input id="f-telefono" name="telefono" type="tel" inputmode="tel" maxlength="20"
+       pattern="[0-9+()\s\-]{7,20}" autocomplete="tel" aria-describedby="e-telefono"
+       class="field-control w-full px-4 py-3.5 bg-white border border-stone-200 rounded-none
+              font-sans text-[13px] text-stone-900 placeholder:text-stone-300
+              focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors">
+<p id="e-telefono" class="field-error empty:hidden font-sans text-[11px] leading-snug text-error mt-1.5"></p>
+</div>
+
+<div class="min-w-0">
+<label for="f-lote" class="block font-sans text-[9px] uppercase tracking-[0.15em] text-stone-500 mb-1.5">
+                    Lote de interés <span class="text-stone-400 normal-case tracking-normal">(opcional)</span>
+                </label>
+<!-- Las opciones las agrega contact.js desde el mismo KML que alimenta el mapa.
+     Si esa carga falla, este <select> se queda con su única opción y el
+     formulario se envía igual: el campo nunca es obligatorio. -->
+<select id="f-lote" name="lote" autocomplete="off" aria-describedby="h-lote"
+        class="field-control w-full pl-4 pr-10 py-3.5 bg-white border border-stone-200 rounded-none
+               font-sans text-[12px] uppercase tracking-widest text-stone-900 font-semibold
+               focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors">
+<option value="">Sin lote específico</option>
+</select>
+<p id="h-lote" class="font-sans text-[10px] leading-snug text-stone-400 mt-1.5">Se completa con los lotes publicados en el mapa.</p>
+</div>
+
+</div>
+
+<div class="min-w-0">
+<label for="f-mensaje" class="block font-sans text-[9px] uppercase tracking-[0.15em] text-stone-500 mb-1.5">
+                Mensaje <span class="text-error" aria-hidden="true">*</span>
+            </label>
+<textarea id="f-mensaje" name="mensaje" rows="6" required maxlength="1200" aria-describedby="e-mensaje"
+          class="field-control w-full px-4 py-3.5 bg-white border border-stone-200 rounded-none resize-y
+                 font-sans text-[13px] leading-relaxed text-stone-900 placeholder:text-stone-300
+                 focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors"></textarea>
+<p id="e-mensaje" class="field-error empty:hidden font-sans text-[11px] leading-snug text-error mt-1.5"></p>
+</div>
+
+<!-- Consentimiento. El enlace al aviso va FUERA del <label> a propósito: un
+     ancla dentro de la etiqueta hace que el clic sobre el enlace compita con
+     la activación de la casilla. -->
+<div class="flex items-start gap-3 pt-1">
+<input id="f-consent" name="consentimiento" type="checkbox" required value="Acepto el aviso de privacidad"
+       aria-describedby="h-consent e-consent"
+       class="field-control mt-0.5 h-4 w-4 shrink-0 rounded-none border-stone-300 text-secondary
+              focus:ring-1 focus:ring-secondary focus:ring-offset-1">
+<div class="min-w-0">
+<label for="f-consent" class="block font-sans text-[11px] leading-relaxed text-stone-700">
+                Autorizo el tratamiento de mis datos personales para ser contactado.
+                <span class="text-error" aria-hidden="true">*</span>
+            </label>
+<p id="h-consent" class="font-sans text-[11px] leading-relaxed text-stone-500 mt-1">
+                Consulta el <a href="../aviso-de-privacidad/" class="text-primary font-semibold underline underline-offset-4 decoration-stone-300 hover:decoration-primary transition-colors">Aviso de Privacidad</a>
+                de GRUPO INMOBILIARIO HERSO S.A. DE C.V.
+            </p>
+<p id="e-consent" class="field-error empty:hidden font-sans text-[11px] leading-snug text-error mt-1.5"></p>
+</div>
+</div>
+
+<p id="form-alert" role="alert" hidden
+   class="border border-error/30 bg-error-container text-on-error-container font-sans text-[11px] leading-relaxed p-4"></p>
+
+<button id="contact-submit" type="submit"
+        class="w-full bg-primary text-white py-4 hover:bg-stone-800 transition-colors
+               disabled:opacity-60 disabled:cursor-not-allowed
+               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-1">
+<span id="contact-submit-label" class="font-sans text-[10px] uppercase tracking-widest font-semibold">Enviar mensaje</span>
+</button>
+
+</form>
+
+<!-- Vive fuera del <form> a propósito: al enviarse, el formulario se oculta y
+     este bloque tiene que sobrevivir y recibir el foco. -->
+<div id="form-success" hidden tabindex="-1" role="status" class="border border-stone-200 bg-white p-8 md:p-10 focus:outline-none">
+<span class="material-symbols-outlined text-3xl text-secondary" aria-hidden="true">mark_email_read</span>
+<h2 class="font-headline-lg text-2xl md:text-3xl text-primary mt-4">Mensaje enviado</h2>
+<p class="font-body-lg text-stone-600 leading-loose mt-4">
+            Gracias por escribirnos. Un asesor se pondrá en contacto contigo a la brevedad.
+        </p>
+<a href="../" class="inline-flex items-center gap-2 mt-8 font-sans text-[10px] uppercase tracking-widest text-stone-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-base" aria-hidden="true">arrow_back</span> Volver al inicio
+</a>
+</div>
+</div>
+
+<aside class="min-w-0 lg:border-l lg:border-stone-200 lg:pl-12">
+<h2 class="font-sans text-[10px] uppercase tracking-[0.4em] text-stone-400 mb-6">Otra vía</h2>
+<p class="font-body-md text-stone-600 leading-relaxed mb-6">
+            ¿Prefieres una respuesta inmediata? Escríbenos por WhatsApp y te atendemos ahí mismo.
+        </p>
+<a class="block text-center w-full bg-secondary text-white py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-secondary/90 transition-colors"
+   href="https://wa.me/5544996922?text=Me%20interesa%20conocer%20mas%20de%20los%20lotes%20comerciales%20en%20Tres%20Marias.">
+            WhatsApp
+        </a>
+</aside>
+
+</div>
+</div>
+</section>
+</main>
+
+<!-- Footer Component — igual que las otras páginas, con "Contacto" marcado. -->
+<footer class="border-t bg-primary border-t border-stone-300/10">
+<div class="w-full py-10 md:py-16 px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1440px] mx-auto">
+<div>
+<h4 class="font-serif text-lg md:text-xl mb-4 text-white tracking-[0.3em]">DISTRITO ZALCE</h4>
+<p class="font-sans text-[10px] tracking-widest uppercase opacity-60 text-stone-400">© 2026 DISTRITO ZALCE. EXCLUSIVE LAND BANKING PRIVACY RESERVED.</p>
+</div>
+<div class="flex flex-wrap gap-6 md:gap-8 justify-start md:justify-end">
+<a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="#">Strategic Land</a>
+<a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="#">Institutional</a>
+<a class="font-sans text-[10px] tracking-widest uppercase transition-colors text-stone-400 hover:text-white" href="../aviso-de-privacidad/">Aviso de privacidad</a>
+<a aria-current="page" class="font-sans text-[10px] tracking-widest uppercase transition-colors text-white" href="./">Contacto</a>
+</div>
+</div>
+<div class="w-full px-6 md:px-12 pb-10 md:pb-12 max-w-[1440px] mx-auto">
+<p class="font-sans text-[10px] leading-relaxed text-stone-400 border-t border-stone-300/10 pt-6 max-w-3xl">
+Los precios publicados no constituyen una oferta vinculante y pueden modificarse sin previo aviso.
+La disponibilidad, promociones, formas de pago y condiciones comerciales pueden afectar el precio
+final. Para conocer el precio vigente y las condiciones aplicables, comuníquese con un asesor de ventas.
+</p>
+</div>
+</footer>
+
+<!-- Floating CTA -->
+<a id="whatsapp-fab" href="https://wa.me/5544996922?text=Me%20interesa%20conocer%20mas%20de%20los%20lotes%20comerciales%20en%20Tres%20Marias."
+   aria-label="Contactar por WhatsApp"
+   class="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[60] w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-[#25D366] rounded-full shadow-xl hover:scale-110 active:scale-95 transition duration-300">
+  <img src="../assets/WhatsApp.svg" alt="" class="w-8 h-8 md:w-10 md:h-10 object-contain" />
+</a>
+
+<!-- Se reutiliza nav.js igual que en el aviso: initAnchors() e initFab() no
+     encuentran sus elementos y salen solos; aquí sólo actúa initMobileMenu(). -->
+<script type="module">
+  import { initNav } from '../assets/js/nav.js';
+  import { initContact } from '../assets/js/contact.js';
+  initNav();
+  initContact();
+</script>
+</body></html>
