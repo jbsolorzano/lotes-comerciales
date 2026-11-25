@@ -10,9 +10,9 @@
 
 import { prefersReducedMotion } from './state.js';
 import { loadLots } from './lots.js';
+import { whatsappUrl } from './config.js';
 
-const WHATSAPP_URL =
-  'https://wa.me/5544996922?text=Me%20interesa%20conocer%20mas%20de%20los%20lotes%20comerciales%20en%20Tres%20Marias.';
+const WHATSAPP_URL = whatsappUrl();
 
 /** Mensajes propios por campo; la llave es la propiedad de ValidityState. */
 const MESSAGES = {
