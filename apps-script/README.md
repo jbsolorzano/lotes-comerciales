@@ -118,8 +118,9 @@ cambia.
 
 **No uses `clasp create-deployment` (`clasp deploy`) ni `clasp
 update-deployment` (`clasp redeploy`)**, aunque clasp 3 los tenga: implementan
-con la cuenta de quien los corre, y la aplicación web pasaría a correr como
-Bernardo. Tampoco "Nueva implementación" en el editor: crea otra URL y el sitio
+con la cuenta de quien los corre, y la aplicación web podría pasar a correr
+como Bernardo (no está probado, y la regla evita averiguarlo en producción).
+Tampoco "Nueva implementación" en el editor: crea otra URL y el sitio
 sigue mandando a la vieja.
 
 ## Contrato de los endpoints
