@@ -235,6 +235,7 @@ assets/
   predios-overview.mp4  Video del hero (~5 MB, 33 s, ~1.2 Mbps, faststart)
   hero-poster.jpg       Póster del video
   WhatsApp.svg
+apps-script/            Backend en Apps Script (en preparación; ver su README)
 DESIGN.md               Tokens de diseño y guía de estilo
 ```
 
