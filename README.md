@@ -232,7 +232,7 @@ assets/
     nav.js              Navegación, menú móvil, botón flotante
   lotes-data.json       Datos comerciales por lote (63 registros)
   predios-Tres-Marias.kml  Geometría por lote (49 placemarks)
-  predios-overview.mp4  Video del hero (~18 MB, 33 s)
+  predios-overview.mp4  Video del hero (~5 MB, 33 s, ~1.2 Mbps, faststart)
   hero-poster.jpg       Póster del video
   WhatsApp.svg
 DESIGN.md               Tokens de diseño y guía de estilo
