@@ -201,6 +201,7 @@ assets/
   js/
     tailwind-config.js  Tokens de DESIGN.md; lo cargan todas las páginas
     contact.js          Validación, envío a Web3Forms y selector de lote
+    format.js           Formato de superficie y precios al pintar (es-MX)
     main.js             Arranque y cableado (solo la portada)
     lots.js             Carga y unión de KML + JSON, normalización, estilos
     state.js            Estado (selección/hover/filtro) y bus de eventos
@@ -334,6 +335,14 @@ publicarlos hay que agregar su polígono al KML.
 
 El `id` de cada `<Placemark>` es la llave que une ambos archivos
 (p. ej. `mz06L16`).
+
+**`lotes-data.json` guarda números, no texto con formato.** `superficie_m2`,
+`precio_por_m2` y `valor_final` son números (m² y MXN) o `null`; `manzana` y
+`lote` son enteros. El formato (`6,931.54`, `$2,500.00`) lo pone
+`assets/js/format.js` al pintar. Es a propósito: así el archivo lo puede
+escribir la hoja de administración sin cuidar comas ni signos. Si llega un
+texto, `format.js` lo muestra tal cual, de modo que un JSON viejo no rompe el
+sitio.
 
 `lots.js` resuelve las rutas de los dos archivos contra `import.meta.url`, no
 contra el documento. Por eso `loadLots()` funciona igual desde la portada que

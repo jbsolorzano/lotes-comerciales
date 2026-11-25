@@ -4,6 +4,7 @@
  */
 
 import { badgeFor, norm } from './lots.js';
+import { formatArea, formatMoney } from './format.js';
 import { on, select, hover, setFilter, state, passesFilter, prefersReducedMotion, canHover } from './state.js';
 
 const WHATSAPP = '5544996922';
@@ -14,7 +15,7 @@ let byId = {};
 
 function itemHTML({ name, uso_suelo, superficie_m2, estado, estadoKey, valor_final }) {
   const precioLine = valor_final
-    ? `<p class="text-xs text-stone-600 font-semibold mt-1.5">${valor_final} MXN</p>`
+    ? `<p class="text-xs text-stone-600 font-semibold mt-1.5">${formatMoney(valor_final)} MXN</p>`
     : '';
   return `
     <div class="flex justify-between items-start mb-2 gap-2">
@@ -22,7 +23,7 @@ function itemHTML({ name, uso_suelo, superficie_m2, estado, estadoKey, valor_fin
       <span class="text-[10px] px-2 py-0.5 border ${badgeFor(estadoKey)} uppercase whitespace-nowrap">${estado}</span>
     </div>
     <h4 class="font-serif text-sm mb-1 text-primary text-left">${name}</h4>
-    <p class="text-xs text-stone-400 text-left">${superficie_m2} m²</p>
+    <p class="text-xs text-stone-400 text-left">${formatArea(superficie_m2)} m²</p>
     ${precioLine}`;
 }
 
@@ -103,11 +104,11 @@ function showCard(lotId) {
   setText('card-ref', lot.lotId.toUpperCase());
   setText('card-name', lot.name);
   setText('card-zoning', lot.uso_suelo);
-  setText('card-area', `${lot.superficie_m2} m²`);
+  setText('card-area', `${formatArea(lot.superficie_m2)} m²`);
   setText('card-sector', `Manzana ${lot.manzana}`);
   setText('card-estado', lot.estado);
-  setText('card-precio-m2', lot.precio_por_m2 ? `${lot.precio_por_m2} MXN/m²` : '—');
-  setText('card-precio', lot.valor_final ? `${lot.valor_final} MXN` : '—');
+  setText('card-precio-m2', lot.precio_por_m2 ? `${formatMoney(lot.precio_por_m2)} MXN/m²` : '—');
+  setText('card-precio', lot.valor_final ? `${formatMoney(lot.valor_final)} MXN` : '—');
 
   const msg = encodeURIComponent(`Estoy interesado en ${lot.name} del proyecto Distrito Zalce.`);
   document.getElementById('card-cta').href = `https://wa.me/${WHATSAPP}?text=${msg}`;

@@ -1,192 +1,191 @@
 {
   "mz01L01": {
-    "manzana": "1", "lote": "1", "uso_suelo": "SERVICIOS", "superficie_m2": "6,931.54", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 1, "lote": 1, "uso_suelo": "SERVICIOS", "superficie_m2": 6931.54, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz01L02": {
-    "manzana": "1", "lote": "2", "uso_suelo": "SERVICIOS", "superficie_m2": "780.58", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 1, "lote": 2, "uso_suelo": "SERVICIOS", "superficie_m2": 780.58, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz01L03": {
-    "manzana": "1", "lote": "3", "uso_suelo": "SERVICIOS", "superficie_m2": "67.12", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 1, "lote": 3, "uso_suelo": "SERVICIOS", "superficie_m2": 67.12, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz02L01": {
-    "manzana": "2", "lote": "1", "uso_suelo": "SERVICIOS", "superficie_m2": "28,330.60", "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
+    "manzana": 2, "lote": 1, "uso_suelo": "SERVICIOS", "superficie_m2": 28330.6, "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
   },
   "mz03L01": {
-    "manzana": "3", "lote": "1", "uso_suelo": "COMERCIAL", "superficie_m2": "2,852.68", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 3, "lote": 1, "uso_suelo": "COMERCIAL", "superficie_m2": 2852.68, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz04L01": {
-    "manzana": "4", "lote": "1", "uso_suelo": "COMERCIAL", "superficie_m2": "4,020.25", "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
+    "manzana": 4, "lote": 1, "uso_suelo": "COMERCIAL", "superficie_m2": 4020.25, "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
   },
   "mz04L02": {
-    "manzana": "4", "lote": "2", "uso_suelo": "HABITACIONAL DENSIDAD MEDIA", "superficie_m2": "44,308.55", "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
+    "manzana": 4, "lote": 2, "uso_suelo": "HABITACIONAL DENSIDAD MEDIA", "superficie_m2": 44308.55, "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
   },
   "mz04L03": {
-    "manzana": "4", "lote": "3", "uso_suelo": "HABITACIONAL DENSIDAD MEDIA", "superficie_m2": "5,377.72", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 4, "lote": 3, "uso_suelo": "HABITACIONAL DENSIDAD MEDIA", "superficie_m2": 5377.72, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
-  "mz04L04": { 
-    "manzana": "4", "lote": "4", "uso_suelo": "ÁREAS VERDES", "superficie_m2": "1,471.71", "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
+  "mz04L04": {
+    "manzana": 4, "lote": 4, "uso_suelo": "ÁREAS VERDES", "superficie_m2": 1471.71, "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
   },
   "mz04L05": {
-    "manzana": "4", "lote": "5", "uso_suelo": "HABITACIONAL DENSIDAD MEDIA", "superficie_m2": "38,479.75", "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
+    "manzana": 4, "lote": 5, "uso_suelo": "HABITACIONAL DENSIDAD MEDIA", "superficie_m2": 38479.75, "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
   },
-  "mz04L06": { 
-    "manzana": "4", "lote": "6", "uso_suelo": "SERVICIOS", "superficie_m2": "3,553.10", "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
+  "mz04L06": {
+    "manzana": 4, "lote": 6, "uso_suelo": "SERVICIOS", "superficie_m2": 3553.1, "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
   },
   "mz05L01": {
-    "manzana": "5", "lote": "1", "uso_suelo": "MIXTO", "superficie_m2": "23,952.15", "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
+    "manzana": 5, "lote": 1, "uso_suelo": "MIXTO", "superficie_m2": 23952.15, "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
   },
   "mz05L02": {
-    "manzana": "5", "lote": "2", "uso_suelo": "SERVICIOS", "superficie_m2": "2,022.27", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 5, "lote": 2, "uso_suelo": "SERVICIOS", "superficie_m2": 2022.27, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz05L03": {
-    "manzana": "5", "lote": "3", "uso_suelo": "MIXTO", "superficie_m2": "10,144.60", "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
+    "manzana": 5, "lote": 3, "uso_suelo": "MIXTO", "superficie_m2": 10144.6, "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
   },
   "mz06L15": {
-    "manzana": "6", "lote": "15", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "5,540.91", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 6, "lote": 15, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 5540.91, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz06L16": {
-    "manzana": "6", "lote": "16", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "4,841.69", "precio_por_m2": "$4,000.00", "valor_final": "$19,366,760.00", "estado": "DISPONIBLE"
+    "manzana": 6, "lote": 16, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 4841.69, "precio_por_m2": 4000, "valor_final": 19366760, "estado": "DISPONIBLE"
   },
   "mz06L17": {
-    "manzana": "6", "lote": "17", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "4,841.67", "precio_por_m2": "$4,000.00", "valor_final": "$19,366,680.00", "estado": "DISPONIBLE"
+    "manzana": 6, "lote": 17, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 4841.67, "precio_por_m2": 4000, "valor_final": 19366680, "estado": "DISPONIBLE"
   },
   "mz06L18": {
-    "manzana": "6", "lote": "18", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "4,841.67", "precio_por_m2": "$4,000.00", "valor_final": "$19,366,680.00", "estado": "DISPONIBLE"
+    "manzana": 6, "lote": 18, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 4841.67, "precio_por_m2": 4000, "valor_final": 19366680, "estado": "DISPONIBLE"
   },
   "mz06L19": {
-    "manzana": "6", "lote": "19", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "4,841.69", "precio_por_m2": "$4,000.00", "valor_final": "$19,366,760.00", "estado": "DISPONIBLE"
+    "manzana": 6, "lote": 19, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 4841.69, "precio_por_m2": 4000, "valor_final": 19366760, "estado": "DISPONIBLE"
   },
   "mz06L20": {
-    "manzana": "6", "lote": "20", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "3,119.00", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 6, "lote": 20, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 3119, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz06L21": {
-    "manzana": "6", "lote": "21", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "3,418.29", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 6, "lote": 21, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 3418.29, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz06L22": {
-    "manzana": "6", "lote": "22", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "2,076.68", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 6, "lote": 22, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 2076.68, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz06L24": {
-    "manzana": "6", "lote": "24", "uso_suelo": "HABITACIONAL DENSIDAD MEDIA", "superficie_m2": "10,139.81", "precio_por_m2": "$2,500.00", "valor_final": "$25,349,525.00", "estado": "DISPONIBLE"
+    "manzana": 6, "lote": 24, "uso_suelo": "HABITACIONAL DENSIDAD MEDIA", "superficie_m2": 10139.81, "precio_por_m2": 2500, "valor_final": 25349525, "estado": "DISPONIBLE"
   },
   "mz06L25": {
-    "manzana": "6", "lote": "25", "uso_suelo": "HABITACIONAL DENSIDAD MEDIA", "superficie_m2": "10,309.30", "precio_por_m2": "$2,500.00", "valor_final": "$25,773,250.00", "estado": "DISPONIBLE"
+    "manzana": 6, "lote": 25, "uso_suelo": "HABITACIONAL DENSIDAD MEDIA", "superficie_m2": 10309.3, "precio_por_m2": 2500, "valor_final": 25773250, "estado": "DISPONIBLE"
   },
   "mz06L26": {
-    "manzana": "6", "lote": "26", "uso_suelo": "HABITACIONAL DENSIDAD MEDIA", "superficie_m2": "10,109.24", "precio_por_m2": "$2,500.00", "valor_final": "$25,272,100.00", "estado": "DISPONIBLE"
+    "manzana": 6, "lote": 26, "uso_suelo": "HABITACIONAL DENSIDAD MEDIA", "superficie_m2": 10109.24, "precio_por_m2": 2500, "valor_final": 25272100, "estado": "DISPONIBLE"
   },
   "mz06L27": {
-    "manzana": "6", "lote": "27", "uso_suelo": "MIXTO", "superficie_m2": "1,613.13","precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 6, "lote": 27, "uso_suelo": "MIXTO", "superficie_m2": 1613.13, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz07L02": {
-    "manzana": "7", "lote": "2", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "2,183.20", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 7, "lote": 2, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 2183.2, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz07L03": {
-    "manzana": "7", "lote": "3", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "2,223.26", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 7, "lote": 3, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 2223.26, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz07L06": {
-    "manzana": "7", "lote": "6", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "2,179.85", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 7, "lote": 6, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 2179.85, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz07L07": {
-    "manzana": "7", "lote": "7", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "2,261.75", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 7, "lote": 7, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 2261.75, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz07L08": {
-    "manzana": "7", "lote": "8", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "2,044.10", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 7, "lote": 8, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 2044.1, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz07L09": {
-    "manzana": "7", "lote": "9", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "2,125.95", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 7, "lote": 9, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 2125.95, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz07L10": {
-    "manzana": "7", "lote": "10", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "2,199.87", "precio_por_m2": "$4,000.00", "valor_final": "$8,799,480.00", "estado": "DISPONIBLE"
+    "manzana": 7, "lote": 10, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 2199.87, "precio_por_m2": 4000, "valor_final": 8799480, "estado": "DISPONIBLE"
   },
-  "mz07L11": { 
-    "manzana": "7", "lote": "11", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "2,429.11", "precio_por_m2": "$4,000.00", "valor_final": "$9,716,440.00",
-  "estado": "DISPONIBLE"
+  "mz07L11": {
+    "manzana": 7, "lote": 11, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 2429.11, "precio_por_m2": 4000, "valor_final": 9716440, "estado": "DISPONIBLE"
   },
   "mz07L12": {
-    "manzana": "7", "lote": "12", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "2,729.34", "precio_por_m2": "$4,000.00", "valor_final": "$10,917,360.00", "estado": "DISPONIBLE"
+    "manzana": 7, "lote": 12, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 2729.34, "precio_por_m2": 4000, "valor_final": 10917360, "estado": "DISPONIBLE"
   },
   "mz07L13": {
-    "manzana": "7", "lote": "13", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "3,244.03", "precio_por_m2": "$4,000.00", "valor_final": "$12,976,120.00", "estado": "DISPONIBLE"
+    "manzana": 7, "lote": 13, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 3244.03, "precio_por_m2": 4000, "valor_final": 12976120, "estado": "DISPONIBLE"
   },
   "mz07L14": {
-    "manzana": "7", "lote": "14", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "3,923.45", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 7, "lote": 14, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 3923.45, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz08L01": {
-    "manzana": "8", "lote": "1", "uso_suelo": "ÁREAS VERDES", "superficie_m2": "5,538.05", "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
+    "manzana": 8, "lote": 1, "uso_suelo": "ÁREAS VERDES", "superficie_m2": 5538.05, "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
   },
   "mz08L02": {
-    "manzana": "8", "lote": "2", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "25,006.80", "precio_por_m2": "$2,500.00", "valor_final": "$62,517,000.00", "estado": "DISPONIBLE"
+    "manzana": 8, "lote": 2, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 25006.8, "precio_por_m2": 2500, "valor_final": 62517000, "estado": "DISPONIBLE"
   },
   "mz08L03": {
-    "manzana": "8", "lote": "3", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "16,543.83", "precio_por_m2": "$2,500.00", "valor_final": "$41,359,575.00", "estado": "DISPONIBLE"
+    "manzana": 8, "lote": 3, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 16543.83, "precio_por_m2": 2500, "valor_final": 41359575, "estado": "DISPONIBLE"
   },
   "mz08L04": {
-    "manzana": "8", "lote": "4", "uso_suelo": "MIXTO", "superficie_m2": "16,815.20", "precio_por_m2": "$2,500.00", "valor_final": "$41,359,575.00", "estado": "DISPONIBLE"
+    "manzana": 8, "lote": 4, "uso_suelo": "MIXTO", "superficie_m2": 16815.2, "precio_por_m2": 2500, "valor_final": 41359575, "estado": "DISPONIBLE"
   },
   "mz08L05": {
-    "manzana": "8", "lote": "5", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "37,500.88", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 8, "lote": 5, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 37500.88, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz09L01": {
-    "manzana": "9", "lote": "1", "uso_suelo": "COMERCIAL", "superficie_m2": "212.48", "precio_por_m2": "$3,000.00", "valor_final": "$637,440.00", "estado": "DISPONIBLE"
+    "manzana": 9, "lote": 1, "uso_suelo": "COMERCIAL", "superficie_m2": 212.48, "precio_por_m2": 3000, "valor_final": 637440, "estado": "DISPONIBLE"
   },
   "mz10L01": {
-    "manzana": "10", "lote": "1", "uso_suelo": "MIXTO", "superficie_m2": "14,193.76", "precio_por_m2": "$2,500.00", "valor_final": "$42,581,280.00", "estado": "DISPONIBLE"
+    "manzana": 10, "lote": 1, "uso_suelo": "MIXTO", "superficie_m2": 14193.76, "precio_por_m2": 2500, "valor_final": 42581280, "estado": "DISPONIBLE"
   },
   "mz10L02": {
-    "manzana": "10", "lote": "2", "uso_suelo": "MIXTO", "superficie_m2": "16,862.02", "precio_por_m2": "$2,500.00", "valor_final": "$42,155,050.00", "estado": "DISPONIBLE"
+    "manzana": 10, "lote": 2, "uso_suelo": "MIXTO", "superficie_m2": 16862.02, "precio_por_m2": 2500, "valor_final": 42155050, "estado": "DISPONIBLE"
   },
   "mz11L01": {
-    "manzana": "11", "lote": "1", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "9,017.96", "precio_por_m2": "$3,000.00", "valor_final": "$27,053,880.00", "estado": "DISPONIBLE"
+    "manzana": 11, "lote": 1, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 9017.96, "precio_por_m2": 3000, "valor_final": 27053880, "estado": "DISPONIBLE"
   },
   "mz11L02": {
-    "manzana": "11", "lote": "2", "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": "5,098.36", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 11, "lote": 2, "uso_suelo": "COMERCIAL (OFICINAS CORPORATIVAS)", "superficie_m2": 5098.36, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz13L01": {
-    "manzana": "13", "lote": "1", "uso_suelo": "MIXTO", "superficie_m2": "14,763.01", "precio_por_m2": "$2,500.00", "valor_final": "$36,907,525.00", "estado": "DISPONIBLE"
+    "manzana": 13, "lote": 1, "uso_suelo": "MIXTO", "superficie_m2": 14763.01, "precio_por_m2": 2500, "valor_final": 36907525, "estado": "DISPONIBLE"
   },
   "mz13L02": {
-    "manzana": "13", "lote": "2", "uso_suelo": "MIXTO", "superficie_m2": "14,821.85", "precio_por_m2": "$2,500.00", "valor_final": "$37,054,625.00", "estado": "DISPONIBLE"
+    "manzana": 13, "lote": 2, "uso_suelo": "MIXTO", "superficie_m2": 14821.85, "precio_por_m2": 2500, "valor_final": 37054625, "estado": "DISPONIBLE"
   },
   "mz13L03": {
-    "manzana": "13", "lote": "3", "uso_suelo": "MIXTO", "superficie_m2": "7,308.60", "precio_por_m2": "$2,500.00", "valor_final": "$18,271,500.00", "estado": "DISPONIBLE"
+    "manzana": 13, "lote": 3, "uso_suelo": "MIXTO", "superficie_m2": 7308.6, "precio_por_m2": 2500, "valor_final": 18271500, "estado": "DISPONIBLE"
   },
   "mz14L01": {
-    "manzana": "14", "lote": "1", "uso_suelo": "MIXTO", "superficie_m2": "4,940.50", "precio_por_m2": "$2,500.00", "valor_final": "$12,351,250.00", "estado": "DISPONIBLE"
+    "manzana": 14, "lote": 1, "uso_suelo": "MIXTO", "superficie_m2": 4940.5, "precio_por_m2": 2500, "valor_final": 12351250, "estado": "DISPONIBLE"
   },
   "mz14L02": {
-    "manzana": "14", "lote": "2", "uso_suelo": "MIXTO", "superficie_m2": "7,233.17", "precio_por_m2": "$2,500.00", "valor_final": "$18,082,925.00", "estado": "DISPONIBLE"
+    "manzana": 14, "lote": 2, "uso_suelo": "MIXTO", "superficie_m2": 7233.17, "precio_por_m2": 2500, "valor_final": 18082925, "estado": "DISPONIBLE"
   },
   "mz14L03": {
-    "manzana": "14", "lote": "3", "uso_suelo": "MIXTO", "superficie_m2": "9,491.90", "precio_por_m2": "$2,500.00", "valor_final": "$23,729,750.00", "estado": "DISPONIBLE"
+    "manzana": 14, "lote": 3, "uso_suelo": "MIXTO", "superficie_m2": 9491.9, "precio_por_m2": 2500, "valor_final": 23729750, "estado": "DISPONIBLE"
   },
   "mz14L04": {
-    "manzana": "14", "lote": "4", "uso_suelo": "MIXTO", "superficie_m2": "11,110.56", "precio_por_m2": "$2,500.00", "valor_final": "$27,776,400.00", "estado": "DISPONIBLE"
+    "manzana": 14, "lote": 4, "uso_suelo": "MIXTO", "superficie_m2": 11110.56, "precio_por_m2": 2500, "valor_final": 27776400, "estado": "DISPONIBLE"
   },
   "mz14L05": {
-    "manzana": "14", "lote": "5", "uso_suelo": "MIXTO", "superficie_m2": "8,633.00", "precio_por_m2": "$2,500.00", "valor_final": "$21,582,500.00", "estado": "DISPONIBLE"
+    "manzana": 14, "lote": 5, "uso_suelo": "MIXTO", "superficie_m2": 8633, "precio_por_m2": 2500, "valor_final": 21582500, "estado": "DISPONIBLE"
   },
   "mz14L06": {
-    "manzana": "14", "lote": "6", "uso_suelo": "MIXTO", "superficie_m2": "7,492.29", "precio_por_m2": "$2,500.00", "valor_final": "$18,730,725.00", "estado": "DISPONIBLE"
+    "manzana": 14, "lote": 6, "uso_suelo": "MIXTO", "superficie_m2": 7492.29, "precio_por_m2": 2500, "valor_final": 18730725, "estado": "DISPONIBLE"
   },
   "mz15L01": {
-    "manzana": "15", "lote": "1", "uso_suelo": "COMERCIAL", "superficie_m2": "19,384.96", "precio_por_m2": null, "valor_final": null, "estado": "NEGOCIACION"
-    },
+    "manzana": 15, "lote": 1, "uso_suelo": "COMERCIAL", "superficie_m2": 19384.96, "precio_por_m2": null, "valor_final": null, "estado": "NEGOCIACION"
+  },
   "mz15L02": {
-    "manzana": "15", "lote": "2", "uso_suelo": "MIXTO", "superficie_m2": "11,353.52", "precio_por_m2": "$2,500.00", "valor_final": "$28,383,800.00", "estado": "DISPONIBLE"
+    "manzana": 15, "lote": 2, "uso_suelo": "MIXTO", "superficie_m2": 11353.52, "precio_por_m2": 2500, "valor_final": 28383800, "estado": "DISPONIBLE"
   },
   "mz15L03": {
-    "manzana": "15", "lote": "3", "uso_suelo": "MIXTO", "superficie_m2": "770.69", "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
+    "manzana": 15, "lote": 3, "uso_suelo": "MIXTO", "superficie_m2": 770.69, "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
   },
   "mz15L04": {
-    "manzana": "15", "lote": "4", "uso_suelo": "SERVICIOS", "superficie_m2": "576.50", "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
+    "manzana": 15, "lote": 4, "uso_suelo": "SERVICIOS", "superficie_m2": 576.5, "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
   },
   "mz16L01": {
-    "manzana": "16", "lote": "1", "uso_suelo": "COMERCIAL", "superficie_m2": "24,931.25", "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
+    "manzana": 16, "lote": 1, "uso_suelo": "COMERCIAL", "superficie_m2": 24931.25, "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
   },
   "mz16L02": {
-    "manzana": "16", "lote": "2", "uso_suelo": "COMERCIAL", "superficie_m2": "30,117.80", "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
+    "manzana": 16, "lote": 2, "uso_suelo": "COMERCIAL", "superficie_m2": 30117.8, "precio_por_m2": null, "valor_final": null, "estado": "VENDIDO"
   },
   "mz17L01": {
-    "manzana": "17", "lote": "1", "uso_suelo": "COMERCIAL", "superficie_m2": "38,276.93", "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
+    "manzana": 17, "lote": 1, "uso_suelo": "COMERCIAL", "superficie_m2": 38276.93, "precio_por_m2": null, "valor_final": null, "estado": "DESARROLLO HERSO"
   }
 }
