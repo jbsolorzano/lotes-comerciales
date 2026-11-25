@@ -50,6 +50,21 @@ dominio propio y HTTPS forzado.
   > dominio desde el que se aceptan envíos. Mientras no se haga, cualquiera puede
   > copiar la clave y mandar mensajes al buzón desde otro sitio.
 
+- [x] **Enlaces de WhatsApp con código de país.** Todos los `wa.me` llevaban
+  `5544996922`, sin el `52` de México. wa.me pide el número completo en formato
+  internacional; con solo 10 dígitos lee el `55` inicial como el código de
+  Brasil y el chat no abre. El número vive ahora en `assets/js/config.js`
+  (`WHATSAPP_NUMBER = '525544996922'`) y lo importan `ui.js` y `contact.js`. Los
+  enlaces fijos del HTML no pueden importar un módulo y lo llevan escrito: si
+  cambia el número, se cambia en `config.js` y en
+  `grep -rn "wa.me/" --include=*.html .` (7 enlaces en 4 páginas).
+
+- [ ] **El formulario no envía.** El commit `b90fb97` dejó vacío el
+  `access_key` de Web3Forms en `contacto/index.html`, así que Web3Forms
+  rechaza cada envío. Mientras no se reponga (o se cambie el backend), el
+  visitante con JavaScript ve la alerta de error con la salida por WhatsApp,
+  que ya funciona.
+
 - [ ] **Falta el correo y el teléfono de ventas.** La columna lateral de
   `/contacto/` sale solo con WhatsApp porque **no existe en el repo ninguna
   dirección ni teléfono comercial**, y no se inventan. Cuando los haya, se
@@ -157,6 +172,10 @@ build); la clave real vive en `index.html`.
 - **Filtros:** las 7 opciones deben sumar 49 lotes
   (Servicios 2, Comercial 3, Habitacional 5, Mixto 16, Corporativo 22,
   Áreas verdes 1).
+- **WhatsApp, desde un celular:** el botón flotante, el CTA de la hoja lateral
+  y *Contáctanos* de la ficha deben abrir el chat con (55) 4499 6922 y el texto
+  ya escrito; el de la ficha, con el nombre del lote. Si WhatsApp dice que el
+  número no es válido, a algún enlace le falta el `52`.
 - **Movimiento reducido:** DevTools → Rendering → *Emulate
   `prefers-reduced-motion: reduce`*. Las transiciones deben ser instantáneas.
   El video del hero **sí** debe seguir reproduciéndose (es intencional).
@@ -200,6 +219,7 @@ contacto/
 assets/
   js/
     tailwind-config.js  Tokens de DESIGN.md; lo cargan todas las páginas
+    config.js           Número de WhatsApp y URL de wa.me (los importan ui.js y contact.js)
     contact.js          Validación, envío a Web3Forms y selector de lote
     main.js             Arranque y cableado (solo la portada)
     lots.js             Carga y unión de KML + JSON, normalización, estilos
@@ -212,7 +232,7 @@ assets/
     nav.js              Navegación, menú móvil, botón flotante
   lotes-data.json       Datos comerciales por lote (63 registros)
   predios-Tres-Marias.kml  Geometría por lote (49 placemarks)
-  predios-overview.mp4  Video del hero (~33 MB)
+  predios-overview.mp4  Video del hero (~18 MB, 33 s)
   hero-poster.jpg       Póster del video
   WhatsApp.svg
 DESIGN.md               Tokens de diseño y guía de estilo
