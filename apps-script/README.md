@@ -38,7 +38,8 @@ se pueden reordenar columnas en la hoja, pero no renombrarlas.
 
 ## Instalación (una vez por hoja)
 
-Requiere Node 18+ y clasp: `npm install -g @google/clasp`.
+Requiere Node 18+ y clasp 3: `npm install -g @google/clasp` (probado con
+3.4.1).
 
 1. En la hoja: *Extensiones → Apps Script*. Se crea un proyecto ligado a la
    hoja. En *Configuración del proyecto* copia el **ID de la secuencia de
@@ -46,15 +47,21 @@ Requiere Node 18+ y clasp: `npm install -g @google/clasp`.
 2. `clasp login` con tu cuenta. La dueña de la hoja es `ventas@`: quien
    desarrolla necesita que `ventas@` le comparta la hoja como **editor** para
    usar clasp con su propia cuenta.
-3. `cp apps-script/.clasp.json.example apps-script/.clasp.json` y pon el ID.
-4. Desde `apps-script/`: `clasp push`. Sobrescribe el `Código.gs` vacío.
+3. `cp apps-script/.clasp.json.example apps-script/.clasp.json` y pon el ID en
+   `scriptId`. `rootDir: "src"` se resuelve contra la carpeta de `.clasp.json`,
+   así que clasp sube solo lo de `apps-script/src/`.
+4. Desde `apps-script/`: `clasp push`. Sobrescribe el `Código.gs` vacío. La
+   primera vez pregunta *"Manifest file has been updated. Do you want to push
+   and overwrite?"*: contesta que sí, porque el `appsscript.json` del repo trae
+   la zona horaria, los permisos y la configuración de la aplicación web.
 5. En *Configuración del proyecto → Propiedades del script*, agrega las de la
    tabla de abajo.
 6. Recarga la hoja. En el menú *Distrito Zalce*, usa **Instalar disparadores
    (solo una vez)** y acepta los permisos.
 7. *Implementar → Nueva implementación → Aplicación web*. Ejecutar como: **yo**.
-   Quién tiene acceso: **cualquier usuario**. Guarda la URL y el **ID de la
-   implementación**.
+   Quién tiene acceso: **cualquier usuario**. Guarda la URL (termina en
+   `/exec`): es la que va en `BACKEND_URL`. Esta es la **única** vez que se usa
+   "Nueva implementación".
 
 > **Los pasos 6 y 7 los hace `ventas@`**, con su sesión abierta en la hoja, no
 > quien desarrolla. El script corre como quien lo implementa (y los
@@ -87,15 +94,33 @@ que el aviso de privacidad cubra la Conversions API.
 
 ### Actualizar el código
 
-```bash
-cd apps-script
-clasp push
-clasp deploy -i <ID-de-la-implementación> -d "descripción del cambio"
-```
+**Regla: Bernardo solo hace `clasp push`. La implementación de la aplicación
+web la crea y la actualiza `ventas@`, desde el editor.** La aplicación web
+corre como quien la implementa, y los correos deben salir de `ventas@`, no de
+una cuenta personal. Actualizando siempre la misma implementación, la URL no
+cambia.
 
-**Siempre `-i` con el mismo ID.** `clasp deploy` sin `-i`, o una "Nueva
-implementación" desde el editor, crea otra URL y el sitio sigue mandando a la
-vieja.
+1. Quien desarrolla, desde `apps-script/`:
+
+   ```bash
+   clasp push
+   ```
+
+   Esto cambia el código del proyecto, pero **no** lo que contesta la URL
+   `/exec`: la aplicación web sirve la versión fijada en su implementación.
+   Los disparadores y el menú de la hoja sí usan el código nuevo desde ese
+   momento.
+
+2. `ventas@`, en el editor de Apps Script: *Implementar → Gestionar
+   implementaciones →* la aplicación web *→ Editar* (el lápiz) *→ Versión:
+   Nueva versión →* una descripción del cambio *→ Implementar*. La URL sigue
+   siendo la misma.
+
+**No uses `clasp create-deployment` (`clasp deploy`) ni `clasp
+update-deployment` (`clasp redeploy`)**, aunque clasp 3 los tenga: implementan
+con la cuenta de quien los corre, y la aplicación web pasaría a correr como
+Bernardo. Tampoco "Nueva implementación" en el editor: crea otra URL y el sitio
+sigue mandando a la vieja.
 
 ## Contrato de los endpoints
 
