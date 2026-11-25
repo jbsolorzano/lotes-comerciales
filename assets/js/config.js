@@ -36,6 +36,17 @@ export const whatsappUrl = (text = WHATSAPP_DEFAULT_TEXT) =>
 export const BACKEND_URL = '';
 
 /**
+ * Interruptor de la atribución (attribution.js): guardar en el navegador de
+ * dónde llegó el visitante y mandarlo con cada lead y cada clic a WhatsApp.
+ *
+ * Se enciende cuando el aviso de privacidad cubra la atribución, y es
+ * independiente de BACKEND_URL: el backend puede funcionar con esto en false.
+ * Los clics llevan su código Ref. y el formulario se envía igual, solo que con
+ * `atribucion` vacía. Para guardar algo hacen falta los dos encendidos.
+ */
+export const ATRIBUCION_ACTIVA = false;
+
+/**
  * Versión del aviso de privacidad que acepta quien envía el formulario; viaja
  * en cada lead como `version_aviso`. Será la fecha de última actualización del
  * aviso (p. ej. '2026-12-01'). Vacía mientras el aviso no tenga fecha: hoy el

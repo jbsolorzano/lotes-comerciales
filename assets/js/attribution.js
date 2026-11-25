@@ -3,7 +3,8 @@
  * lead y cada clic a WhatsApp.
  *
  * Corre al importarse (lo importa nav.js, que cargan las cuatro páginas) y,
- * solo con el backend encendido, guarda dos cosas en localStorage:
+ * solo con el backend encendido Y la atribución activa (BACKEND_URL y
+ * ATRIBUCION_ACTIVA en config.js), guarda dos cosas en localStorage:
  *
  *   dz_atribucion  Último toque: los parámetros de campaña de la URL, la página
  *                  de entrada y el referrer externo. Se reescribe cada vez que
@@ -22,7 +23,7 @@
  * vacío.
  */
 
-import { BACKEND_URL } from './config.js';
+import { BACKEND_URL, ATRIBUCION_ACTIVA } from './config.js';
 
 const CLAVE_ULTIMO = 'dz_atribucion';
 const CLAVE_PRIMERA = 'dz_primera';
@@ -141,10 +142,10 @@ function registrarVisita() {
   }
 }
 
-// Con el backend apagado no se guarda nada en el navegador del visitante. Se
-// enciende junto con el backend, cuando el aviso de privacidad cubra la
-// atribución.
-if (BACKEND_URL) {
+// Sin backend, o con la atribución apagada, no se guarda nada en el navegador
+// del visitante. ATRIBUCION_ACTIVA se enciende cuando el aviso de privacidad
+// cubra la atribución.
+if (BACKEND_URL && ATRIBUCION_ACTIVA) {
   // Un error aquí no debe impedir que el módulo que lo importa (nav.js) cargue.
   try {
     registrarVisita();
@@ -158,9 +159,13 @@ if (BACKEND_URL) {
 /**
  * La atribución actual como objeto plano, con exactamente las llaves de LLAVES
  * y '' donde no hay dato. Es lo que viaja al backend en `atribucion`.
+ *
+ * Con ATRIBUCION_ACTIVA en false devuelve todas las llaves vacías sin leer
+ * localStorage ni cookies: el backend recibe la forma de siempre, sin datos.
  */
 export function getAttribution() {
   const salida = Object.fromEntries(LLAVES.map((k) => [k, '']));
+  if (!ATRIBUCION_ACTIVA) return salida;
 
   let ultimo = leer(CLAVE_ULTIMO);
   if (!ultimo || !(Date.now() - Number(ultimo.guardado) < VIGENCIA_MS)) ultimo = null;

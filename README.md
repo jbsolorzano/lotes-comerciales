@@ -226,7 +226,10 @@ build); la clave real vive en `index.html`.
 - **Atribución y WhatsApp con el backend encendido**, contra un stub local que
   imprima lo que recibe y conteste `{"ok":true,"lead_id":"DZ-TEST-000001"}` con
   `Access-Control-Allow-Origin: *`. Pon `BACKEND_URL` temporalmente a la URL del
-  stub y **devuélvelo a `''` antes del commit**:
+  stub y `ATRIBUCION_ACTIVA` en `true`, y **devuélvelos a `''` y `false` antes
+  del commit**:
+  - Con `ATRIBUCION_ACTIVA` en `false`, lo mismo que abajo debe funcionar, pero
+    `localStorage` queda vacío y `atribucion` llega con las 16 llaves vacías.
   - Abre `/index.html?utm_source=prueba&utm_medium=cpc&gclid=abc123`: en
     DevTools → Application → Local Storage deben aparecer `dz_atribucion` y
     `dz_primera`.
@@ -397,10 +400,25 @@ visitante y lo manda con el formulario y con cada clic a WhatsApp. Lo hacen dos
 módulos que importa `nav.js` —el único que cargan las cuatro páginas— y que
 corren al importarse.
 
-**`attribution.js`** guarda en `localStorage` del navegador del visitante lo de
-la tabla de abajo, **solo con el backend encendido**. Con `BACKEND_URL` vacío no
-escribe nada en `localStorage`: se enciende junto con el backend, cuando el
-aviso de privacidad cubra la atribución.
+**Dos interruptores en `assets/js/config.js`, independientes:**
+
+| | `ATRIBUCION_ACTIVA = false` (hoy) | `ATRIBUCION_ACTIVA = true` |
+|---|---|---|
+| **`BACKEND_URL = ''`** (hoy) | Nada se guarda ni se envía; el sitio funciona como antes | Igual: sin backend no se guarda nada |
+| **`BACKEND_URL` puesto** | Clics con código Ref. y formulario al backend, con `atribucion` vacía; nada en `localStorage` | Todo: código Ref., formulario y atribución completa |
+
+**La atribución espera la revisión del aviso de privacidad.** Guardar de dónde
+llegó el visitante y mandarlo con cada lead es un tratamiento que el aviso
+todavía no cubre, así que `ATRIBUCION_ACTIVA` se queda en `false` hasta que el
+abogado lo apruebe (ver [Decisiones](#decisiones)). Mientras tanto el backend se
+puede encender: el código Ref. sigue uniendo cada chat con su clic, aunque sin
+campaña.
+
+**`attribution.js`**, con los dos interruptores encendidos, guarda en
+`localStorage` del navegador del visitante lo de la tabla de abajo. Con
+cualquiera de los dos apagado no escribe nada, y con `ATRIBUCION_ACTIVA` en
+`false` `getAttribution()` devuelve las 16 llaves vacías sin leer
+`localStorage` ni cookies.
 
 | Clave | Qué guarda | Cuándo se escribe | Cuánto dura |
 |---|---|---|---|
@@ -449,12 +467,18 @@ Para encenderlo, en este orden:
    JavaScript; sin este paso, quien no tenga JavaScript sigue mandando a
    Web3Forms.
 4. **Probar los dos caminos:** con JavaScript (el lead entra con
-   `origen_envio = js` y la atribución) y sin JavaScript (entra con
+   `origen_envio = js`, y con la atribución si `ATRIBUCION_ACTIVA` está en
+   `true`) y sin JavaScript (entra con
    `origen_envio = sin_js` y la página del backend lleva a
    `/contacto/gracias/`). Y un clic a WhatsApp desde la ficha: el mensaje debe
    llevar el `(Ref. …)` y aparecer en la pestaña Clics WA.
 5. **Poner `AVISO_VERSION`** en `config.js` cuando el aviso de privacidad tenga
    fecha de última actualización (hoy no la tiene; ver Pendientes).
+6. **Encender `ATRIBUCION_ACTIVA`** en `config.js` solo cuando el aviso de
+   privacidad cubra la atribución. Es independiente de los pasos anteriores:
+   el backend funciona con la atribución apagada (los leads y los clics llegan
+   con `atribucion` vacía). Al encenderla, repetir la prueba del paso 4 y
+   comprobar que los leads traen la campaña.
 
 ### Datos
 
