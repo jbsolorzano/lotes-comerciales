@@ -43,7 +43,9 @@ Requiere Node 18+ y clasp: `npm install -g @google/clasp`.
 1. En la hoja: *Extensiones → Apps Script*. Se crea un proyecto ligado a la
    hoja. En *Configuración del proyecto* copia el **ID de la secuencia de
    comandos**.
-2. `clasp login` con la cuenta dueña de la hoja (en producción, `admin@`).
+2. `clasp login` con tu cuenta. La dueña de la hoja es `ventas@`: quien
+   desarrolla necesita que `ventas@` le comparta la hoja como **editor** para
+   usar clasp con su propia cuenta.
 3. `cp apps-script/.clasp.json.example apps-script/.clasp.json` y pon el ID.
 4. Desde `apps-script/`: `clasp push`. Sobrescribe el `Código.gs` vacío.
 5. En *Configuración del proyecto → Propiedades del script*, agrega las de la
@@ -54,13 +56,19 @@ Requiere Node 18+ y clasp: `npm install -g @google/clasp`.
    Quién tiene acceso: **cualquier usuario**. Guarda la URL y el **ID de la
    implementación**.
 
+> **Los pasos 6 y 7 los hace `ventas@`**, con su sesión abierta en la hoja, no
+> quien desarrolla. El script corre como quien lo implementa (y los
+> disparadores, como quien los instala): los avisos de leads y el resumen
+> diario deben salir de `ventas@`, no de la cuenta personal de quien
+> desarrolla.
+
 ### Propiedades del script
 
 | Propiedad | Ejemplo | Obligatoria |
 |---|---|---|
 | `SITE_URL` | `https://distritozalce.com` | Sí |
 | `VENTAS_EMAIL` | `ventas@distritozalce.com` | Sí |
-| `ALERT_EMAIL` | `admin@distritozalce.com` | Sí |
+| `ALERT_EMAIL` | el correo de soporte técnico | Sí |
 | `GITHUB_REPO` | `jbsolorzano/lotes-comerciales` | Para publicar |
 | `GITHUB_BRANCH` | `main` | Para publicar |
 | `GITHUB_TOKEN` | token de grano fino | Para publicar |
