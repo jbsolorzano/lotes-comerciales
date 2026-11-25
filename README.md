@@ -203,6 +203,29 @@ build); la clave real vive en `index.html`.
     que se llenen las opciones: el ancho del `<select>` cambia al llegar.
   - Sin JavaScript (DevTools → Settings → Debugger → *Disable JavaScript*): el
     formulario debe verse completo y el navegador debe validar con sus burbujas.
+- **Atribución y WhatsApp con el backend apagado** (`BACKEND_URL = ''`, como
+  está en el repo):
+  - Al dar clic en cualquier enlace de WhatsApp, el href **no** cambia y en la
+    consola `dataLayer` trae un `whatsapp_click` con su `ubicacion`.
+  - El formulario sigue enviando a Web3Forms (con el stub de `fetch` de arriba,
+    la petición va a `form.action`).
+  - Sin errores en consola en las cuatro páginas.
+- **Atribución y WhatsApp con el backend encendido**, contra un stub local que
+  imprima lo que recibe y conteste `{"ok":true,"lead_id":"DZ-TEST-000001"}` con
+  `Access-Control-Allow-Origin: *`. Pon `BACKEND_URL` temporalmente a la URL del
+  stub y **devuélvelo a `''` antes del commit**:
+  - Abre `/index.html?utm_source=prueba&utm_medium=cpc&gclid=abc123`: en
+    DevTools → Application → Local Storage deben aparecer `dz_atribucion` y
+    `dz_primera`.
+  - *Contáctanos* de una ficha: el texto de WhatsApp lleva `(Ref. XXXXXX)` y el
+    stub recibe `action=wa_click` con ese `ref_wa`, el `lote_id` y la
+    atribución.
+  - Envía el formulario de `/contacto/` con un lote elegido: el stub recibe
+    `action=lead` con la atribución y `lote` como id (`mz06L16`), y se ve el
+    bloque de éxito.
+  - Con el stub contestando
+    `{"ok":false,"error":"validacion","campos":{"email":"formato"}}`, el campo
+    del correo se marca con su mensaje en español.
 
 ---
 
@@ -222,8 +245,10 @@ contacto/
 assets/
   js/
     tailwind-config.js  Tokens de DESIGN.md; lo cargan todas las páginas
-    config.js           Número de WhatsApp y URL de wa.me (los importan ui.js y contact.js)
-    contact.js          Validación, envío a Web3Forms y selector de lote
+    config.js           Número de WhatsApp, URL de wa.me, BACKEND_URL y AVISO_VERSION
+    attribution.js      Fuente de la visita (UTM, gclid, fbclid, cookies) en localStorage
+    whatsapp.js         Clics a wa.me: evento de dataLayer y código Ref. con backend
+    contact.js          Validación, envío (Web3Forms o backend) y selector de lote
     format.js           Formato de superficie y precios al pintar (es-MX)
     main.js             Arranque y cableado (solo la portada)
     lots.js             Carga y unión de KML + JSON, normalización, estilos
@@ -233,7 +258,7 @@ assets/
     ui.js               Listado lateral, filtro, ficha del lote
     sheet.js            Bottom sheet móvil
     hero.js             Video del hero (carga diferida y pausa)
-    nav.js              Navegación, menú móvil, botón flotante
+    nav.js              Navegación, menú móvil, botón flotante; importa attribution.js y whatsapp.js
   lotes-data.json       Datos comerciales por lote (63 registros)
   predios-Tres-Marias.kml  Geometría por lote (49 placemarks)
   predios-overview.mp4  Video del hero (~5 MB, 33 s, ~1.2 Mbps, faststart)
@@ -287,7 +312,8 @@ Cada sección del aviso tiene `id` (`#identidad`, `#finalidades`,
 
 `/contacto/` es el único `<form>` del sitio. El endpoint es **Web3Forms**
 (`https://api.web3forms.com/submit`), porque sin backend ni build no hay dónde
-recibir un POST propio.
+recibir un POST propio. El backend en Apps Script ya está conectado pero
+apagado; ver [Activar el backend](#activar-el-backend).
 
 **Todo el JavaScript es mejora progresiva.** El `<form>` lleva su `action`, su
 `method` y sus atributos de validación en el marcado, así que si `contact.js` no
@@ -348,6 +374,72 @@ esté "dentro" del header desplegable: es la navegación del header por debajo d
 768px, y el botón blanco que lleva al formulario está oculto en ese ancho, así
 que dejarlo en WhatsApp haría el formulario inalcanzable desde el header en un
 teléfono.
+
+### Atribución y WhatsApp
+
+Para saber qué campaña trajo cada lead, el sitio guarda de dónde llegó el
+visitante y lo manda con el formulario y con cada clic a WhatsApp. Lo hacen dos
+módulos que importa `nav.js` —el único que cargan las cuatro páginas— y que
+corren al importarse.
+
+**`attribution.js`** guarda en `localStorage` del navegador del visitante lo de
+la tabla de abajo, **solo con el backend encendido**. Con `BACKEND_URL` vacío no
+escribe nada en `localStorage`: se enciende junto con el backend, cuando el
+aviso de privacidad cubra la atribución.
+
+| Clave | Qué guarda | Cuándo se escribe | Cuánto dura |
+|---|---|---|---|
+| `dz_atribucion` | Último toque: `utm_*`, `gclid`, `gbraid`, `wbraid`, `fbclid`, la página de entrada y el referrer si es de otro dominio | Cada vez que la URL trae cualquiera de esos parámetros | 90 días; vencido, se ignora |
+| `dz_primera` | Primera visita conocida: fecha con zona horaria y fuente (`google/cpc`, `facebook.com/referral` o `directo`) | Una sola vez | Hasta que se borre el almacenamiento |
+
+Además lee las cookies `_ga`, `_fbp` y `_fbc` si existen. Hoy el sitio no carga
+Google Analytics ni el Pixel de Meta, así que salen vacías; si llega un
+`fbclid` sin cookie `_fbc`, se arma `fbc` a mano (`fb.1.<ms>.<fbclid>`), como lo
+acepta Meta. `getAttribution()` devuelve siempre las mismas 16 llaves, que son
+las que lee el backend. Si `localStorage` o las cookies fallan (modo privado,
+almacenamiento lleno), los datos salen vacíos y el sitio sigue.
+
+**`whatsapp.js`** escucha los clics en cualquier `a[href^="https://wa.me/"]`
+con un solo listener en `document`, así cubre los enlaces fijos del HTML y el
+`#card-cta` que pinta `ui.js`. Cada enlace lleva `data-wa-ubicacion`
+(`flotante`, `hoja`, `ficha`, `contacto`, `gracias`, `alerta`) y el de la ficha,
+`data-lot-id`. Siempre hace push a `dataLayer` de
+`{ event: 'whatsapp_click', ref_wa, lote_id, ubicacion }`.
+
+**El código Ref.** existe porque la app de WhatsApp Business no tiene API:
+cuando entra un chat, nada dice de qué campaña vino. Con el backend encendido,
+cada clic genera un código de 6 caracteres (`crypto.getRandomValues` sobre
+`ABCDEFGHJKLMNPQRSTUVWXYZ23456789`, sin I, O, 0 ni 1 para que se dicte y se
+copie sin errores), lo agrega al mensaje —`… Distrito Zalce. (Ref. DZ7K3Q)`— y
+lo registra con `sendBeacon` junto con la atribución. Quien atiende el chat
+copia el código a la columna `ref_wa` de Leads y el backend le pega la campaña.
+El href se reescribe dentro del mismo clic y `sendBeacon` no espera respuesta:
+la navegación nunca se bloquea ni se retrasa. Con el backend apagado, el href
+no cambia.
+
+### Activar el backend
+
+Hoy está **apagado**: `BACKEND_URL` en `assets/js/config.js` está vacío, los
+enlaces de WhatsApp salen sin código Ref. y el formulario envía a Web3Forms.
+Para encenderlo, en este orden:
+
+1. **Instalar el backend** en la hoja con los pasos de `apps-script/README.md`
+   y guardar la URL de la implementación (termina en `/exec`).
+2. **Poner `BACKEND_URL`** en `assets/js/config.js` con esa URL, sin parámetros.
+   Desde ese momento el formulario con JavaScript y los clics a WhatsApp van
+   al backend.
+3. **Cambiar el `action` del `<form>`** en `contacto/index.html` a
+   `<BACKEND_URL>?action=lead` y **quitar los campos ocultos de Web3Forms**:
+   `access_key`, `subject`, `from_name` y `redirect`. Es el camino sin
+   JavaScript; sin este paso, quien no tenga JavaScript sigue mandando a
+   Web3Forms.
+4. **Probar los dos caminos:** con JavaScript (el lead entra con
+   `origen_envio = js` y la atribución) y sin JavaScript (entra con
+   `origen_envio = sin_js` y la página del backend lleva a
+   `/contacto/gracias/`). Y un clic a WhatsApp desde la ficha: el mensaje debe
+   llevar el `(Ref. …)` y aparecer en la pestaña Clics WA.
+5. **Poner `AVISO_VERSION`** en `config.js` cuando el aviso de privacidad tenga
+   fecha de última actualización (hoy no la tiene; ver Pendientes).
 
 ### Datos
 

@@ -1,6 +1,9 @@
 /**
- * Formulario de contacto: validación, envío por AJAX a Web3Forms y el selector
- * de lotes.
+ * Formulario de contacto: validación, envío por AJAX y el selector de lotes.
+ *
+ * El envío va a Web3Forms (el `action` del form) mientras BACKEND_URL esté
+ * vacío; con BACKEND_URL, va al backend de Apps Script con la atribución de la
+ * visita (contrato en apps-script/README.md).
  *
  * Todo lo de aquí es mejora progresiva sobre un formulario que ya funciona sin
  * JavaScript: el <form> lleva su `action`, su `method` y sus atributos de
@@ -10,9 +13,20 @@
 
 import { prefersReducedMotion } from './state.js';
 import { loadLots } from './lots.js';
-import { whatsappUrl } from './config.js';
+import { whatsappUrl, BACKEND_URL, AVISO_VERSION } from './config.js';
+import { getAttribution } from './attribution.js';
 
 const WHATSAPP_URL = whatsappUrl();
+
+/** Cuándo se pintó el formulario; el backend descarta envíos de menos de 3 s. */
+const T_RENDER = Date.now();
+
+const WHATSAPP_LINK = (texto) =>
+  `<a href="${WHATSAPP_URL}" data-wa-ubicacion="alerta" class="underline underline-offset-4 font-semibold">${texto}</a>`;
+
+const ALERT_ENVIO = `No pudimos enviar tu mensaje. Vuelve a intentarlo o ${WHATSAPP_LINK('escríbenos por WhatsApp')}.`;
+
+const ALERT_LIMITE = `Recibimos muchos mensajes en poco tiempo. ${WHATSAPP_LINK('Escríbenos por WhatsApp')}.`;
 
 /** Mensajes propios por campo; la llave es la propiedad de ValidityState. */
 const MESSAGES = {
@@ -42,6 +56,29 @@ function messageFor(el) {
   }
   return el.validationMessage;
 }
+
+/**
+ * Los errores del backend vienen como { campo: 'requerido' | 'formato' }. Se
+ * traducen a la causa de ValidityState para reutilizar los mismos mensajes que
+ * la validación del navegador.
+ */
+const BACKEND_CAUSES = {
+  requerido: ['valueMissing'],
+  formato: ['typeMismatch', 'patternMismatch'],
+};
+
+function backendMessageFor(el, code) {
+  const table = MESSAGES[el.name] ?? {};
+  for (const cause of BACKEND_CAUSES[code] ?? []) {
+    if (table[cause]) return table[cause];
+  }
+  return 'Revisa este campo.';
+}
+
+const pushDataLayer = (evento) => {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push(evento);
+};
 
 /* ── Validación ───────────────────────────────────────────────────────────── */
 
@@ -137,6 +174,82 @@ export function initContact() {
     });
   }
 
+  /* ── Envío al backend (solo con BACKEND_URL) ───────────────────────────── */
+
+  /** Marca los campos que rechazó el backend y enfoca el primero. Devuelve si marcó alguno. */
+  function markBackendErrors(campos) {
+    let first = null;
+    for (const [name, code] of Object.entries(campos ?? {})) {
+      const el = form.elements[name];
+      if (!el?.id) continue;
+      showError(el, backendMessageFor(el, code));
+      first ??= el;
+    }
+    first?.focus();
+    return first !== null;
+  }
+
+  async function sendToBackend() {
+    const f = form.elements;
+    // El backend acepta el id o el texto de la opción; se manda el id, que no
+    // depende de cómo se escriba el nombre del lote.
+    const option = f.lote?.selectedOptions?.[0];
+    const loteId = option?.dataset.lotId || '';
+    const eventId = crypto.randomUUID();
+    const body = {
+      nombre: f.nombre.value,
+      email: f.email.value,
+      telefono: f.telefono.value,
+      lote: loteId || f.lote?.value || '',
+      mensaje: f.mensaje.value,
+      consentimiento: f.consentimiento.checked,
+      version_aviso: AVISO_VERSION,
+      captcha_token: '',
+      botcheck: f.botcheck?.checked ? 'on' : '',
+      t_render: T_RENDER,
+      event_id: eventId,
+      user_agent: navigator.userAgent,
+      pagina: location.pathname + location.search,
+      atribucion: getAttribution(),
+    };
+
+    let data;
+    try {
+      // text/plain para que el navegador no haga la petición previa de CORS,
+      // que Apps Script no contesta.
+      const res = await fetch(`${BACKEND_URL}?action=lead`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(body),
+        signal: AbortSignal.timeout?.(15000),
+      });
+      // Apps Script responde 200 aunque falle: lo que decide es `ok`.
+      data = await res.json();
+    } catch (err) {
+      console.error('Envío del formulario de contacto:', err);
+      data = { ok: false, error: 'red' };
+    }
+
+    if (data?.ok) {
+      pushDataLayer({ event: 'generate_lead', lead_id: data.lead_id || '', lote_id: loteId, event_id: eventId });
+      showSuccess();
+      return;
+    }
+
+    const error = data?.error || 'desconocido';
+    pushDataLayer({ event: 'form_error', error });
+    if (error === 'limite') {
+      showAlert(ALERT_LIMITE);
+    } else if (error !== 'validacion' || !markBackendErrors(data.campos)) {
+      // Con errores de validación los mensajes van junto a cada campo; la alerta
+      // general queda para todo lo demás (y para una validación sin campos).
+      showAlert(ALERT_ENVIO);
+    }
+    // Lo que el visitante escribió sigue ahí y el formulario se puede reenviar.
+    sending = false;
+    setSending(false);
+  }
+
   /* ── Envío ─────────────────────────────────────────────────────────────── */
 
   let sending = false;
@@ -148,6 +261,13 @@ export function initContact() {
     if (sending) return;
     hideAlert();
     if (!validateAll()) return;
+
+    if (BACKEND_URL) {
+      sending = true;
+      setSending(true);
+      await sendToBackend();
+      return;
+    }
 
     const payload = Object.fromEntries(new FormData(form));
     // `redirect` es una instrucción sólo para el camino sin JavaScript. Si viaja
@@ -176,10 +296,7 @@ export function initContact() {
       showSuccess();
     } catch (err) {
       console.error('Envío del formulario de contacto:', err);
-      showAlert(
-        'No pudimos enviar tu mensaje. Vuelve a intentarlo o ' +
-          `<a href="${WHATSAPP_URL}" class="underline underline-offset-4 font-semibold">escríbenos por WhatsApp</a>.`
-      );
+      showAlert(ALERT_ENVIO);
       // Se deja el formulario intacto y enviable: lo que el visitante escribió
       // sigue ahí.
       sending = false;
