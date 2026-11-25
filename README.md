@@ -232,6 +232,9 @@ build); la clave real vive en `index.html`.
 ## Estructura
 
 ```
+firebase.json           Hosting en Firebase: qué se publica, encabezados, rutas
+.github/workflows/
+  firebase-hosting.yml  Deploy a Firebase (apagado hasta configurarlo)
 index.html              Portada: marcado + cargador de Google Maps
 aviso-de-privacidad/
   index.html            Aviso de privacidad — la carpeta ES la ruta pública
@@ -246,6 +249,7 @@ assets/
     attribution.js      Fuente de la visita (UTM, gclid, fbclid, cookies) en localStorage
     whatsapp.js         Clics a wa.me: evento de dataLayer y código Ref. con backend
     contact.js          Validación, envío (Web3Forms o backend) y selector de lote
+    format.js           Formato de superficie y precios al pintar (es-MX)
     main.js             Arranque y cableado (solo la portada)
     lots.js             Carga y unión de KML + JSON, normalización, estilos
     state.js            Estado (selección/hover/filtro) y bus de eventos
@@ -257,9 +261,10 @@ assets/
     nav.js              Navegación, menú móvil, botón flotante; importa attribution.js y whatsapp.js
   lotes-data.json       Datos comerciales por lote (63 registros)
   predios-Tres-Marias.kml  Geometría por lote (49 placemarks)
-  predios-overview.mp4  Video del hero (~18 MB, 33 s)
+  predios-overview.mp4  Video del hero (~5 MB, 33 s, ~1.2 Mbps, faststart)
   hero-poster.jpg       Póster del video
   WhatsApp.svg
+apps-script/            Backend en Apps Script (en preparación; ver su README)
 DESIGN.md               Tokens de diseño y guía de estilo
 ```
 
@@ -447,11 +452,62 @@ publicarlos hay que agregar su polígono al KML.
 El `id` de cada `<Placemark>` es la llave que une ambos archivos
 (p. ej. `mz06L16`).
 
+**`lotes-data.json` guarda números, no texto con formato.** `superficie_m2`,
+`precio_por_m2` y `valor_final` son números (m² y MXN) o `null`; `manzana` y
+`lote` son enteros. El formato (`6,931.54`, `$2,500.00`) lo pone
+`assets/js/format.js` al pintar. Es a propósito: así el archivo lo puede
+escribir la hoja de administración sin cuidar comas ni signos. Si llega un
+texto, `format.js` lo muestra tal cual, de modo que un JSON viejo no rompe el
+sitio.
+
 `lots.js` resuelve las rutas de los dos archivos contra `import.meta.url`, no
 contra el documento. Por eso `loadLots()` funciona igual desde la portada que
 desde `/contacto/`, que vive un nivel más abajo: con rutas relativas al documento
 el formulario habría pedido `/contacto/assets/predios-Tres-Marias.kml` y recibido
 un 404.
+
+### Hosting en Firebase (preparado, sin activar)
+
+El sitio se sigue publicando con GitHub Pages. `firebase.json` y
+`.github/workflows/firebase-hosting.yml` dejan listo el cambio a Firebase
+Hosting, pero **no hacen nada** mientras el repo no tenga la variable
+`FIREBASE_PROJECT_ID`.
+
+**Qué se publica.** Como `public` es la raíz del repo, todo lo que no esté en
+`ignore` se sube. La lista excluye archivos y carpetas ocultos (`**/.*` **y**
+`**/.*/**`: el primero solo no excluye el contenido de `.git/`, y el deploy
+subiría el historial del repo), todos los `.md`, `CNAME`, `firebase.json`,
+`apps-script/` y `docs/`. Eso deja solo las 4 páginas y `assets/` (20 archivos
+en `main` al 25-nov-2026). **El log del deploy dice cuántos archivos encontró; si son muchos más,
+revisa `ignore` antes de seguir.**
+
+**Rutas.** `trailingSlash: true` reproduce lo de GitHub Pages: `/contacto`
+redirige con 301 a `/contacto/`.
+
+**Caché.** HTML, JS y JSON (incluido `lotes-data.json`) con `max-age=300`: un
+cambio se ve en máximo 5 minutos, y como los módulos JS no llevan hash en el
+nombre, una caché larga mezclaría versiones. KML, video e imágenes, un día.
+Firebase limpia su CDN en cada deploy.
+
+**Activación** (requiere el proyecto de Firebase a nombre de la empresa):
+
+1. Crear el proyecto con la cuenta de administración, en plan Blaze, con
+   alertas de presupuesto.
+2. Crear una cuenta de servicio con permiso de deploy de Hosting y agregar su
+   llave JSON como secreto del repo `FIREBASE_SERVICE_ACCOUNT`
+   (`firebase init hosting:github` lo hace solo).
+3. Agregar la variable del repo `FIREBASE_PROJECT_ID`. Desde ese momento, cada
+   push a `main` publica en `<proyecto>.web.app` y cada PR recibe una URL de
+   vista previa.
+4. Agregar a los referrers de la clave de Maps `https://<proyecto>.web.app/*` y
+   `https://<proyecto>--*.web.app/*` (vistas previas).
+5. Probar en `<proyecto>.web.app` con la lista "Qué revisar al probar un
+   cambio". Solo después se mueve el dominio (registros DNS en Namecheap).
+
+**Probar en local** sin cuenta ni proyecto:
+`firebase emulators:start --only hosting --project demo-dz` y abrir
+`http://127.0.0.1:5000`. Ojo: el emulador sirve todo, incluso lo que está en
+`ignore`; la lista de exclusión solo se aplica al subir.
 
 ### Video del hero
 

@@ -23,6 +23,12 @@ DJI_*.mp4
 .env.*
 !.env.example
 
+# ── Apps Script (clasp) ──────────────────────────────────────────────────────
+# El id del proyecto cambia entre la hoja prototipo y la definitiva; la plantilla
+# está en apps-script/.clasp.json.example. .clasprc.json guarda credenciales.
+apps-script/.clasp.json
+.clasprc.json
+
 # ── Servidores de desarrollo (npx serve, http-server) ────────────────────────
 node_modules/
 package-lock.json
@@ -42,3 +48,8 @@ $RECYCLE.BIN/
 *.swp
 *.swo
 .claude/settings.local.json
+
+# ── Firebase CLI ─────────────────────────────────────────────────────────────
+.firebase/
+firebase-debug.log
+firebase-debug.*.log

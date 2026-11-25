@@ -1,0 +1,40 @@
+# Deploy del sitio a Firebase Hosting.
+#
+# - Push a main → canal "live" (producción en Firebase).
+# - Pull request del mismo repo → canal de vista previa de 7 días; la Action
+#   comenta la URL en el PR.
+#
+# Está apagado mientras no exista la variable FIREBASE_PROJECT_ID en el repo
+# (Settings → Secrets and variables → Actions → Variables). Así este archivo se
+# puede fusionar antes de que exista el proyecto de Firebase sin que falle nada.
+# Activación: ver "Hosting en Firebase" en el README.
+
+name: Firebase Hosting
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  deploy:
+    # Los PR de forks no reciben secretos: sin este filtro fallarían.
+    if: >-
+      vars.FIREBASE_PROJECT_ID != '' &&
+      (github.event_name == 'push' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: ${{ vars.FIREBASE_PROJECT_ID }}
+          channelId: ${{ github.event_name == 'push' && 'live' || '' }}
+          expires: 7d
