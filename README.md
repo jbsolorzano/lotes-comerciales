@@ -85,6 +85,19 @@ dominio propio y HTTPS forzado.
 
 ---
 
+## Decisiones
+
+- **25-nov-2026 · Google Workspace con una sola cuenta,
+  `ventas@distritozalce.com`,** con control total de quien administra el sitio.
+  Se recomendó una cuenta `admin@` aparte (lo estándar) y se decidió no crearla.
+- **25-nov-2026 · Por ahora se omite todo lo que dependa de personas
+  externas** (abogado, Comercial, Dirección): la atribución queda apagada
+  hasta que el aviso de privacidad la cubra; no se publica desde la hoja hasta
+  confirmar los valores de mz06L26, mz08L04 y mz10L01; y /contacto/ no agrega
+  correo ni teléfono comerciales.
+
+---
+
 ## Probar en local
 
 ### Requisitos
