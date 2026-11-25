@@ -197,6 +197,8 @@ contacto/
   index.html            Formulario de contacto
   gracias/
     index.html          Aterrizaje del envío sin JavaScript (noindex)
+docs/
+  manual-operacion.md   Manual para quien administra el sitio (no técnico)
 assets/
   js/
     tailwind-config.js  Tokens de DESIGN.md; lo cargan todas las páginas
