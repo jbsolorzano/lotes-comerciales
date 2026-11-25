@@ -48,3 +48,8 @@ $RECYCLE.BIN/
 *.swp
 *.swo
 .claude/settings.local.json
+
+# ── Firebase CLI ─────────────────────────────────────────────────────────────
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
