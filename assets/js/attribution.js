@@ -2,8 +2,8 @@
  * Atribución: de dónde llegó el visitante, para saber qué campaña trajo cada
  * lead y cada clic a WhatsApp.
  *
- * Corre al importarse (lo importa nav.js, que cargan las cuatro páginas) y
- * guarda dos cosas en localStorage:
+ * Corre al importarse (lo importa nav.js, que cargan las cuatro páginas) y,
+ * solo con el backend encendido, guarda dos cosas en localStorage:
  *
  *   dz_atribucion  Último toque: los parámetros de campaña de la URL, la página
  *                  de entrada y el referrer externo. Se reescribe cada vez que
@@ -21,6 +21,8 @@
  * venir bloqueadas. Todo acceso va en try/catch y, si falla, el dato sale
  * vacío.
  */
+
+import { BACKEND_URL } from './config.js';
 
 const CLAVE_ULTIMO = 'dz_atribucion';
 const CLAVE_PRIMERA = 'dz_primera';
@@ -139,11 +141,16 @@ function registrarVisita() {
   }
 }
 
-// Un error aquí no debe impedir que el módulo que lo importa (nav.js) cargue.
-try {
-  registrarVisita();
-} catch (err) {
-  console.warn('Atribución: no se pudo registrar la visita.', err);
+// Con el backend apagado no se guarda nada en el navegador del visitante. Se
+// enciende junto con el backend, cuando el aviso de privacidad cubra la
+// atribución.
+if (BACKEND_URL) {
+  // Un error aquí no debe impedir que el módulo que lo importa (nav.js) cargue.
+  try {
+    registrarVisita();
+  } catch (err) {
+    console.warn('Atribución: no se pudo registrar la visita.', err);
+  }
 }
 
 /* ── Lectura ──────────────────────────────────────────────────────────────── */

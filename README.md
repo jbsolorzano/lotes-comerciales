@@ -377,7 +377,10 @@ visitante y lo manda con el formulario y con cada clic a WhatsApp. Lo hacen dos
 módulos que importa `nav.js` —el único que cargan las cuatro páginas— y que
 corren al importarse.
 
-**`attribution.js`** guarda en `localStorage` del navegador del visitante:
+**`attribution.js`** guarda en `localStorage` del navegador del visitante lo de
+la tabla de abajo, **solo con el backend encendido**. Con `BACKEND_URL` vacío no
+escribe nada en `localStorage`: se enciende junto con el backend, cuando el
+aviso de privacidad cubra la atribución.
 
 | Clave | Qué guarda | Cuándo se escribe | Cuánto dura |
 |---|---|---|---|
