@@ -108,8 +108,10 @@ function showCard(lotId) {
   setText('card-precio-m2', lot.precio_por_m2 ? `${lot.precio_por_m2} MXN/m²` : '—');
   setText('card-precio', lot.valor_final ? `${lot.valor_final} MXN` : '—');
 
-  document.getElementById('card-cta').href =
-    whatsappUrl(`Estoy interesado en ${lot.name} del proyecto Distrito Zalce.`);
+  const cta = document.getElementById('card-cta');
+  cta.href = whatsappUrl(`Estoy interesado en ${lot.name} del proyecto Distrito Zalce.`);
+  // whatsapp.js lo manda con el clic, para saber de qué lote se preguntó.
+  cta.dataset.lotId = lot.lotId;
 
   document.getElementById('lot-detail-card').hidden = false;
 }

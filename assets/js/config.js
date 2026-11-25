@@ -23,3 +23,22 @@ export const WHATSAPP_DEFAULT_TEXT =
 /** URL de wa.me con el texto ya codificado. */
 export const whatsappUrl = (text = WHATSAPP_DEFAULT_TEXT) =>
   `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+
+/**
+ * URL de la implementación web de Apps Script (termina en /exec), sin
+ * parámetros: cada módulo le agrega su `?action=`.
+ *
+ * Vacía = backend apagado. Así el sitio se comporta como antes: los enlaces de
+ * WhatsApp no llevan código Ref., no se registra ningún clic y el formulario
+ * sigue enviando a Web3Forms. Para encenderlo, ver "Activar el backend" en el
+ * README: no basta con poner la URL aquí, también cambia el `action` del form.
+ */
+export const BACKEND_URL = '';
+
+/**
+ * Versión del aviso de privacidad que acepta quien envía el formulario; viaja
+ * en cada lead como `version_aviso`. Será la fecha de última actualización del
+ * aviso (p. ej. '2026-12-01'). Vacía mientras el aviso no tenga fecha: hoy el
+ * documento no la trae (ver Pendientes en el README).
+ */
+export const AVISO_VERSION = '';

@@ -5,6 +5,12 @@
  */
 
 import { prefersReducedMotion } from './state.js';
+// Se importan aquí porque nav.js es el único módulo que cargan las cuatro
+// páginas (la portada vía main.js; contacto, gracias y aviso directo). Los dos
+// corren al importarse: attribution.js guarda la fuente de la visita y
+// whatsapp.js escucha los clics a wa.me. Ver "Atribución y WhatsApp" en el README.
+import './attribution.js';
+import './whatsapp.js';
 
 function scrollToSection(target) {
   if (!target) return;
