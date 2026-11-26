@@ -87,6 +87,16 @@ dominio propio y HTTPS forzado.
 
 ## Decisiones
 
+- **26-nov-2026 · El formulario se queda en Apps Script** (no en Google
+  Forms) y Web3Forms se retira: `BACKEND_URL` apunta a la implementación web y
+  el `action` del formulario a `<BACKEND_URL>?action=lead`. Esto reemplaza lo
+  anterior sobre una sola cuenta de Workspace: `admin@distritozalce.com` es la
+  cuenta técnica (administración de Workspace, Google Cloud, Firebase y GitHub)
+  y `ventas@distritozalce.com` la de operación (buzón y avisos). La hoja de
+  operación y el backend quedaron a nombre de `admin@`, y la aplicación web se
+  ejecuta como esa cuenta; `ventas@` recibe los avisos. El repo se configura
+  con la cuenta de quien lo mantiene y al final se transfiere a una
+  organización de GitHub de la empresa.
 - **25-nov-2026 · Google Workspace con una sola cuenta,
   `ventas@distritozalce.com`,** con control total de quien administra el sitio.
   Se recomendó una cuenta `admin@` aparte (lo estándar) y se decidió no crearla.

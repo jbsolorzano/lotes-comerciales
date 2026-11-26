@@ -33,7 +33,7 @@ export const whatsappUrl = (text = WHATSAPP_DEFAULT_TEXT) =>
  * sigue enviando a Web3Forms. Para encenderlo, ver "Activar el backend" en el
  * README: no basta con poner la URL aquí, también cambia el `action` del form.
  */
-export const BACKEND_URL = '';
+export const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbz_jXnH-bM9meMLLdAZcD9SwQoyG4qeJKGHOKI7BhgC1eHuvJBWNktDWx1LKYq3D3w4Qg/exec';
 
 /**
  * Interruptor de la atribución (attribution.js): guardar en el navegador de

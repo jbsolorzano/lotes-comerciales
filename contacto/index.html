@@ -113,19 +113,8 @@
 <!-- El `action` y el `method` no son decorativos: sin JavaScript el navegador
      hace el POST por su cuenta y Web3Forms redirige a /contacto/gracias/.
      contact.js intercepta el submit y lo convierte en fetch(). -->
-<form id="contact-form" action="https://api.web3forms.com/submit" method="POST" class="space-y-6 md:space-y-7">
+<form id="contact-form" action="https://script.google.com/macros/s/AKfycbz_jXnH-bM9meMLLdAZcD9SwQoyG4qeJKGHOKI7BhgC1eHuvJBWNktDWx1LKYq3D3w4Qg/exec?action=lead" method="POST" class="space-y-6 md:space-y-7">
 
-<!-- La access_key es pública por diseño, igual que la clave de Maps en
-     index.html: el formulario se envía desde el navegador y no hay forma de
-     ocultarla. Se protege restringiendo el dominio en el panel de Web3Forms. -->
-<input type="hidden" name="access_key" value="">
-<input type="hidden" name="subject" value="Nuevo mensaje desde distritozalce.com">
-<input type="hidden" name="from_name" value="Distrito Zalce — Formulario de contacto">
-<!-- Solo sirve al camino sin JavaScript. contact.js lo quita del payload AJAX
-     para que Web3Forms conteste JSON en vez de una instrucción de redirección.
-     Tiene que ser absoluta y del mismo dominio (el plan gratuito no redirige
-     fuera del sitio). -->
-<input type="hidden" name="redirect" value="https://distritozalce.com/contacto/gracias/">
 <!-- Honeypot de Web3Forms: invisible para la vista, para el teclado y para el
      lector de pantalla. Si llega marcado, el envío es de un bot. -->
 <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
