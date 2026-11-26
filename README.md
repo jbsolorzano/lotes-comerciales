@@ -40,15 +40,10 @@ dominio propio y HTTPS forzado.
   `/contacto/` lo enlaza en el momento mismo en que se recaban los datos, que es
   lo que la LFPDPPP exige.
 
-- [x] **Formulario de contacto publicado** en `/contacto/`, con endpoint en
-  **Web3Forms**. La `access_key` va a la vista en el HTML: es pública por
-  necesidad, exactamente por la misma razón que la clave de Maps (el envío sale
-  del navegador y no hay build que pueda esconderla). Cómo está armado:
+- [x] **Formulario de contacto publicado** en `/contacto/`. Envía al backend
+  de Apps Script (`apps-script/`), que guarda el lead en la hoja de operación
+  y avisa a ventas; Web3Forms se retiró el 26-nov-2026. Cómo está armado:
   [Formulario de contacto](#formulario-de-contacto).
-
-  > **Endurecimiento pendiente:** en el panel de Web3Forms se puede restringir el
-  > dominio desde el que se aceptan envíos. Mientras no se haga, cualquiera puede
-  > copiar la clave y mandar mensajes al buzón desde otro sitio.
 
 - [x] **Enlaces de WhatsApp con código de país.** Todos los `wa.me` llevaban
   `5544996922`, sin el `52` de México. wa.me pide el número completo en formato
@@ -58,12 +53,6 @@ dominio propio y HTTPS forzado.
   enlaces fijos del HTML no pueden importar un módulo y lo llevan escrito: si
   cambia el número, se cambia en `config.js` y en
   `grep -rn "wa.me/" --include=*.html .` (7 enlaces en 4 páginas).
-
-- [ ] **El formulario no envía.** El commit `b90fb97` dejó vacío el
-  `access_key` de Web3Forms en `contacto/index.html`, así que Web3Forms
-  rechaza cada envío. Mientras no se reponga (o se cambie el backend), el
-  visitante con JavaScript ve la alerta de error con la salida por WhatsApp,
-  que ya funciona.
 
 - [ ] **Falta el correo y el teléfono de ventas.** La columna lateral de
   `/contacto/` sale solo con WhatsApp porque **no existe en el repo ninguna
@@ -212,8 +201,9 @@ build); la clave real vive en `index.html`.
   scroll horizontal** — el correo `privacidaddedatos@grupoherso.com.mx` es una
   cadena larga sin espacios y desborda si se le quita `break-words`. En Network
   no debe aparecer ninguna petición a `maps.googleapis.com`.
-- **Formulario** (`/contacto/`). Sin mandar nada al buzón real: en la consola,
-  `window.fetch = async () => new Response('{}', {status:200})` antes de enviar.
+- **Formulario** (`/contacto/`). Sin mandar nada a la hoja real: en la consola,
+  `window.fetch = async () => new Response('{"ok":true}', {status:200})` antes
+  de enviar.
   - Enviar vacío: cuatro errores en español, borde rojo y el foco en *Nombre*.
     Al corregir un campo su error se va **solo**, sin tocar los demás.
   - Camino feliz: el formulario se sustituye por el bloque de éxito y el foco
@@ -226,18 +216,13 @@ build); la clave real vive en `index.html`.
     que se llenen las opciones: el ancho del `<select>` cambia al llegar.
   - Sin JavaScript (DevTools → Settings → Debugger → *Disable JavaScript*): el
     formulario debe verse completo y el navegador debe validar con sus burbujas.
-- **Atribución y WhatsApp con el backend apagado** (`BACKEND_URL = ''`, como
-  está en el repo):
-  - Al dar clic en cualquier enlace de WhatsApp, el href **no** cambia y en la
-    consola `dataLayer` trae un `whatsapp_click` con su `ubicacion`.
-  - El formulario sigue enviando a Web3Forms (con el stub de `fetch` de arriba,
-    la petición va a `form.action`).
-  - Sin errores en consola en las cuatro páginas.
-- **Atribución y WhatsApp con el backend encendido**, contra un stub local que
-  imprima lo que recibe y conteste `{"ok":true,"lead_id":"DZ-TEST-000001"}` con
-  `Access-Control-Allow-Origin: *`. Pon `BACKEND_URL` temporalmente a la URL del
-  stub y `ATRIBUCION_ACTIVA` en `true`, y **devuélvelos a `''` y `false` antes
-  del commit**:
+- **Atribución y WhatsApp**, contra un stub local que imprima lo que recibe y
+  conteste `{"ok":true,"lead_id":"DZ-TEST-000001"}` con
+  `Access-Control-Allow-Origin: *`, para no escribir en la hoja real. Pon
+  `BACKEND_URL` temporalmente a la URL del stub y `ATRIBUCION_ACTIVA` en
+  `true`, y **devuélvelos a la URL `/exec` y a `false` antes del commit**:
+  - En cualquier página, al dar clic en un enlace de WhatsApp `dataLayer` trae
+    un `whatsapp_click` con su `ubicacion`, y no hay errores en consola.
   - Con `ATRIBUCION_ACTIVA` en `false`, lo mismo que abajo debe funcionar, pero
     `localStorage` queda vacío y `atribucion` llega con las 16 llaves vacías.
   - Abre `/index.html?utm_source=prueba&utm_medium=cpc&gclid=abc123`: en
@@ -276,7 +261,7 @@ assets/
     config.js           Número de WhatsApp, URL de wa.me, BACKEND_URL y AVISO_VERSION
     attribution.js      Fuente de la visita (UTM, gclid, fbclid, cookies) en localStorage
     whatsapp.js         Clics a wa.me: evento de dataLayer y código Ref. con backend
-    contact.js          Validación, envío (Web3Forms o backend) y selector de lote
+    contact.js          Validación, envío al backend y selector de lote
     format.js           Formato de superficie y precios al pintar (es-MX)
     main.js             Arranque y cableado (solo la portada)
     lots.js             Carga y unión de KML + JSON, normalización, estilos
@@ -292,7 +277,7 @@ assets/
   predios-overview.mp4  Video del hero (~5 MB, 33 s, ~1.2 Mbps, faststart)
   hero-poster.jpg       Póster del video
   WhatsApp.svg
-apps-script/            Backend en Apps Script (en preparación; ver su README)
+apps-script/            Backend en Apps Script: formulario, clics a WhatsApp y publicación (ver su README)
 DESIGN.md               Tokens de diseño y guía de estilo
 ```
 
@@ -338,10 +323,10 @@ Cada sección del aviso tiene `id` (`#identidad`, `#finalidades`,
 
 ### Formulario de contacto
 
-`/contacto/` es el único `<form>` del sitio. El endpoint es **Web3Forms**
-(`https://api.web3forms.com/submit`), porque sin backend ni build no hay dónde
-recibir un POST propio. El backend en Apps Script ya está conectado pero
-apagado; ver [Activar el backend](#activar-el-backend).
+`/contacto/` es el único `<form>` del sitio. Envía al **backend de Apps
+Script**: el `action` es `<BACKEND_URL>?action=lead`, la misma URL `/exec` de
+`assets/js/config.js`, y las dos tienen que coincidir. El contrato está en
+`apps-script/README.md`; el estado, en [El backend](#el-backend).
 
 **Todo el JavaScript es mejora progresiva.** El `<form>` lleva su `action`, su
 `method` y sus atributos de validación en el marcado, así que si `contact.js` no
@@ -350,20 +335,22 @@ decisiones que parecen rarezas y no lo son:
 
 - **`form.noValidate` se pone desde JS, nunca en el HTML.** Con el atributo
   `novalidate` escrito en el marcado, quien no tenga JavaScript mandaría campos
-  vacíos a Web3Forms. Puesto desde JS: con JavaScript salen nuestros mensajes en
+  vacíos al backend. Puesto desde JS: con JavaScript salen nuestros mensajes en
   español, sin él salen las burbujas del navegador. Las reglas viven en un solo
   lugar (los atributos) y no se duplican.
-- **El campo del correo se llama `email`, no `correo`.** Web3Forms toma de ahí la
-  dirección de respuesta *por el nombre del campo*. Con cualquier otro nombre, el
-  asesor le daría «responder» y no le llegaría a quien escribió.
-- **`fetch(form.action)`**, no una constante con la URL repetida. Una sola fuente
-  de verdad, y para probar en local basta con apuntar el `action` a otro lado.
+- **Los dos caminos llegan al mismo `doPost`.** Con JavaScript, `contact.js`
+  manda JSON como `text/plain` (sin petición previa de CORS) y decide por el
+  `ok` de la respuesta, porque Apps Script siempre contesta 200. Sin
+  JavaScript, el navegador manda el formulario codificado; el backend lo marca
+  `origen_envio = sin_js` y contesta una página mínima con enlace a
+  `/contacto/gracias/`.
+- **El campo del correo se llama `email`.** El backend lo lee por ese nombre y
+  lo usa como dirección de respuesta del aviso a ventas: el asesor le da
+  «responder» y le escribe directo a quien mandó el formulario.
 
-El campo oculto `redirect` es **solo** para el camino sin JavaScript: manda al
-visitante a `/contacto/gracias/`. `contact.js` lo borra del payload AJAX, porque
-si viaja, Web3Forms contesta una redirección en vez del JSON que esperamos. La
-respuesta se juzga por el código HTTP: la documentación no garantiza la llave
-`success`, así que exigirla rompería el día que dejen de mandarla.
+Si `BACKEND_URL` quedara vacía, el formulario con JavaScript no tiene a dónde
+enviar y muestra la alerta con la salida por WhatsApp. El campo trampa
+`botcheck` sigue: si llega marcado, el envío entra como spam y no genera aviso.
 
 **El selector de lote se llena con `loadLots()`**, el mismo módulo que alimenta el
 mapa. Es a propósito: el KML es lo único que sabe cuáles lotes son públicos
@@ -414,15 +401,14 @@ corren al importarse.
 
 | | `ATRIBUCION_ACTIVA = false` (hoy) | `ATRIBUCION_ACTIVA = true` |
 |---|---|---|
-| **`BACKEND_URL = ''`** (hoy) | Nada se guarda ni se envía; el sitio funciona como antes | Igual: sin backend no se guarda nada |
-| **`BACKEND_URL` puesto** | Clics con código Ref. y formulario al backend, con `atribucion` vacía; nada en `localStorage` | Todo: código Ref., formulario y atribución completa |
+| **`BACKEND_URL = ''`** | Nada se guarda ni se envía, y el formulario no tiene a dónde enviar | Igual: sin backend no se guarda nada |
+| **`BACKEND_URL` puesto** (hoy) | Clics con código Ref. y formulario al backend, con `atribucion` vacía; nada en `localStorage` | Todo: código Ref., formulario y atribución completa |
 
 **La atribución espera la revisión del aviso de privacidad.** Guardar de dónde
 llegó el visitante y mandarlo con cada lead es un tratamiento que el aviso
 todavía no cubre, así que `ATRIBUCION_ACTIVA` se queda en `false` hasta que el
-abogado lo apruebe (ver [Decisiones](#decisiones)). Mientras tanto el backend se
-puede encender: el código Ref. sigue uniendo cada chat con su clic, aunque sin
-campaña.
+abogado lo apruebe (ver [Decisiones](#decisiones)). Mientras tanto el backend
+funciona igual: el código Ref. une cada chat con su clic, aunque sin campaña.
 
 **`attribution.js`**, con los dos interruptores encendidos, guarda en
 `localStorage` del navegador del visitante lo de la tabla de abajo. Con
@@ -460,35 +446,31 @@ El href se reescribe dentro del mismo clic y `sendBeacon` no espera respuesta:
 la navegación nunca se bloquea ni se retrasa. Con el backend apagado, el href
 no cambia.
 
-### Activar el backend
+### El backend
 
-Hoy está **apagado**: `BACKEND_URL` en `assets/js/config.js` está vacío, los
-enlaces de WhatsApp salen sin código Ref. y el formulario envía a Web3Forms.
-Para encenderlo, en este orden:
+**Encendido desde el 26-nov-2026.** `BACKEND_URL` en `assets/js/config.js`
+apunta a la implementación web de Apps Script (termina en `/exec`) y el
+`action` del `<form>` de `contacto/index.html` es esa URL con
+`?action=lead`. Los clics a WhatsApp llevan su código Ref. y el formulario
+entra a la pestaña Leads. Cómo se instala y se actualiza: `apps-script/README.md`.
 
-1. **Instalar el backend** en la hoja con los pasos de `apps-script/README.md`
-   y guardar la URL de la implementación (termina en `/exec`).
-2. **Poner `BACKEND_URL`** en `assets/js/config.js` con esa URL, sin parámetros.
-   Desde ese momento el formulario con JavaScript y los clics a WhatsApp van
-   al backend.
-3. **Cambiar el `action` del `<form>`** en `contacto/index.html` a
-   `<BACKEND_URL>?action=lead` y **quitar los campos ocultos de Web3Forms**:
-   `access_key`, `subject`, `from_name` y `redirect`. Es el camino sin
-   JavaScript; sin este paso, quien no tenga JavaScript sigue mandando a
-   Web3Forms.
-4. **Probar los dos caminos:** con JavaScript (el lead entra con
-   `origen_envio = js`, y con la atribución si `ATRIBUCION_ACTIVA` está en
-   `true`) y sin JavaScript (entra con
-   `origen_envio = sin_js` y la página del backend lleva a
-   `/contacto/gracias/`). Y un clic a WhatsApp desde la ficha: el mensaje debe
-   llevar el `(Ref. …)` y aparecer en la pestaña Clics WA.
-5. **Poner `AVISO_VERSION`** en `config.js` cuando el aviso de privacidad tenga
+**Si cambia la URL** (otra implementación), se cambia en los dos lugares, y
+después se prueban los dos caminos: con JavaScript (el lead entra con
+`origen_envio = js`) y sin JavaScript (entra con `origen_envio = sin_js` y la
+página del backend lleva a `/contacto/gracias/`). Y un clic a WhatsApp desde la
+ficha: el mensaje debe llevar el `(Ref. …)` y aparecer en la pestaña Clics WA.
+Prueba rápida de que la URL responde: `curl -sL "<URL /exec>"` debe devolver
+`{"ok":true,"servicio":"distrito-zalce"}`.
+
+**Falta:**
+
+1. **Poner `AVISO_VERSION`** en `config.js` cuando el aviso de privacidad tenga
    fecha de última actualización (hoy no la tiene; ver Pendientes).
-6. **Encender `ATRIBUCION_ACTIVA`** en `config.js` solo cuando el aviso de
-   privacidad cubra la atribución. Es independiente de los pasos anteriores:
-   el backend funciona con la atribución apagada (los leads y los clics llegan
-   con `atribucion` vacía). Al encenderla, repetir la prueba del paso 4 y
-   comprobar que los leads traen la campaña.
+2. **Encender `ATRIBUCION_ACTIVA`** en `config.js` solo cuando el aviso de
+   privacidad cubra la atribución. El backend funciona con la atribución
+   apagada (los leads y los clics llegan con `atribucion` vacía). Al
+   encenderla, repetir la prueba de los dos caminos y comprobar que los leads
+   traen la campaña.
 
 ### Datos
 

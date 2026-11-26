@@ -1,14 +1,13 @@
 /**
  * Formulario de contacto: validación, envío por AJAX y el selector de lotes.
  *
- * El envío va a Web3Forms (el `action` del form) mientras BACKEND_URL esté
- * vacío; con BACKEND_URL, va al backend de Apps Script con la atribución de la
- * visita (contrato en apps-script/README.md).
+ * El envío va al backend de Apps Script (`${BACKEND_URL}?action=lead`) como
+ * JSON, con la atribución de la visita (contrato en apps-script/README.md).
  *
  * Todo lo de aquí es mejora progresiva sobre un formulario que ya funciona sin
- * JavaScript: el <form> lleva su `action`, su `method` y sus atributos de
- * validación en el marcado, así que si este módulo no carga, el navegador hace
- * el POST y valida por su cuenta.
+ * JavaScript: el <form> lleva su `action` (la misma URL), su `method` y sus
+ * atributos de validación en el marcado, así que si este módulo no carga, el
+ * navegador hace el POST y valida por su cuenta.
  */
 
 import { prefersReducedMotion } from './state.js';
@@ -107,7 +106,7 @@ export function initContact() {
 
   // Se desactiva la validación nativa desde JS y no con el atributo `novalidate`
   // en el HTML: sin JavaScript el navegador tiene que seguir validando con sus
-  // burbujas, o el formulario mandaría campos vacíos a Web3Forms.
+  // burbujas, o el formulario mandaría campos vacíos al backend.
   form.noValidate = true;
 
   const controls = () =>
@@ -174,7 +173,7 @@ export function initContact() {
     });
   }
 
-  /* ── Envío al backend (solo con BACKEND_URL) ───────────────────────────── */
+  /* ── Envío al backend ──────────────────────────────────────────────────── */
 
   /** Marca los campos que rechazó el backend y enfoca el primero. Devuelve si marcó alguno. */
   function markBackendErrors(campos) {
@@ -215,6 +214,8 @@ export function initContact() {
 
     let data;
     try {
+      // Sin URL no hay a dónde enviar; cae a la alerta con la salida por WhatsApp.
+      if (!BACKEND_URL) throw new Error('BACKEND_URL vacía en config.js');
       // text/plain para que el navegador no haga la petición previa de CORS,
       // que Apps Script no contesta.
       const res = await fetch(`${BACKEND_URL}?action=lead`, {
@@ -262,46 +263,9 @@ export function initContact() {
     hideAlert();
     if (!validateAll()) return;
 
-    if (BACKEND_URL) {
-      sending = true;
-      setSending(true);
-      await sendToBackend();
-      return;
-    }
-
-    const payload = Object.fromEntries(new FormData(form));
-    // `redirect` es una instrucción sólo para el camino sin JavaScript. Si viaja
-    // en la petición AJAX, Web3Forms contesta una redirección en vez del JSON.
-    delete payload.redirect;
-    payload.origen = location.href;
-
     sending = true;
     setSending(true);
-
-    try {
-      // Se lee la URL del marcado en vez de repetirla aquí: una sola fuente de
-      // verdad, y para probar en local basta con cambiar el `action`.
-      const res = await fetch(form.action, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(payload),
-        signal: AbortSignal.timeout?.(15000),
-      });
-      const data = await res.json().catch(() => ({}));
-      // La documentación de Web3Forms no garantiza la llave `success`, así que
-      // manda el código HTTP; `success:false` sólo se toma en cuenta si viene.
-      if (!res.ok || data.success === false) {
-        throw new Error(data.message || `HTTP ${res.status}`);
-      }
-      showSuccess();
-    } catch (err) {
-      console.error('Envío del formulario de contacto:', err);
-      showAlert(ALERT_ENVIO);
-      // Se deja el formulario intacto y enviable: lo que el visitante escribió
-      // sigue ahí.
-      sending = false;
-      setSending(false);
-    }
+    await sendToBackend();
   });
 
   fillLotSelect();

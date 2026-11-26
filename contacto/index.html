@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" href="../assets/favicon.png"/>
 <link rel="apple-touch-icon" href="../assets/favicon.png"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link rel="preconnect" href="https://api.web3forms.com"/>
+<link rel="preconnect" href="https://script.google.com"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,300;0,400;0,700;1,400&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -111,12 +111,15 @@
             </p>
 
 <!-- El `action` y el `method` no son decorativos: sin JavaScript el navegador
-     hace el POST por su cuenta y Web3Forms redirige a /contacto/gracias/.
-     contact.js intercepta el submit y lo convierte en fetch(). -->
+     hace el POST por su cuenta al backend de Apps Script, que guarda el lead y
+     contesta una página mínima con enlace a /contacto/gracias/. Con JavaScript,
+     contact.js intercepta el submit y lo manda con fetch() a la misma URL
+     (BACKEND_URL en config.js; las dos tienen que coincidir). -->
 <form id="contact-form" action="https://script.google.com/macros/s/AKfycbz_jXnH-bM9meMLLdAZcD9SwQoyG4qeJKGHOKI7BhgC1eHuvJBWNktDWx1LKYq3D3w4Qg/exec?action=lead" method="POST" class="space-y-6 md:space-y-7">
 
-<!-- Honeypot de Web3Forms: invisible para la vista, para el teclado y para el
-     lector de pantalla. Si llega marcado, el envío es de un bot. -->
+<!-- Campo trampa (honeypot): invisible para la vista, para el teclado y para el
+     lector de pantalla. Si llega marcado, el backend guarda el envío como spam
+     y no manda aviso. -->
 <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-7">
@@ -140,9 +143,9 @@
 <label for="f-email" class="block font-sans text-[9px] uppercase tracking-[0.15em] text-stone-500 mb-1.5">
                     Correo electrónico <span class="text-error" aria-hidden="true">*</span>
                 </label>
-<!-- El campo se llama "email" a propósito: Web3Forms toma de ahí la dirección
-     de respuesta automáticamente. Con otro nombre (correo, mail…) las
-     respuestas del asesor no llegarían a quien escribió. -->
+<!-- El campo se llama "email" porque así lo lee el backend: de ahí sale la
+     dirección de respuesta del aviso a ventas. Si se renombra, hay que
+     cambiarlo también en apps-script/src/ y en contact.js. -->
 <input id="f-email" name="email" type="email" required maxlength="120" autocomplete="email"
        inputmode="email" spellcheck="false" aria-describedby="e-email"
        class="field-control w-full px-4 py-3.5 bg-white border border-stone-200 rounded-none
