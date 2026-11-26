@@ -1,8 +1,10 @@
 # Backend en Apps Script
 
-Backend del sitio, ligado a la hoja de operación de Distrito Zalce. **Todavía no
-está en producción:** se prueba contra la hoja prototipo y, cuando exista el
-Workspace de la empresa, se instala en la hoja definitiva con los mismos pasos.
+Backend del sitio, ligado a la hoja de operación de Distrito Zalce. **En
+producción desde el 26-nov-2026:** la hoja y el proyecto de Apps Script son de
+`admin@distritozalce.com`, la aplicación web corre como esa cuenta y los avisos
+llegan a `ventas@`. La URL `/exec` está en `assets/js/config.js`
+(`BACKEND_URL`) y en el `action` del formulario de `contacto/index.html`.
 
 Hace tres cosas:
 
@@ -44,9 +46,10 @@ Requiere Node 18+ y clasp 3: `npm install -g @google/clasp` (probado con
 1. En la hoja: *Extensiones → Apps Script*. Se crea un proyecto ligado a la
    hoja. En *Configuración del proyecto* copia el **ID de la secuencia de
    comandos**.
-2. `clasp login` con tu cuenta. La dueña de la hoja es `ventas@`: quien
-   desarrolla necesita que `ventas@` le comparta la hoja como **editor** para
-   usar clasp con su propia cuenta.
+2. `clasp login` con una cuenta que sea **editor de la hoja** (`admin@`, que
+   es la dueña, o una cuenta a la que `admin@` le comparta la hoja como
+   editor). Con otra cuenta, `clasp push` falla con *"The caller does not have
+   permission"*. `clasp show-authorized-user` dice con qué cuenta quedó.
 3. `cp apps-script/.clasp.json.example apps-script/.clasp.json` y pon el ID en
    `scriptId`. `rootDir: "src"` se resuelve contra la carpeta de `.clasp.json`,
    así que clasp sube solo lo de `apps-script/src/`.
@@ -63,11 +66,11 @@ Requiere Node 18+ y clasp 3: `npm install -g @google/clasp` (probado con
    `/exec`): es la que va en `BACKEND_URL`. Esta es la **única** vez que se usa
    "Nueva implementación".
 
-> **Los pasos 6 y 7 los hace `ventas@`**, con su sesión abierta en la hoja, no
-> quien desarrolla. El script corre como quien lo implementa (y los
+> **Los pasos 6 y 7 los hace `admin@`**, con su sesión abierta en la hoja, no
+> una cuenta personal. El script corre como quien lo implementa (y los
 > disparadores, como quien los instala): los avisos de leads y el resumen
-> diario deben salir de `ventas@`, no de la cuenta personal de quien
-> desarrolla.
+> diario deben salir de la cuenta de la empresa, no de la de quien desarrolla.
+> Los avisos van a `VENTAS_EMAIL`.
 
 ### Propiedades del script
 
@@ -94,13 +97,14 @@ que el aviso de privacidad cubra la Conversions API.
 
 ### Actualizar el código
 
-**Regla: Bernardo solo hace `clasp push`. La implementación de la aplicación
-web la crea y la actualiza `ventas@`, desde el editor.** La aplicación web
-corre como quien la implementa, y los correos deben salir de `ventas@`, no de
-una cuenta personal. Actualizando siempre la misma implementación, la URL no
-cambia.
+**Regla: `clasp push` se hace con una cuenta que sea editor de la hoja. La
+implementación de la aplicación web la crea y la actualiza `admin@`, desde el
+editor.** La aplicación web corre como quien la implementa, y los correos
+deben salir de la cuenta de la empresa, no de una personal. Actualizando
+siempre la misma implementación, la URL no cambia.
 
-1. Quien desarrolla, desde `apps-script/`:
+1. Desde `apps-script/`, con una cuenta editora de la hoja
+   (`clasp show-authorized-user` para confirmarlo):
 
    ```bash
    clasp push
@@ -111,17 +115,17 @@ cambia.
    Los disparadores y el menú de la hoja sí usan el código nuevo desde ese
    momento.
 
-2. `ventas@`, en el editor de Apps Script: *Implementar → Gestionar
+2. `admin@`, en el editor de Apps Script: *Implementar → Gestionar
    implementaciones →* la aplicación web *→ Editar* (el lápiz) *→ Versión:
    Nueva versión →* una descripción del cambio *→ Implementar*. La URL sigue
    siendo la misma.
 
 **No uses `clasp create-deployment` (`clasp deploy`) ni `clasp
 update-deployment` (`clasp redeploy`)**, aunque clasp 3 los tenga: implementan
-con la cuenta de quien los corre, y la aplicación web podría pasar a correr
-como Bernardo (no está probado, y la regla evita averiguarlo en producción).
-Tampoco "Nueva implementación" en el editor: crea otra URL y el sitio
-sigue mandando a la vieja.
+con la cuenta de quien los corre, y si no es `admin@`, la aplicación web
+podría pasar a correr como otra cuenta (no está probado, y la regla evita
+averiguarlo en producción). Tampoco "Nueva implementación" en el editor: crea
+otra URL y el sitio sigue mandando a la vieja.
 
 ## Contrato de los endpoints
 

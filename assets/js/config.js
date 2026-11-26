@@ -28,10 +28,14 @@ export const whatsappUrl = (text = WHATSAPP_DEFAULT_TEXT) =>
  * URL de la implementación web de Apps Script (termina en /exec), sin
  * parámetros: cada módulo le agrega su `?action=`.
  *
- * Vacía = backend apagado. Así el sitio se comporta como antes: los enlaces de
- * WhatsApp no llevan código Ref., no se registra ningún clic y el formulario
- * sigue enviando a Web3Forms. Para encenderlo, ver "Activar el backend" en el
- * README: no basta con poner la URL aquí, también cambia el `action` del form.
+ * Con ella, el formulario de /contacto/ envía a `?action=lead` y cada clic a
+ * WhatsApp lleva su código Ref. y se registra en `?action=wa_click`. El
+ * `action` del <form> en contacto/index.html es esta misma URL con
+ * `?action=lead`: si cambia la implementación, se cambian los dos.
+ *
+ * Vacía, los enlaces de WhatsApp salen sin código Ref. y no se registra ningún
+ * clic, pero el formulario con JavaScript no tiene a dónde enviar y muestra la
+ * alerta de error con la salida por WhatsApp.
  */
 export const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbz_jXnH-bM9meMLLdAZcD9SwQoyG4qeJKGHOKI7BhgC1eHuvJBWNktDWx1LKYq3D3w4Qg/exec';
 
